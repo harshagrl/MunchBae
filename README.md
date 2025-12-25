@@ -10,3 +10,5 @@ _Set Up backend First_
 - Added .gitignore file to exclude node_modules and .env files
 - mongoDB connection setup in config/db.js
 - created user model in models/user.model.js
+- generated token using jwt in utils/token.js
+- created Signup, SignIn and SignOut controller in controllers/auth.controller.js
