@@ -1,19 +1,20 @@
 import User from "../models/user.model";
 import bcrypt from "bcryptjs";
-const SignUp = async (req, res) => {
+import genToken from "../utils/token";
+export const SignUp = async (req, res) => {
   try {
     const { fullName, email, password, mobile, role } = req.body;
     const user = await User.findOne({ email });
     if (user) {
-      return req.status(400).json({ message: "User Already exists." });
+      return res.status(400).json({ message: "User Already exists." });
     }
     if (password.length < 6) {
-      return req
+      return res
         .status(400)
         .json({ message: "Password length must be at least 6 characters." });
     }
     if (mobile.length < 10) {
-      return req
+      return res
         .status(400)
         .json({ message: "Mobile no. length must be of 10 digits." });
     }
@@ -25,5 +26,43 @@ const SignUp = async (req, res) => {
       role,
       password: hashedPassword,
     });
-  } catch (error) {}
+
+    const token = await genToken(user._id);
+    res.cookie("token", token, {
+      secure: false,
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+    });
+
+    return res.status(201).json(user);
+  } catch (error) {
+    return res.status(500).json(`Sign up error ${error}`);
+  }
+};
+
+export const SignIn = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "User does not exists." });
+    }
+    isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Incorrect password." });
+    }
+
+    const token = await genToken(user._id);
+    res.cookie("token", token, {
+      secure: false,
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+    });
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json(`Sign in error ${error}`);
+  }
 };
