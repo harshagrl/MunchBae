@@ -12,3 +12,5 @@ _Set Up backend First_
 - created user model in models/user.model.js
 - generated token using jwt in utils/token.js
 - created Signup, SignIn and SignOut controller in controllers/auth.controller.js
+- built authRouter in routes/auth.router.js
+- configured global middlewares in server file such as cors, express.json, cookieparser
