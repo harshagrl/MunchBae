@@ -14,3 +14,14 @@ _Set Up backend First_
 - created Signup, SignIn and SignOut controller in controllers/auth.controller.js
 - built authRouter in routes/auth.router.js
 - configured global middlewares in server file such as cors, express.json, cookieparser
+- configured authRouter route in server file
+
+_Set up Frontend_
+
+- Created vite project
+- installed tailwindcss and configured it
+- installed react-router-dom react-router and react-icons 3rd party packages
+- created pages/signup and pages/signin
+- wraped app with browserrouter in main.jsx
+- created routes in App.jsx for signup and signin pages
+- installed daisyui for components
