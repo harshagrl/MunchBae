@@ -13,7 +13,7 @@ export const SignUp = async (req, res) => {
         .status(400)
         .json({ message: "Password length must be at least 6 characters." });
     }
-    if (mobile.length < 10) {
+    if (mobile.length !== 10) {
       return res
         .status(400)
         .json({ message: "Mobile no. length must be of 10 digits." });

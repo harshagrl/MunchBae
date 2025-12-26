@@ -21,7 +21,8 @@ _Set up Frontend_
 - Created vite project
 - installed tailwindcss and configured it
 - installed react-router-dom react-router and react-icons 3rd party packages
-- created pages/signup and pages/signin
 - wraped app with browserrouter in main.jsx
 - created routes in App.jsx for signup and signin pages
 - installed daisyui for components
+- created Signup and Signin components in src/pages
+- created a pages/ForgotPassword page
