@@ -4,7 +4,7 @@ import genToken from "../utils/token.js";
 export const SignUp = async (req, res) => {
   try {
     const { fullName, email, password, mobile, role } = req.body;
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: "User Already exists." });
     }
@@ -48,7 +48,7 @@ export const SignIn = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User does not exists." });
     }
-    isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Incorrect password." });
     }
