@@ -15,6 +15,12 @@ _Set Up backend First_
 - built authRouter in routes/auth.router.js
 - configured global middlewares in server file such as cors, express.json, cookieparser
 - configured authRouter route in server file
+  --------------Moved to frontend part-----------
+- installed nodemailer in backend
+- configured nodemailer for sending otp in user email in utils/mail.js
+- wrote sendotp and verifyotp controller in controllers/auth.controller.js
+- wrote resetPassword controller in controllers/auth.controller.js
+- mentioned these routes in routes/auth.router.js
 
 _Set up Frontend_
 
@@ -25,4 +31,5 @@ _Set up Frontend_
 - created routes in App.jsx for signup and signin pages
 - installed daisyui for components
 - created Signup and Signin components in src/pages
-- created a pages/ForgotPassword page
+- created pages/ForgotPassword page
+  --------------Moved to backend part-----------

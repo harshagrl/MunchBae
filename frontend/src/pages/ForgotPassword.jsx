@@ -1,12 +1,59 @@
 import { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { serverUrl } from "../App";
+import axios from "axios";
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+  const handleSendOtp = async () => {
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/send-otp`,
+        { email },
+        { withCredentials: true }
+      );
+      setStep(2);
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleVerifyOtp = async () => {
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/verify-otp`,
+        { email, otp },
+        { withCredentials: true }
+      );
+      setStep(3);
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleResetPassword = async () => {
+    if (newPassword != confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/reset-password`,
+        { email, newPassword },
+        { withCredentials: true }
+      );
+      navigate("/signin");
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-b from-cyan-700 to-cyan-900">
       <div className="w-full max-w-md">
@@ -44,7 +91,7 @@ const ForgotPassword = () => {
 
               <button
                 className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
-                onClick={() => setStep(2)}
+                onClick={handleSendOtp}
               >
                 Send OTP
               </button>
@@ -72,7 +119,7 @@ const ForgotPassword = () => {
 
               <button
                 className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
-                onClick={() => setStep(3)}
+                onClick={handleVerifyOtp}
               >
                 Verify
               </button>
@@ -114,7 +161,10 @@ const ForgotPassword = () => {
                 />
               </div>
 
-              <button className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl">
+              <button
+                className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
+                onClick={handleResetPassword}
+              >
                 Reset Password
               </button>
             </div>

@@ -80,7 +80,7 @@ export const signOut = async (req, res) => {
 export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "User does not exists." });
     }
@@ -99,7 +99,7 @@ export const sendOtp = async (req, res) => {
 export const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user || user.resetOtp != otp || user.otpExpires < Date.now()) {
       return res.status(400).json({ message: "Invalid/Expired Otp" });
     }
@@ -110,5 +110,27 @@ export const verifyOtp = async (req, res) => {
     return res.status(200).json({ message: "Otp verified successfully" });
   } catch (error) {
     return res.status(500).json(`Verify Otp error: ${error}`);
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !user.isOtpVerified) {
+      return res.status(400).json({ message: "Otp verification required" });
+    }
+    if (newPassword.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password length must be at least 6 characters." });
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.isOtpVerified = false;
+    await user.save();
+    return res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    return res.status(500).json(`Password reset error: ${error}`);
   }
 };
