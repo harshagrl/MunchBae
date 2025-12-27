@@ -6,11 +6,13 @@ import munchBaeLogo from "../assets/munch-bae-logo.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { serverUrl } from "../App";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase";
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [err, setErr] = useState("");
   const handleSignIn = async () => {
     try {
       const result = await axios.post(
@@ -22,6 +24,23 @@ const SignIn = () => {
         { withCredentials: true }
       );
       console.log(result);
+      setErr("");
+    } catch (error) {
+      setErr(error?.response?.data?.message);
+    }
+  };
+  const handleGoogleAuth = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const { data } = await axios.post(
+        `${serverUrl}/api/auth/google-auth`,
+        {
+          email: result.user.email,
+        },
+        { withCredentials: true }
+      );
+      console.log(data);
     } catch (error) {
       console.error(error);
     }
@@ -60,6 +79,7 @@ const SignIn = () => {
                 placeholder="Enter your email"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
+                required
               />
             </div>
 
@@ -78,6 +98,7 @@ const SignIn = () => {
                   placeholder="Enter your password"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
+                  required
                 />
                 <button
                   type="button"
@@ -98,13 +119,17 @@ const SignIn = () => {
             >
               Forgot Password?
             </Link>
+            {err.length > 0 && <p className="text-red-500">{err}</p>}
             <button
               className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
               onClick={handleSignIn}
             >
               Sign In
             </button>
-            <button className="flex items-center justify-center mx-auto gap-1 cursor-pointer hover:bg-gray-300 border border-black bg-white w-full text-black font-semibold rounded-lg py-3 mt-2">
+            <button
+              className="flex items-center justify-center mx-auto gap-1 cursor-pointer hover:bg-gray-300 border border-black bg-white w-full text-black font-semibold rounded-lg py-3 mt-2"
+              onClick={handleGoogleAuth}
+            >
               <FcGoogle size={25} />
               <span>Sign In with Google</span>
             </button>

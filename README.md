@@ -1,4 +1,4 @@
-_Set Up backend First_
+<!-- _Set Up backend First_ -->
 
 - npm init
 - npm install express mongoose cors dotenv ......
@@ -15,15 +15,21 @@ _Set Up backend First_
 - built authRouter in routes/auth.router.js
 - configured global middlewares in server file such as cors, express.json, cookieparser
 - configured authRouter route in server file
+
   --------------Moved to frontend part-----------
+
 - installed nodemailer in backend
 - configured nodemailer for sending otp in user email in utils/mail.js
 - wrote sendotp and verifyotp controller in controllers/auth.controller.js
 - wrote resetPassword controller in controllers/auth.controller.js
 - mentioned these routes in routes/auth.router.js
+
   --------------Moved to frontend part-----------
 
-_Set up Frontend_
+- wrote googleAuth in controllers/auth.controller for checking user exist or not and generating token
+- mentioned google auth route in routes/auth.router
+
+<!-- _Set up Frontend_ -->
 
 - Created vite project
 - installed tailwindcss and configured it
@@ -33,8 +39,12 @@ _Set up Frontend_
 - installed daisyui for components
 - created Signup and Signin components in src/pages
 - created pages/ForgotPassword page
+
   --------------Moved to backend part-----------
+
 - installed firebase for google authentication
 - configured firebase in firebase.js
 - created .env file to store firebase apikey
 - built handlegoogleauth function in pages/signup page for signin up with google
+
+  --------------Moved to backend part-----------

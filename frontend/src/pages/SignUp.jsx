@@ -15,6 +15,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
+  const [err, setErr] = useState("");
 
   const roleOptions = [
     { key: "user", label: "User" },
@@ -36,19 +37,30 @@ const SignUp = () => {
         { withCredentials: true }
       );
       console.log(result);
+      setErr("");
     } catch (error) {
-      console.error(error);
+      setErr(error?.response?.data?.message);
     }
   };
 
   const handleGoogleAuth = async () => {
     if (!mobile) {
-      return alert("Mobile no is required");
+      return setErr("Mobile no. is required");
     }
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-      console.log(result);
+      const { data } = await axios.post(
+        `${serverUrl}/api/auth/google-auth`,
+        {
+          fullName: result.user.displayName,
+          email: result.user.email,
+          mobile,
+          role,
+        },
+        { withCredentials: true }
+      );
+      console.log(data);
     } catch (error) {
       console.error(error);
     }
@@ -87,6 +99,7 @@ const SignUp = () => {
                 placeholder="Enter your full name"
                 onChange={(e) => setFullName(e.target.value)}
                 value={fullName}
+                required
               />
             </div>
 
@@ -104,6 +117,7 @@ const SignUp = () => {
                 placeholder="Enter your email"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
+                required
               />
             </div>
 
@@ -121,6 +135,7 @@ const SignUp = () => {
                 placeholder="Enter your mobile number"
                 onChange={(e) => setMobile(e.target.value)}
                 value={mobile}
+                required
               />
             </div>
 
@@ -139,6 +154,7 @@ const SignUp = () => {
                   placeholder="Enter a password"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
+                  required
                 />
                 <button
                   type="button"
@@ -175,6 +191,7 @@ const SignUp = () => {
               </div>
             </div>
 
+            {err.length > 0 && <p className="text-red-500">* {err}</p>}
             <button
               className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
               onClick={handleSignUp}

@@ -5,6 +5,11 @@ import { sendResetOtpMail } from "../utils/mail.js";
 export const SignUp = async (req, res) => {
   try {
     const { fullName, email, password, mobile, role } = req.body;
+    if (!email) {
+      return res
+        .status(400)
+        .json({ message: "Please write a valid email address." });
+    }
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: "User Already exists." });
@@ -132,5 +137,31 @@ export const resetPassword = async (req, res) => {
     return res.status(200).json({ message: "Password reset successfully" });
   } catch (error) {
     return res.status(500).json(`Password reset error: ${error}`);
+  }
+};
+
+export const googleAuth = async (req, res) => {
+  try {
+    const { fullName, email, mobile, role } = req.body;
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        fullName,
+        email,
+        mobile,
+        role,
+      });
+    }
+    const token = await genToken(user._id);
+    res.cookie("token", token, {
+      secure: false,
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+    });
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json(`Google auth error ${error}`);
   }
 };

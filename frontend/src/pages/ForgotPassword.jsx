@@ -9,6 +9,7 @@ const ForgotPassword = () => {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [err, setErr] = useState("");
   const navigate = useNavigate();
   const handleSendOtp = async () => {
     try {
@@ -19,8 +20,9 @@ const ForgotPassword = () => {
       );
       setStep(2);
       console.log(result);
+      setErr("");
     } catch (error) {
-      console.error(error);
+      setErr(error?.response?.data?.message);
     }
   };
   const handleVerifyOtp = async () => {
@@ -32,8 +34,9 @@ const ForgotPassword = () => {
       );
       setStep(3);
       console.log(result);
+      setErr("");
     } catch (error) {
-      console.error(error);
+      setErr(error?.response?.data?.message);
     }
   };
   const handleResetPassword = async () => {
@@ -49,8 +52,9 @@ const ForgotPassword = () => {
       );
       navigate("/signin");
       console.log(result);
+      setErr("");
     } catch (error) {
-      console.error(error);
+      setErr(error?.response?.data?.message);
     }
   };
 
@@ -86,8 +90,10 @@ const ForgotPassword = () => {
                   placeholder="Enter your email to reset password"
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
+                  required
                 />
               </div>
+              {err.length > 0 && <p className="text-red-500">{err}</p>}
 
               <button
                 className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -114,8 +120,10 @@ const ForgotPassword = () => {
                   placeholder="Enter OTP"
                   onChange={(e) => setOtp(e.target.value)}
                   value={otp}
+                  required
                 />
               </div>
+              {err.length > 0 && <p className="text-red-500">{err}</p>}
 
               <button
                 className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -142,6 +150,7 @@ const ForgotPassword = () => {
                   placeholder="Enter new password"
                   onChange={(e) => setNewPassword(e.target.value)}
                   value={newPassword}
+                  required
                 />
               </div>
               <div>
@@ -158,8 +167,10 @@ const ForgotPassword = () => {
                   placeholder="Confirm password"
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   value={confirmPassword}
+                  required
                 />
               </div>
+              {err.length > 0 && <p className="text-red-500">{err}</p>}
 
               <button
                 className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
