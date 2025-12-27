@@ -45,6 +45,9 @@
 - installed firebase for google authentication
 - configured firebase in firebase.js
 - created .env file to store firebase apikey
-- built handlegoogleauth function in pages/signup page for signin up with google
+- built handlegoogleauth function in pages/signup page for sign up with google
 
   --------------Moved to backend part-----------
+
+- handlegoogleauth function in pages/signin page for sign in with google
+- setErr state to show error messages in signup, signin and forgotpassword pages
