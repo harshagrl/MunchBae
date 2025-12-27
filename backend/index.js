@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 
-app.listen(port, () => {
-  connectDB();
+app.listen(port, async () => {
+  await connectDB();
   console.log(`Server is running on ${port}`);
 });

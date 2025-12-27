@@ -21,6 +21,7 @@ _Set Up backend First_
 - wrote sendotp and verifyotp controller in controllers/auth.controller.js
 - wrote resetPassword controller in controllers/auth.controller.js
 - mentioned these routes in routes/auth.router.js
+  --------------Moved to frontend part-----------
 
 _Set up Frontend_
 
@@ -33,3 +34,7 @@ _Set up Frontend_
 - created Signup and Signin components in src/pages
 - created pages/ForgotPassword page
   --------------Moved to backend part-----------
+- installed firebase for google authentication
+- configured firebase in firebase.js
+- created .env file to store firebase apikey
+- built handlegoogleauth function in pages/signup page for signin up with google

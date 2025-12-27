@@ -6,6 +6,8 @@ import munchBaeLogo from "../assets/munch-bae-logo.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { serverUrl } from "../App";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("user");
@@ -33,6 +35,19 @@ const SignUp = () => {
         },
         { withCredentials: true }
       );
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleGoogleAuth = async () => {
+    if (!mobile) {
+      return alert("Mobile no is required");
+    }
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
       console.log(result);
     } catch (error) {
       console.error(error);
@@ -166,7 +181,10 @@ const SignUp = () => {
             >
               Create Account
             </button>
-            <button className="flex items-center justify-center mx-auto gap-1 cursor-pointer hover:bg-gray-300 border border-black bg-white w-full text-black font-semibold rounded-lg py-3 mt-2">
+            <button
+              className="flex items-center justify-center mx-auto gap-1 cursor-pointer hover:bg-gray-300 border border-black bg-white w-full text-black font-semibold rounded-lg py-3 mt-2"
+              onClick={handleGoogleAuth}
+            >
               <FcGoogle size={25} />
               <span>Sign Up with Google</span>
             </button>
