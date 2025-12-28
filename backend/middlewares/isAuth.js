@@ -5,7 +5,7 @@ const isAuth = async (req, res) => {
     if (!token) {
       return res.status(400).json({ message: "Token not found" });
     }
-    const decodeToken = await jwt.verify(token, process.env.JWT_SECRET);
+    const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
     if (!decodeToken) {
       return res.status(400).json({ message: "Token not verified" });
     }
@@ -16,3 +16,5 @@ const isAuth = async (req, res) => {
     return res.status(500).json({ message: `isAuth error: ${error}` });
   }
 };
+
+export default isAuth;
