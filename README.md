@@ -51,3 +51,4 @@
 
 - handlegoogleauth function in pages/signin page for sign in with google
 - setErr state to show error messages in signup, signin and forgotpassword pages
+- installed react spinners and configured it
