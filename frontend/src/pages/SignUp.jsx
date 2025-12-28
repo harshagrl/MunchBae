@@ -8,6 +8,7 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
+import { ClipLoader } from "react-spinners";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("user");
@@ -16,7 +17,7 @@ const SignUp = () => {
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const roleOptions = [
     { key: "user", label: "User" },
     { key: "shopOwner", label: "Shop Owner" },
@@ -24,6 +25,7 @@ const SignUp = () => {
   ];
 
   const handleSignUp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/signup`,
@@ -38,8 +40,10 @@ const SignUp = () => {
       );
       console.log(result);
       setErr("");
+      setLoading(false);
     } catch (error) {
       setErr(error?.response?.data?.message);
+      setLoading(false);
     }
   };
 
@@ -195,8 +199,13 @@ const SignUp = () => {
             <button
               className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
               onClick={handleSignUp}
+              disabled={loading}
             >
-              Create Account
+              {loading ? (
+                <ClipLoader size={25} color="white" />
+              ) : (
+                "Create Account"
+              )}
             </button>
             <button
               className="flex items-center justify-center mx-auto gap-1 cursor-pointer hover:bg-gray-300 border border-black bg-white w-full text-black font-semibold rounded-lg py-3 mt-2"

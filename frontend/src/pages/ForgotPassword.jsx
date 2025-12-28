@@ -3,6 +3,8 @@ import { IoArrowBack } from "react-icons/io5";
 import { Link, useNavigate } from "react-router";
 import { serverUrl } from "../App";
 import axios from "axios";
+import { ClipLoader } from "react-spinners";
+
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
@@ -10,8 +12,10 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleSendOtp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/send-otp`,
@@ -21,11 +25,14 @@ const ForgotPassword = () => {
       setStep(2);
       console.log(result);
       setErr("");
+      setLoading(false);
     } catch (error) {
       setErr(error?.response?.data?.message);
+      setLoading(false);
     }
   };
   const handleVerifyOtp = async () => {
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/verify-otp`,
@@ -35,8 +42,10 @@ const ForgotPassword = () => {
       setStep(3);
       console.log(result);
       setErr("");
+      setLoading(false);
     } catch (error) {
       setErr(error?.response?.data?.message);
+      setLoading(false);
     }
   };
   const handleResetPassword = async () => {
@@ -44,6 +53,7 @@ const ForgotPassword = () => {
       alert("Passwords do not match");
       return;
     }
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/reset-password`,
@@ -53,8 +63,10 @@ const ForgotPassword = () => {
       navigate("/signin");
       console.log(result);
       setErr("");
+      setLoading(false);
     } catch (error) {
       setErr(error?.response?.data?.message);
+      setLoading(false);
     }
   };
 
@@ -98,8 +110,9 @@ const ForgotPassword = () => {
               <button
                 className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
                 onClick={handleSendOtp}
+                disabled={loading}
               >
-                Send OTP
+                {loading ? <ClipLoader size={25} color="white" /> : "Send OTP"}
               </button>
             </div>
           )}
@@ -128,8 +141,9 @@ const ForgotPassword = () => {
               <button
                 className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
                 onClick={handleVerifyOtp}
+                disabled={loading}
               >
-                Verify
+                {loading ? <ClipLoader size={25} color="white" /> : "Verify"}
               </button>
             </div>
           )}
@@ -175,8 +189,13 @@ const ForgotPassword = () => {
               <button
                 className="btn btn-lg w-full mt-6 bg-green-700 hover:bg-green-800 text-white border-0 rounded-lg font-semibold text-base transition-all duration-200 shadow-lg hover:shadow-xl"
                 onClick={handleResetPassword}
+                disabled={loading}
               >
-                Reset Password
+                {loading ? (
+                  <ClipLoader size={25} color="white" />
+                ) : (
+                  "Reset Password"
+                )}
               </button>
             </div>
           )}
