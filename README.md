@@ -35,6 +35,8 @@
 - wrote controllers/user.controller.js for fetching user id and routing the same in routes/user.router.js
 - using user route in index.js
 
+  --------------Moved to frontend part-----------
+
 <!-- _Set up Frontend_ -->
 
 - Created vite project
@@ -60,3 +62,5 @@
 - installed react spinners and configured it
 
   --------------Moved to backend part-----------
+
+-
