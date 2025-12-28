@@ -32,6 +32,8 @@
   --------------Moved to frontend part-----------
 
 - Set up Middlewares/isAuth.js middleware to verify user id from token
+- wrote controllers/user.controller.js for fetching user id and routing the same in routes/user.router.js
+- using user route in index.js
 
 <!-- _Set up Frontend_ -->
 
