@@ -9,12 +9,15 @@ import { serverUrl } from "../App";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../store/user.slice";
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const handleSignIn = async () => {
     setLoading(true);
     try {
@@ -26,7 +29,7 @@ const SignIn = () => {
         },
         { withCredentials: true }
       );
-      console.log(result);
+      dispatch(setUserData(result.data));
       setErr("");
       setLoading(false);
     } catch (error) {
@@ -45,7 +48,8 @@ const SignIn = () => {
         },
         { withCredentials: true }
       );
-      console.log(data);
+
+      dispatch(setUserData(data));
     } catch (error) {
       console.error(error);
     }

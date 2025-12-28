@@ -63,4 +63,10 @@
 
   --------------Moved to backend part-----------
 
--
+- useGetCurrentUser custom hook to fetch current user data from backend using token
+- called useGetCurrentUser in App.jsx to make it available throughout the app
+- set up react redux toolkit for storing user data
+- created user.slice.js for user data
+- configured it in store.js
+- Provided store in main.jsx
+- dispatched user data in signup, signin, usecurrentuser
