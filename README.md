@@ -29,6 +29,10 @@
 - wrote googleAuth in controllers/auth.controller for checking user exist or not and generating token
 - mentioned google auth route in routes/auth.router
 
+  --------------Moved to frontend part-----------
+
+- Set up Middlewares/isAuth.js middleware to verify user id from token
+
 <!-- _Set up Frontend_ -->
 
 - Created vite project
@@ -52,3 +56,5 @@
 - handlegoogleauth function in pages/signin page for sign in with google
 - setErr state to show error messages in signup, signin and forgotpassword pages
 - installed react spinners and configured it
+
+  --------------Moved to backend part-----------
