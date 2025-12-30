@@ -70,3 +70,4 @@
 - configured it in store.js
 - Provided store in main.jsx
 - dispatched user data in signup, signin, usecurrentuser
+- accessed user data in App.jsx
