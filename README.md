@@ -37,6 +37,10 @@
 
   --------------Moved to frontend part-----------
 
+- created models/shop.model.js for shop data
+- created models/item.model.js for item data
+- installed multer for image upload and cloudinary for storing images in cloud
+
 <!-- _Set up Frontend_ -->
 
 - Created vite project
@@ -71,3 +75,6 @@
 - Provided store in main.jsx
 - dispatched user data in signup, signin, usecurrentuser
 - accessed user data in App.jsx
+- created NavBar component and accessed user data from redux store to show user name
+
+  --------------Moved to backend part-----------
