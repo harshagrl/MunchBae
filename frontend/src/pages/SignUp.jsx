@@ -23,7 +23,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const roleOptions = [
     { key: "user", label: "User" },
-    { key: "shopOwner", label: "Shop Owner" },
+    { key: "owner", label: "Shop Owner" },
     { key: "deliveryBoy", label: "Delivery Boy" },
   ];
 

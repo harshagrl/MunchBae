@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <div>
       {userData.role == "user" && <UserDashboard />}
-      {userData.role == "shopOwner" && <OwnerDashBoard />}
+      {userData.role == "owner" && <OwnerDashBoard />}
       {userData.role == "deliveryBoy" && <DeliveryBoyDashBoard />}
     </div>
   );

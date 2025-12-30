@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-const uploadOnCloud = async (file) => {
+const uploadOnCloudinary = async (file) => {
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUDNAME,
     api_key: process.env.CLOUDINARY_APIKEY,
@@ -16,4 +16,4 @@ const uploadOnCloud = async (file) => {
   }
 };
 
-export default uploadOnCloud;
+export default uploadOnCloudinary;
