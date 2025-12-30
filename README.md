@@ -1,4 +1,4 @@
-<!-- _Set Up backend First_ -->
+**\*\***\*\*\***\*\***_*Set Up backend First*_**\*\***\*\*\***\*\***
 
 - npm init
 - npm install express mongoose cors dotenv ......
@@ -43,8 +43,9 @@
 - configured cloudinary in utils/cloudinary.js
 - created public folder for storing image files
 - configured multer for image uploading in middlewares/multer.js
+- wrote shop controller in controllers/shop.controller.js for creating shop and editing shop
 
-<!-- _Set up Frontend_ -->
+**\*\***\*\*\***\*\***_*Set Up Frontend*_**\*\***\*\*\***\*\***
 
 - Created vite project
 - installed tailwindcss and configured it
