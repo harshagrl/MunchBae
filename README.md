@@ -40,6 +40,9 @@
 - created models/shop.model.js for shop data
 - created models/item.model.js for item data
 - installed multer for image upload and cloudinary for storing images in cloud
+- configured cloudinary in utils/cloudinary.js
+- created public folder for storing image files
+- configured multer for image uploading in middlewares/multer.js
 
 <!-- _Set up Frontend_ -->
 
