@@ -44,6 +44,9 @@
 - created public folder for storing image files
 - configured multer for image uploading in middlewares/multer.js
 - wrote shop controller in controllers/shop.controller.js for creating shop and editing shop
+- wrote shop router in routes/shop.router.js
+- wrote item contollers for adding and editing items in controllers/item.controller.js
+- created item router in routes/item.router.js
 
 **\*\***\*\*\***\*\***_*Set Up Frontend*_**\*\***\*\*\***\*\***
 
