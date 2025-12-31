@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.router.js";
 import userRouter from "./routes/user.router.js";
 import cors from "cors";
+import shopRouter from "./routes/shop.router.js";
+import itemRouter from "./routes/item.router.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -21,6 +23,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/shop", shopRouter);
+app.use("/api/item", itemRouter);
 
 app.listen(port, async () => {
   await connectDB();
