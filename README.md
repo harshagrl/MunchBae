@@ -48,6 +48,9 @@
 - wrote item contollers for adding and editing items in controllers/item.controller.js
 - created item router in routes/item.router.js
 - wrote getMyShop controller in controllers/shop.controller.js
+- configured it's route
+
+  --------------Moved to frontend part-----------
 
 **\*\***\*\*\***\*\***_*Set Up Frontend*_**\*\***\*\*\***\*\***
 
@@ -84,7 +87,9 @@
 - dispatched user data in signup, signin, usecurrentuser
 - accessed user data in App.jsx
 - created NavBar component and accessed user data from redux store to show user name
+- modified navbar component for owner dashboard
 
   --------------Moved to backend part-----------
 
-- modified navbar component for owner dashboard
+- custom hook for getMyShop in hooks folder
+- ownerSlice for storing shop data

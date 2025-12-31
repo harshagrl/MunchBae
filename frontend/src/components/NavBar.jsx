@@ -12,6 +12,7 @@ import { TbReceiptRupee } from "react-icons/tb";
 
 const NavBar = () => {
   const { userData, city } = useSelector((state) => state.user);
+  const { myShopData } = useSelector((state) => state.owner);
   const dispatch = useDispatch();
   const [showInfo, setShowInfo] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -54,10 +55,12 @@ const NavBar = () => {
           )}
           {userData.role == "owner" && (
             <>
-              <button className="bg-green-700 text-white px-2 py-1.5 rounded-lg hover:bg-green-800 transition cursor-pointer flex items-center gap-1">
-                <IoIosAdd size={22} />
-                <span className="text-md">Add Food Item</span>
-              </button>
+              {myShopData && (
+                <button className="bg-green-700 text-white px-2 py-1.5 rounded-lg hover:bg-green-800 transition cursor-pointer flex items-center gap-1">
+                  <IoIosAdd size={22} />
+                  <span className="text-md">Add Food Item</span>
+                </button>
+              )}
               <button className="relative bg-green-700 text-white px-2 py-1.5 rounded-lg hover:bg-green-800 transition cursor-pointer flex items-center gap-1">
                 <TbReceiptRupee size={20} />
                 <span className="text-md">Pending Orders</span>
@@ -175,9 +178,11 @@ const NavBar = () => {
 
             {userData.role == "owner" && (
               <>
-                <button className="rounded-full bg-green-700 text-white w-7 h-7 flex items-center justify-center text-sm shadow cursor-pointer ml-2">
-                  <IoIosAdd size={20} />
-                </button>
+                {myShopData && (
+                  <button className="rounded-full bg-green-700 text-white w-7 h-7 flex items-center justify-center text-sm shadow cursor-pointer ml-2">
+                    <IoIosAdd size={20} />
+                  </button>
+                )}
               </>
             )}
 
