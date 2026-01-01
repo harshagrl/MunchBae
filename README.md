@@ -93,3 +93,5 @@
 
 - custom hook for getMyShop in hooks folder
 - ownerSlice for storing shop data
+- dispatched shop data in owner dashboard
+- if shop data exist show owner dashboard nav else show create shop link
