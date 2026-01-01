@@ -95,3 +95,11 @@
 - ownerSlice for storing shop data
 - dispatched shop data in owner dashboard
 - if shop data exist show owner dashboard nav else show create shop link
+- created createEditShop component for creating and editing shop
+- added currentCity, currentState, currentAddress in user.slice.js
+- dispatched these data in useGetCity hook
+- accessed currentCity in NavBar to show user location
+- accessed currentCity, currentState and currentAddress in createEditShop page
+- created handleImage function for image preview in createEditShop page
+- created handleSubmit function for submitting shop data to backend in createEditShop page
+- dispatched shop data in createEditShop page after successful creation or editing of shop

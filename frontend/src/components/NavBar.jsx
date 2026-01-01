@@ -11,7 +11,7 @@ import { IoIosAdd } from "react-icons/io";
 import { TbReceiptRupee } from "react-icons/tb";
 
 const NavBar = () => {
-  const { userData, city } = useSelector((state) => state.user);
+  const { userData, currentCity } = useSelector((state) => state.user);
   const { myShopData } = useSelector((state) => state.owner);
   const dispatch = useDispatch();
   const [showInfo, setShowInfo] = useState(false);
@@ -37,7 +37,7 @@ const NavBar = () => {
         <div className="flex items-center gap-2">
           <FaLocationDot className="text-green-700 text-xl" />
           <div className="text-gray-700 font-medium truncate">
-            {city || "Enable your location"}{" "}
+            {currentCity || "Enable your location"}{" "}
           </div>
         </div>
 
@@ -140,7 +140,7 @@ const NavBar = () => {
             <FaLocationDot className="text-green-700 text-md" />
 
             <div className="text-md font-sans text-gray-700 truncate">
-              {city || "Enable your location"}
+              {currentCity || "Enable your location"}
             </div>
           </div>
         </div>

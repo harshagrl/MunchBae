@@ -2,7 +2,9 @@ import { useSelector } from "react-redux";
 import { FaUtensils } from "react-icons/fa";
 
 import NavBar from "./NavBar";
+import { useNavigate } from "react-router";
 const OwnerDashBoard = () => {
+  const navigate = useNavigate();
   const { myShopData } = useSelector((state) => state.owner);
   return (
     <div className="w-screen min-h-screen flex flex-col gap-10 bg-linear-to-b from-cyan-700 to-cyan-900">
@@ -19,7 +21,10 @@ const OwnerDashBoard = () => {
                 Join our food delivery platform and reach thousands of hungry
                 customers every day.
               </p>
-              <button className="bg-green-700 hover:bg-green-800 text-md sm:text-lg rounded-full transition duration-300 px-4 py-2 font-sans font-semibold cursor-pointer">
+              <button
+                className="bg-green-700 hover:bg-green-800 text-md sm:text-lg rounded-full transition duration-300 px-4 py-2 font-sans font-semibold cursor-pointer"
+                onClick={() => navigate("/create-edit-shop")}
+              >
                 Get Started
               </button>
             </div>
