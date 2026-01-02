@@ -9,7 +9,6 @@ import { serverUrl } from "../App";
 import { setUserData } from "../store/user.slice";
 import { IoIosAdd } from "react-icons/io";
 import { TbReceiptRupee } from "react-icons/tb";
-
 const NavBar = () => {
   const { userData, currentCity } = useSelector((state) => state.user);
   const { myShopData } = useSelector((state) => state.owner);
@@ -60,6 +59,7 @@ const NavBar = () => {
                 <span className="text-md">Add Food Item</span>
               </button>
             )}
+
             <button className="relative bg-green-700 text-white px-2 py-1.5 rounded-lg hover:bg-green-800 transition cursor-pointer flex items-center gap-1">
               <TbReceiptRupee size={20} />
               <span className="text-md">Pending Orders</span>

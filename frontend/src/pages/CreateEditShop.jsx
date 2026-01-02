@@ -47,6 +47,7 @@ const CreateEditShop = () => {
         { withCredentials: true }
       );
       dispatch(setMyShopData(result.data));
+      navigate("/");
     } catch (error) {
       console.log("Error in creating/editing shop:", error);
     }
@@ -60,35 +61,35 @@ const CreateEditShop = () => {
         <IoIosArrowRoundBack size={30} />
         <h2 className="text-md sm:text-xl">Back</h2>
       </div>
-      <div className="max-w-md w-full bg-white shadow-xl rounded-2xl p-8 border border-white">
+      <div className="max-w-md w-full bg-white shadow-xl rounded-2xl p-8 border border-white mt-10 sm:mt-0">
         <div className="flex flex-col items-center justify-center mb-6 gap-4">
           <div className="text-green-700 bg-green-100 p-6 rounded-full">
             <BsShopWindow size={60} />
           </div>
-          <div className="text-xl sm:text-2xl text-gray-900 font-extrabold font-serif">
+          <div className="text-xl sm:text-2xl text-gray-900 font-extrabold">
             {myShopData ? "Edit Shop" : "Add Shop"}
           </div>
         </div>
         <form onSubmit={handleSubmit}>
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block text-gray-900 text-sm font-bold mb-2">
               Shop Name
             </label>
             <input
               type="text"
-              className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-600"
+              className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 font-serif"
               placeholder="Enter your shop name"
               onChange={(e) => setName(e.target.value)}
               value={name}
             />
           </div>
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block text-gray-900 text-sm font-bold mb-2">
               Shop Image
             </label>
             <input
               type="file"
-              className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-600"
+              className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 font-serif"
               accept="image/*"
               onChange={handleImage}
             />
@@ -104,24 +105,24 @@ const CreateEditShop = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-4">
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label className="block text-gray-900 text-sm font-bold mb-2">
                 State
               </label>
               <input
                 type="text"
-                className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-600"
+                className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 font-serif"
                 placeholder="Enter your shop state"
                 onChange={(e) => setState(e.target.value)}
                 value={state}
               />
             </div>
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label className="block text-gray-900 text-sm font-bold mb-2">
                 City
               </label>
               <input
                 type="text"
-                className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-600"
+                className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 font-serif"
                 placeholder="Enter your shop city"
                 onChange={(e) => setCity(e.target.value)}
                 value={city}
@@ -129,12 +130,12 @@ const CreateEditShop = () => {
             </div>
           </div>
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block text-gray-900 text-sm font-bold mb-2">
               Shop Address
             </label>
             <input
               type="text"
-              className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-600"
+              className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 font-serif"
               placeholder="Enter your shop address"
               onChange={(e) => setAddress(e.target.value)}
               value={address}

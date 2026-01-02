@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import useGetCity from "./hooks/useGetCity";
 import useGetMyShop from "./hooks/useGetMyShop";
 import CreateEditShop from "./pages/CreateEditShop";
+import AddFoodItem from "./pages/AddFoodItem";
 export const serverUrl = "http://localhost:8000";
 const App = () => {
   useGetCurrentUser();
@@ -32,7 +33,14 @@ const App = () => {
         path="/forgot-password"
         element={!userData ? <ForgotPassword /> : <Navigate to={"/"} />}
       />
-      <Route path="/create-edit-shop" element={<CreateEditShop />} />
+      <Route
+        path="/create-edit-shop"
+        element={userData ? <CreateEditShop /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/add-food-item"
+        element={userData ? <AddFoodItem /> : <Navigate to={"/signin"} />}
+      />
     </Routes>
   );
 };

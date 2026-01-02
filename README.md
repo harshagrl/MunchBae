@@ -103,3 +103,5 @@
 - created handleImage function for image preview in createEditShop page
 - created handleSubmit function for submitting shop data to backend in createEditShop page
 - dispatched shop data in createEditShop page after successful creation or editing of shop
+- redirected to owner dashboard after shop creation or edition
+-
