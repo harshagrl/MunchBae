@@ -1,4 +1,4 @@
-**\*\***\*\*\***\*\***_*Set Up backend First*_**\*\***\*\*\***\*\***
+**\*\***\*\*\***\*\***_*Step By Step Notes*_**\*\***\*\*\***\*\***
 
 - npm init
 - npm install express mongoose cors dotenv ......
@@ -16,7 +16,14 @@
 - configured global middlewares in server file such as cors, express.json, cookieparser
 - configured authRouter route in server file
 
-  --------------Moved to frontend part-----------
+- Created vite project
+- installed tailwindcss and configured it
+- installed react-router-dom react-router and react-icons 3rd party packages
+- wraped app with browserrouter in main.jsx
+- created routes in App.jsx for signup and signin pages
+- installed daisyui for components
+- created Signup and Signin components in src/pages
+- created pages/ForgotPassword page
 
 - installed nodemailer in backend
 - configured nodemailer for sending otp in user email in utils/mail.js
@@ -24,18 +31,32 @@
 - wrote resetPassword controller in controllers/auth.controller.js
 - mentioned these routes in routes/auth.router.js
 
-  --------------Moved to frontend part-----------
+- installed firebase for google authentication
+- configured firebase in firebase.js
+- created .env file to store firebase apikey
+- built handlegoogleauth function in pages/signup page for sign up with google
 
 - wrote googleAuth in controllers/auth.controller for checking user exist or not and generating token
 - mentioned google auth route in routes/auth.router
 
-  --------------Moved to frontend part-----------
+- handlegoogleauth function in pages/signin page for sign in with google
+- setErr state to show error messages in signup, signin and forgotpassword pages
+- installed react spinners and configured it
 
 - Set up Middlewares/isAuth.js middleware to verify user id from token
 - wrote controllers/user.controller.js for fetching user id and routing the same in routes/user.router.js
 - using user route in index.js
 
-  --------------Moved to frontend part-----------
+- useGetCurrentUser custom hook to fetch current user data from backend using token
+- called useGetCurrentUser in App.jsx to make it available throughout the app
+- set up react redux toolkit for storing user data
+- created user.slice.js for user data
+- configured it in store.js
+- Provided store in main.jsx
+- dispatched user data in signup, signin, usecurrentuser
+- accessed user data in App.jsx
+- created NavBar component and accessed user data from redux store to show user name
+- modified navbar component for owner dashboard
 
 - created models/shop.model.js for shop data
 - created models/item.model.js for item data
@@ -50,47 +71,6 @@
 - wrote getMyShop controller in controllers/shop.controller.js
 - configured it's route
 
-  --------------Moved to frontend part-----------
-
-**\*\***\*\*\***\*\***_*Set Up Frontend*_**\*\***\*\*\***\*\***
-
-- Created vite project
-- installed tailwindcss and configured it
-- installed react-router-dom react-router and react-icons 3rd party packages
-- wraped app with browserrouter in main.jsx
-- created routes in App.jsx for signup and signin pages
-- installed daisyui for components
-- created Signup and Signin components in src/pages
-- created pages/ForgotPassword page
-
-  --------------Moved to backend part-----------
-
-- installed firebase for google authentication
-- configured firebase in firebase.js
-- created .env file to store firebase apikey
-- built handlegoogleauth function in pages/signup page for sign up with google
-
-  --------------Moved to backend part-----------
-
-- handlegoogleauth function in pages/signin page for sign in with google
-- setErr state to show error messages in signup, signin and forgotpassword pages
-- installed react spinners and configured it
-
-  --------------Moved to backend part-----------
-
-- useGetCurrentUser custom hook to fetch current user data from backend using token
-- called useGetCurrentUser in App.jsx to make it available throughout the app
-- set up react redux toolkit for storing user data
-- created user.slice.js for user data
-- configured it in store.js
-- Provided store in main.jsx
-- dispatched user data in signup, signin, usecurrentuser
-- accessed user data in App.jsx
-- created NavBar component and accessed user data from redux store to show user name
-- modified navbar component for owner dashboard
-
-  --------------Moved to backend part-----------
-
 - custom hook for getMyShop in hooks folder
 - ownerSlice for storing shop data
 - dispatched shop data in owner dashboard
@@ -104,4 +84,6 @@
 - created handleSubmit function for submitting shop data to backend in createEditShop page
 - dispatched shop data in createEditShop page after successful creation or editing of shop
 - redirected to owner dashboard after shop creation or edition
--
+- created AddFoodItem page for adding items to shop
+
+- modified item and shop controllers to store items in shop document
