@@ -2,13 +2,21 @@ import Item from "../models/item.model.js";
 import Shop from "../models/shop.model.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 
-export const addItem = async () => {
+export const addItem = async (req, res) => {
   try {
     const { name, category, foodType, price } = req.body;
+
+    if (!name || !category || !foodType || !price) {
+      return res.status(400).json({
+        message: "Missing required fields: name, category, foodType, or price",
+      });
+    }
+
     let image;
     if (req.file) {
       image = await uploadOnCloudinary(req.file.path);
     }
+
     const shop = await Shop.findOne({ owner: req.userId });
     if (!shop) {
       return res.status(400).json({ message: `shop not found` });
@@ -17,12 +25,16 @@ export const addItem = async () => {
       name,
       category,
       foodType,
-      price,
+      price: Number(price),
       image,
       shop: shop._id,
     });
-    return res.status(201).json(item);
+    shop.items.push(item._id);
+    await shop.save();
+    await shop.populate("items owner");
+    return res.status(201).json(shop);
   } catch (error) {
+    console.error("Full error:", error);
     return res.status(500).json({ message: `add item error: ${error}` });
   }
 };

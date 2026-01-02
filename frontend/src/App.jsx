@@ -38,7 +38,7 @@ const App = () => {
         element={userData ? <CreateEditShop /> : <Navigate to={"/signin"} />}
       />
       <Route
-        path="/add-food-item"
+        path="/add-item"
         element={userData ? <AddFoodItem /> : <Navigate to={"/signin"} />}
       />
     </Routes>

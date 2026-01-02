@@ -78,7 +78,7 @@ const OwnerDashBoard = () => {
                   </p>
                   <button
                     className="bg-green-700 hover:bg-green-800 text-md sm:text-lg rounded-full transition duration-300 px-4 py-2 font-sans font-semibold cursor-pointer"
-                    onClick={() => navigate("/add-food-item")}
+                    onClick={() => navigate("/add-item")}
                   >
                     Add Food
                   </button>
