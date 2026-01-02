@@ -101,7 +101,7 @@ const NavBar = () => {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowInfo(false)}
                 />
-                <div className="absolute right-0 mt-3 bg-white rounded-lg shadow-2xl z-50 min-w-[200px] border border-gray-100 py-3">
+                <div className="absolute right-0 mt-3 bg-white rounded-lg shadow-2xl z-50 min-w-50 border border-gray-100 py-3">
                   <div className="px-4 pb-3 border-b border-gray-100 cursor-pointer">
                     <p className="font-semibold text-gray-900">
                       {userData?.fullName}
@@ -216,7 +216,7 @@ const NavBar = () => {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowInfo(false)}
                 />
-                <div className="absolute right-0 mt-3 bg-white rounded-lg shadow-2xl z-50 min-w-[180px] border border-gray-100 py-3">
+                <div className="absolute right-0 mt-3 bg-white rounded-lg shadow-2xl z-50 min-w-45 border border-gray-100 py-3">
                   <div className="px-4 pb-3 border-b border-gray-100 cursor-pointer">
                     <p className="font-semibold text-gray-900">
                       {userData?.fullName}
