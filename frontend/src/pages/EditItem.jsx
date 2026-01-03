@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { BsShopWindow } from "react-icons/bs";
@@ -7,10 +7,12 @@ import { serverUrl } from "../App";
 import { setMyShopData } from "../store/owner.slice";
 import axios from "axios";
 const EditItem = () => {
+  const { itemId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [currentItem, setCurrentItem] = useState(null);
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
   const [foodType, setFoodType] = useState("Veg");
   const categories = [
@@ -41,10 +43,7 @@ const EditItem = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !price || !category || !backendImage) {
-      alert("Please fill all required fields and select an image");
-      return;
-    }
+
     try {
       const formData = new FormData();
       formData.append("name", name);
@@ -54,7 +53,7 @@ const EditItem = () => {
       formData.append("image", backendImage);
 
       const result = await axios.post(
-        `${serverUrl}/api/item/add-item`,
+        `${serverUrl}/api/item/edit-item/${itemId}`,
         formData,
         { withCredentials: true }
       );
@@ -64,6 +63,27 @@ const EditItem = () => {
       console.log("Error in adding food item:", error);
     }
   };
+  useEffect(() => {
+    const fetchGetItem = async () => {
+      try {
+        const result = await axios.get(
+          `${serverUrl}/api/item/get-item/${itemId}`,
+          { withCredentials: true }
+        );
+        setCurrentItem(result.data);
+      } catch (error) {
+        console.error("Error getting item: ", error);
+      }
+    };
+    fetchGetItem();
+  }, [itemId]);
+  useEffect(() => {
+    setName(currentItem?.name || "");
+    setPrice(currentItem?.price || 0);
+    setCategory(currentItem?.category || "");
+    setFoodType(currentItem?.foodType || "Veg");
+    setFrontendImage(currentItem?.image || null);
+  }, [currentItem]);
   return (
     <div className="relative flex justify-center flex-col items-center p-6 min-h-screen bg-linear-to-b from-cyan-700 to-cyan-900">
       <div
@@ -79,7 +99,7 @@ const EditItem = () => {
             <BsShopWindow size={60} />
           </div>
           <div className="text-xl sm:text-2xl text-gray-900 font-extrabold">
-            Add Food
+            Edit Item
           </div>
         </div>
         <form onSubmit={handleSubmit}>

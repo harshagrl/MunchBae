@@ -91,3 +91,6 @@
 - Created OwnerItemCard.jsx component for food items
 
 - built getItem controller in controllers/item.controller.js
+- modified editItem controller
+
+- built EditItem.jsx to edit particular item

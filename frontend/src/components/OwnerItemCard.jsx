@@ -37,7 +37,7 @@ const OwnerItemCard = ({ data }) => {
           </div>
           <div className="flex items-center rounded-lg">
             <Link
-              to={`/edit-item/:${data._id}`}
+              to={`/edit-item/${data._id}`}
               className="hover:bg-gray-200 p-2 cursor-pointer"
               title="Edit Item"
             >

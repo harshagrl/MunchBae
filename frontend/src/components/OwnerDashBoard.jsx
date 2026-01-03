@@ -2,9 +2,8 @@ import { useSelector } from "react-redux";
 import { FaUtensils } from "react-icons/fa";
 import { MdOutlineFoodBank } from "react-icons/md";
 import NavBar from "./NavBar";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { FaPenToSquare } from "react-icons/fa6";
-import { Link } from "react-router";
 import OwnerItemCard from "./OwnerItemCard";
 const OwnerDashBoard = () => {
   const navigate = useNavigate();
@@ -89,10 +88,8 @@ const OwnerDashBoard = () => {
           )}
           {myShopData.items.length > 0 && (
             <div className="flex flex-col w-full items-center gap-3 max-w-3xl mt-5">
-              {myShopData.items.map((item, index) => (
-                <>
-                  <OwnerItemCard data={item} key={index} />
-                </>
+              {myShopData.items.map((item) => (
+                <OwnerItemCard data={item} key={item._id} />
               ))}
             </div>
           )}
