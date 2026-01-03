@@ -87,3 +87,7 @@
 - created AddFoodItem page for adding items to shop
 
 - modified item and shop controllers to store items in shop document
+
+- Created OwnerItemCard.jsx component for food items
+
+- built getItem controller in controllers/item.controller.js

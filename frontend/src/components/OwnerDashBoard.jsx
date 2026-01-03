@@ -3,8 +3,9 @@ import { FaUtensils } from "react-icons/fa";
 import { MdOutlineFoodBank } from "react-icons/md";
 import NavBar from "./NavBar";
 import { useNavigate } from "react-router";
-import { FaRegEdit } from "react-icons/fa";
+import { FaPenToSquare } from "react-icons/fa6";
 import { Link } from "react-router";
+import OwnerItemCard from "./OwnerItemCard";
 const OwnerDashBoard = () => {
   const navigate = useNavigate();
   const { myShopData } = useSelector((state) => state.owner);
@@ -46,7 +47,7 @@ const OwnerDashBoard = () => {
                 className="bg-green-700 text-white px-2 py-1.5 rounded-full hover:bg-green-800 transition cursor-pointer flex items-center gap-2"
                 title="Edit your shop"
               >
-                <FaRegEdit size={20} />
+                <FaPenToSquare size={20} />
               </Link>
             </div>
             <img
@@ -84,6 +85,15 @@ const OwnerDashBoard = () => {
                   </button>
                 </div>
               </div>
+            </div>
+          )}
+          {myShopData.items.length > 0 && (
+            <div className="flex flex-col w-full items-center gap-3 max-w-3xl mt-5">
+              {myShopData.items.map((item, index) => (
+                <>
+                  <OwnerItemCard data={item} key={index} />
+                </>
+              ))}
             </div>
           )}
         </div>

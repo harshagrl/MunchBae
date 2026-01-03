@@ -9,6 +9,7 @@ import { serverUrl } from "../App";
 import { setUserData } from "../store/user.slice";
 import { IoIosAdd } from "react-icons/io";
 import { TbReceiptRupee } from "react-icons/tb";
+import { useNavigate } from "react-router";
 const NavBar = () => {
   const { userData, currentCity } = useSelector((state) => state.user);
   const { myShopData } = useSelector((state) => state.owner);
@@ -16,6 +17,7 @@ const NavBar = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       await axios.get(
@@ -54,7 +56,10 @@ const NavBar = () => {
         {userData.role == "owner" && (
           <>
             {myShopData && (
-              <button className="bg-green-700 text-white px-2 py-1.5 rounded-lg hover:bg-green-800 transition cursor-pointer flex items-center gap-1">
+              <button
+                className="bg-green-700 text-white px-2 py-1.5 rounded-lg hover:bg-green-800 transition cursor-pointer flex items-center gap-1"
+                onClick={() => navigate("/add-item")}
+              >
                 <IoIosAdd size={22} />
                 <span className="text-md">Add Food Item</span>
               </button>
