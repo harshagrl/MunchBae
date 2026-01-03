@@ -2,7 +2,23 @@ import { FaPenToSquare } from "react-icons/fa6";
 import { FaTrashAlt } from "react-icons/fa";
 import { MdCurrencyRupee } from "react-icons/md";
 import { Link } from "react-router";
+import axios from "axios";
+import { serverUrl } from "../App";
+import { useDispatch } from "react-redux";
+import { setMyShopData } from "../store/owner.slice";
 const OwnerItemCard = ({ data }) => {
+  const dispatch = useDispatch();
+  const handleDeleteItem = async () => {
+    try {
+      const result = await axios.get(
+        `${serverUrl}/api/item/delete-item/${data._id}`,
+        { withCredentials: true }
+      );
+      dispatch(setMyShopData(result.data));
+    } catch (error) {
+      console.error("Error in handle delete: ", error);
+    }
+  };
   return (
     <div className="flex bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 w-full max-w-2xl">
       <div className="w-40 flex shrink-0 bg-gray-50">
@@ -46,6 +62,7 @@ const OwnerItemCard = ({ data }) => {
             <span
               className="hover:bg-gray-200 p-2 cursor-pointer"
               title="Remove Item"
+              onClick={handleDeleteItem}
             >
               <FaTrashAlt />
             </span>
