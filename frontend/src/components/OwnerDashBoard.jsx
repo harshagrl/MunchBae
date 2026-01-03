@@ -9,7 +9,7 @@ const OwnerDashBoard = () => {
   const navigate = useNavigate();
   const { myShopData } = useSelector((state) => state.owner);
   return (
-    <div className="w-screen min-h-screen flex flex-col gap-10 bg-linear-to-b from-cyan-700 to-cyan-900">
+    <div className="w-screen min-h-screen flex flex-col gap-10 bg-linear-to-b from-slate-900 via-slate-800 to-slate-700">
       <NavBar />
       {!myShopData && (
         <div className="flex justify-center items-center p-4 sm:p-6">

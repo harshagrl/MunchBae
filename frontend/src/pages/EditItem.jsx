@@ -6,6 +6,7 @@ import { BsShopWindow } from "react-icons/bs";
 import { serverUrl } from "../App";
 import { setMyShopData } from "../store/owner.slice";
 import axios from "axios";
+import { ClipLoader } from "react-spinners";
 const EditItem = () => {
   const { itemId } = useParams();
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const EditItem = () => {
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
   const [foodType, setFoodType] = useState("Veg");
+  const [loading, setLoading] = useState(false);
   const categories = [
     "Beverages",
     "Snacks",
@@ -43,7 +45,7 @@ const EditItem = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("name", name);
@@ -58,9 +60,11 @@ const EditItem = () => {
         { withCredentials: true }
       );
       dispatch(setMyShopData(result.data));
+      setLoading(false);
       navigate("/");
     } catch (error) {
       console.log("Error in adding food item:", error);
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -180,8 +184,9 @@ const EditItem = () => {
           <button
             type="submit"
             className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded-lg cursor-pointer transition duration-300 mt-3 text-lg"
+            disabled={loading}
           >
-            Save
+            {loading ? <ClipLoader size={20} color="white" /> : "Save"}
           </button>
         </form>
       </div>

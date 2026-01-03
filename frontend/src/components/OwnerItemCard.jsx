@@ -5,7 +5,7 @@ import { Link } from "react-router";
 const OwnerItemCard = ({ data }) => {
   return (
     <div className="flex bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 w-full max-w-2xl">
-      <div className="w-54 h-36 shrink-0 bg-gray-50">
+      <div className="w-40 flex shrink-0 bg-gray-50">
         <img
           src={data.image}
           alt={data.name}

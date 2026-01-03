@@ -6,6 +6,7 @@ import { BsShopWindow } from "react-icons/bs";
 import { serverUrl } from "../App";
 import { setMyShopData } from "../store/owner.slice";
 import axios from "axios";
+import { ClipLoader } from "react-spinners";
 const AddFoodItem = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const AddFoodItem = () => {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [foodType, setFoodType] = useState("Veg");
+  const [loading, setLoading] = useState(false);
   const categories = [
     "Beverages",
     "Snacks",
@@ -41,6 +43,7 @@ const AddFoodItem = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if (!name || !price || !category || !backendImage) {
       alert("Please fill all required fields and select an image");
       return;
@@ -59,9 +62,11 @@ const AddFoodItem = () => {
         { withCredentials: true }
       );
       dispatch(setMyShopData(result.data));
+      setLoading(false);
       navigate("/");
     } catch (error) {
       console.log("Error in adding food item:", error);
+      setLoading(false);
     }
   };
   return (
@@ -160,8 +165,9 @@ const AddFoodItem = () => {
           <button
             type="submit"
             className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded-lg cursor-pointer transition duration-300 mt-3 text-lg"
+            disabled={loading}
           >
-            Save
+            {loading ? <ClipLoader size={20} color="white" /> : "Save"}
           </button>
         </form>
       </div>

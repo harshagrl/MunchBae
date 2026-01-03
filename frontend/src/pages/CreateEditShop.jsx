@@ -6,6 +6,7 @@ import { BsShopWindow } from "react-icons/bs";
 import { serverUrl } from "../App";
 import { setMyShopData } from "../store/owner.slice";
 import axios from "axios";
+import { ClipLoader } from "react-spinners";
 const CreateEditShop = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const CreateEditShop = () => {
   const { currentCity, currentState, currentAddress } = useSelector(
     (state) => state.user
   );
+  const [loading, setLoading] = useState(false);
   const [name, setName] = React.useState(myShopData?.name || "");
   const [city, setCity] = React.useState(myShopData?.city || currentCity || "");
   const [state, setState] = React.useState(
@@ -32,6 +34,7 @@ const CreateEditShop = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("name", name);
@@ -47,9 +50,11 @@ const CreateEditShop = () => {
         { withCredentials: true }
       );
       dispatch(setMyShopData(result.data));
+      setLoading(false);
       navigate("/");
     } catch (error) {
       console.log("Error in creating/editing shop:", error);
+      setLoading(false);
     }
   };
   return (
@@ -144,8 +149,13 @@ const CreateEditShop = () => {
           <button
             type="submit"
             className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded-lg cursor-pointer transition duration-300 mt-3 text-lg"
+            disabled={loading}
           >
-            {myShopData ? "Update Shop" : "Create Shop"}
+            {loading ? (
+              <ClipLoader size={20} color="white" />
+            ) : (
+              <>{myShopData ? "Update Shop" : "Create Shop"}</>
+            )}
           </button>
         </form>
       </div>

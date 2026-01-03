@@ -9,7 +9,7 @@ import { serverUrl } from "../App";
 import { setUserData } from "../store/user.slice";
 import { IoIosAdd } from "react-icons/io";
 import { TbReceiptRupee } from "react-icons/tb";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 const NavBar = () => {
   const { userData, currentCity } = useSelector((state) => state.user);
   const { myShopData } = useSelector((state) => state.owner);
@@ -183,9 +183,12 @@ const NavBar = () => {
           {userData.role == "owner" && (
             <>
               {myShopData && (
-                <button className="rounded-full bg-green-700 text-white w-7 h-7 flex items-center justify-center text-sm shadow cursor-pointer ml-2">
+                <Link
+                  to="/add-item"
+                  className="rounded-full bg-green-700 text-white w-7 h-7 flex items-center justify-center text-sm shadow cursor-pointer ml-2"
+                >
                   <IoIosAdd size={20} />
-                </button>
+                </Link>
               )}
             </>
           )}
