@@ -2,7 +2,7 @@ import React from "react";
 
 const CategoryCard = ({ data }) => {
   return (
-    <div className="relative w-30 h-30 md:w-45 md:h-45 shrink-0 overflow-hidden transition-shadow cursor-pointer">
+    <div className="relative w-40 h-40 md:w-45 md:h-45 shrink-0 overflow-hidden transition-shadow cursor-pointer rounded-2xl">
       <img
         src={data.image}
         alt=""

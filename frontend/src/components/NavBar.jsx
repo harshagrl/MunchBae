@@ -134,13 +134,9 @@ const NavBar = () => {
       </div>
 
       {/* Mobile */}
-      <div className="md:hidden fixed top-0 left-0 right-0 flex items-center justify-between bg-white shadow-md px-4 py-3 w-full rounded-none z-50">
+      <div className="md:hidden fixed top-0 left-0 right-0 flex items-center justify-between bg-white shadow-md px-4 py-0 w-full rounded-lg z-50">
         <div className="flex items-center gap-3">
-          <img
-            src={logo}
-            alt="logo"
-            className="w-12 h-12 rounded-full p-1 bg-white shadow"
-          />
+          <img src={logo} alt="logo" className="w-20 h-20" />
           <div className="flex gap-1 items-center">
             <FaLocationDot className="text-green-700 text-md" />
 

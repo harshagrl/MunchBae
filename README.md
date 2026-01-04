@@ -1,3 +1,7 @@
+# MunchBae
+
+MunchBae is a food delivery application that connects users with local restaurants and food outlets. It allows users to browse menus, place orders, and have food delivered to their doorstep. The application also provides restaurant owners with a platform to manage their menus and orders efficiently.
+
 **\*\***\*\*\***\*\***_*Step By Step Notes*_**\*\***\*\*\***\*\***
 
 - npm init
@@ -96,3 +100,16 @@
 - built EditItem.jsx to edit particular item
 
 - Sorted items based on their update time in owner dashboard
+
+- categories.js file for food categories
+- built CategoryCard.jsx component
+
+- created getShopByCity controller in controllers/shop.controller.js
+- created useGetShopsByCity custom hook to fetch shops based on city
+- accessed currentCity from user slice in UserDashboard.jsx to fetch shops based on city
+- called useGetShopByCity hook in App.jsx
+- CityShopsCard.jsx component to show shops in user dashboard
+- accessed shopsInMyCity data in UserDashboard.jsx to show shops in user's city
+- modified object-fit property in CityShopsCard.jsx from contain to fill for better image display
+- modified width of carousels in UserDashboard.jsx from 80% to 90% for better visibility on medium screens
+- modified width and height of CityShopsCard from w-50 h-50 to w-60 h-50 for better visibility
