@@ -82,7 +82,7 @@ const NavBar = () => {
             <div className="relative">
               <IoIosCart size={30} className="text-green-700" />
               <span className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold shadow">
-                1
+                0
               </span>
             </div>
           )}
