@@ -1,6 +1,6 @@
 # MunchBae
 
-MunchBae is a food delivery application that connects users with local restaurants and food outlets. It allows users to browse menus, place orders, and have food delivered to their doorstep. The application also provides restaurant owners with a platform to manage their menus and orders efficiently.
+MunchBae is a food delivery application that connects users with local restaurants and food outlets. It allows users to browse menus, place orders, and have food delivered to their doorstep. The application also provides restaurant owners with a platform to manage their menus and orders efficiently. This website also provides delivery boy functionality to manage deliveries.
 
 **\*\***\*\*\***\*\***_*Step By Step Notes*_**\*\***\*\*\***\*\***
 
@@ -113,3 +113,4 @@ MunchBae is a food delivery application that connects users with local restauran
 - modified object-fit property in CityShopsCard.jsx from contain to fill for better image display
 - modified width of carousels in UserDashboard.jsx from 80% to 90% for better visibility on medium screens
 - modified width and height of CityShopsCard from w-50 h-50 to w-60 h-50 for better visibility
+- created getItemByShop controller in controllers/item.controller.js

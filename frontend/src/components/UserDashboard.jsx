@@ -39,6 +39,10 @@ const UserDashboard = () => {
           </div>
         </div>
       </div>
+
+      <div className="flex flex-col items-center text-white w-full space-y-6 mt-0 p-3">
+        <h1 className="text-2xl font-bold font-sans">Explore food items</h1>
+      </div>
     </div>
   );
 };

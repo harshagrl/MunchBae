@@ -110,3 +110,11 @@ export const deleteItem = async (req, res) => {
     return res.status(500).json({ message: `delete item error: ${error}` });
   }
 };
+
+export const getItemByCity=async()=>{
+  try {
+    
+  } catch (error) {
+    
+  }
+}
