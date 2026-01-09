@@ -113,4 +113,5 @@ MunchBae is a food delivery application that connects users with local restauran
 - modified object-fit property in CityShopsCard.jsx from contain to fill for better image display
 - modified width of carousels in UserDashboard.jsx from 80% to 90% for better visibility on medium screens
 - modified width and height of CityShopsCard from w-50 h-50 to w-60 h-50 for better visibility
-- created getItemByShop controller in controllers/item.controller.js
+- created getItemByCity controller in controllers/item.controller.js
+- routed it to item.router.js
