@@ -2,31 +2,30 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { serverUrl } from "../App";
 import { useDispatch, useSelector } from "react-redux";
-import { setShopsInMyCity } from "../store/user.slice";
+import { setItemsInMyCity } from "../store/user.slice";
 
-const useGetShopByCity = () => {
+const useGetItemsByCity = () => {
   const dispatch = useDispatch();
   const { currentCity } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const fetchShops = async () => {
+    const fetchItems = async () => {
       if (!currentCity) return; // Skip if no city selected
       try {
         const result = await axios.get(
-          `${serverUrl}/api/shop/get-shop-by-city/${currentCity}`,
+          `${serverUrl}/api/item/get-item-by-city/${currentCity}`,
           {
             withCredentials: true,
           }
         );
-        dispatch(setShopsInMyCity(result.data || []));
+        dispatch(setItemsInMyCity(result.data || []));
       } catch (error) {
-        // Silent fail - shops might not exist yet
-
-        dispatch(setShopsInMyCity([]));
+        // Silent fail - items might not exist yet
+        dispatch(setItemsInMyCity([]));
       }
     };
-    fetchShops();
+    fetchItems();
   }, [currentCity, dispatch]);
 };
 
-export default useGetShopByCity;
+export default useGetItemsByCity;

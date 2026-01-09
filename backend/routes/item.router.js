@@ -15,6 +15,6 @@ itemRouter.post("/add-item", isAuth, upload.single("image"), addItem);
 itemRouter.post("/edit-item/:itemId", isAuth, upload.single("image"), editItem);
 itemRouter.get("/get-item/:itemId", isAuth, getItem);
 itemRouter.get("/delete-item/:itemId", isAuth, deleteItem);
-itemRouter.get("/get-by-city/:city", isAuth, getItemByCity);
+itemRouter.get("/get-item-by-city/:city", isAuth, getItemByCity);
 
 export default itemRouter;

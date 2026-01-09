@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { serverUrl } from "../App";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setMyShopData } from "../store/owner.slice";
 const useGetMyShop = () => {
   const dispatch = useDispatch();
-
+  const { userData } = useSelector((state) => state.user);
   useEffect(() => {
     const fetchShop = async () => {
       try {
@@ -13,12 +13,10 @@ const useGetMyShop = () => {
           withCredentials: true,
         });
         dispatch(setMyShopData(result.data));
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     };
     fetchShop();
-  }, []);
+  }, [userData]);
 };
 
 export default useGetMyShop;

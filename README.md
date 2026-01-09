@@ -115,3 +115,11 @@ MunchBae is a food delivery application that connects users with local restauran
 - modified width and height of CityShopsCard from w-50 h-50 to w-60 h-50 for better visibility
 - created getItemByCity controller in controllers/item.controller.js
 - routed it to item.router.js
+
+- created setItemsInMyCity in item.slice.js
+- created useGetItemsByCity custom hook to fetch items based on city
+- called useGetItemsByCity in App.jsx
+- accessed itemsInMyCity in UserDashboard.jsx to show food items in user's city
+- created FoodCard.jsx component to show food item details
+- added increase and decrease quantity functionality in FoodCard.jsx component
+- modified UserDashboard.jsx to show FoodCard component for items in user's city

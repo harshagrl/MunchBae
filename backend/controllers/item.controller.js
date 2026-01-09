@@ -111,7 +111,7 @@ export const deleteItem = async (req, res) => {
   }
 };
 
-export const getItemByCity = async () => {
+export const getItemByCity = async (req, res) => {
   try {
     const { city } = req.params;
     if (!city) {
