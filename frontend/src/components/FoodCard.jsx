@@ -48,13 +48,13 @@ const FoodCard = ({ data }) => {
       </div>
 
       <div className="p-4">
-        <div className="flex items-start flex-row justify-between">
+        <div className="flex items-start flex-row justify-between space-x-1">
           {data.foodType === "Veg" ? (
-            <h3 className="text-xl font-bold font-mono text-green-600 truncate mb-2">
+            <h3 className="text-lg font-bold font-mono text-green-600 truncate mb-2">
               {data.name}
             </h3>
           ) : (
-            <h3 className="text-xl font-bold font-mono text-red-600 truncate mb-2">
+            <h3 className="text-lg font-bold font-mono text-red-600 truncate mb-2">
               {data.name}
             </h3>
           )}
