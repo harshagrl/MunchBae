@@ -123,3 +123,5 @@ MunchBae is a food delivery application that connects users with local restauran
 - created FoodCard.jsx component to show food item details
 - added increase and decrease quantity functionality in FoodCard.jsx component
 - modified UserDashboard.jsx to show FoodCard component for items in user's city
+- addToCart state for adding items to the cart in user.slice.js
+- handleAddToCart function in FoodCard.jsx

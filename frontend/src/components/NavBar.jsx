@@ -11,7 +11,9 @@ import { IoIosAdd } from "react-icons/io";
 import { TbReceiptRupee } from "react-icons/tb";
 import { Link, useNavigate } from "react-router";
 const NavBar = () => {
-  const { userData, currentCity } = useSelector((state) => state.user);
+  const { userData, currentCity, cartItems } = useSelector(
+    (state) => state.user
+  );
   const { myShopData } = useSelector((state) => state.owner);
   const dispatch = useDispatch();
   const [showInfo, setShowInfo] = useState(false);
@@ -79,12 +81,12 @@ const NavBar = () => {
 
         <div className="flex items-center gap-6 cursor-pointer">
           {userData.role == "user" && (
-            <div className="relative">
+            <Link to={"/cart"} className="relative">
               <IoIosCart size={30} className="text-green-700" />
               <span className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold shadow">
-                0
+                {cartItems.length}
               </span>
-            </div>
+            </Link>
           )}
 
           {userData.role == "user" && (
@@ -125,7 +127,6 @@ const NavBar = () => {
           </div>
         </div>
 
-        {/* Desktop overlapped logo */}
         <img
           src={logo}
           alt="MunchBae"
@@ -147,7 +148,6 @@ const NavBar = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* mobile search toggle */}
           {userData.role == "user" && (
             <div>
               {!mobileSearchOpen ? (
@@ -199,12 +199,12 @@ const NavBar = () => {
           )}
 
           {userData.role == "user" && (
-            <div className="relative cursor-pointer">
+            <Link to={"/cart"} className="relative cursor-pointer">
               <IoIosCart size={24} className="text-green-700" />
               <span className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs font-semibold shadow cursor-pointer">
-                1
+                {cartItems.length}
               </span>
-            </div>
+            </Link>
           )}
 
           <div className="relative">
@@ -244,7 +244,6 @@ const NavBar = () => {
           </div>
         </div>
       </div>
-      {/* spacer for fixed mobile navbar */}
       <div className="md:hidden h-16" />
     </div>
   );

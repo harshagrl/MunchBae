@@ -3,17 +3,39 @@ import { CiStar } from "react-icons/ci";
 import { TiMinus } from "react-icons/ti";
 import { IoIosAdd } from "react-icons/io";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../store/user.slice";
+import { IoIosCart } from "react-icons/io";
 
 const FoodCard = ({ data }) => {
   const [quantity, setQuantity] = useState(0);
+  const dispatch = useDispatch();
+  const { cartItems } = useSelector((state) => state.user);
+  const handleAddToCart = () => {
+    {
+      quantity > 0 &&
+        dispatch(
+          addToCart({
+            id: data._id,
+            name: data.name,
+            image: data.image,
+            shop: data.shop,
+            price: data.price,
+            quantity,
+            foodType: data.foodType,
+          })
+        );
+    }
+    setQuantity(0);
+  };
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(
         i <= rating ? (
-          <FaStar className="text-yellow-500 text-lg" />
+          <FaStar className="text-yellow-500 text-base md:text-lg" />
         ) : (
-          <CiStar className="text-yellow-500 text-lg" />
+          <CiStar className="text-yellow-500 text-base md:text-lg" />
         )
       );
     }
@@ -30,8 +52,8 @@ const FoodCard = ({ data }) => {
     }
   };
   return (
-    <div className="w-64 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
-      <div className="w-full h-48 bg-gray-200 overflow-hidden flex items-center justify-center relative">
+    <div className="w-full max-w-52 md:max-w-64 h-74 md:h-86 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+      <div className="w-full h-40 md:h-48 bg-gray-200 overflow-hidden flex items-center justify-center relative">
         {data.image ? (
           <img
             src={data.image}
@@ -47,14 +69,20 @@ const FoodCard = ({ data }) => {
         )}
       </div>
 
-      <div className="p-4">
+      <div className="md:p-4 p-2">
         <div className="flex items-start flex-row justify-between space-x-1">
           {data.foodType === "Veg" ? (
-            <h3 className="text-lg font-bold font-mono text-green-600 truncate mb-2">
+            <h3
+              className="text-base md:text-lg font-bold font-mono text-green-600 truncate mb-2"
+              title={data.name}
+            >
               {data.name}
             </h3>
           ) : (
-            <h3 className="text-lg font-bold font-mono text-red-600 truncate mb-2">
+            <h3
+              className="text-base md:text-lg font-bold font-mono text-red-600 truncate mb-2"
+              title={data.name}
+            >
               {data.name}
             </h3>
           )}
@@ -65,7 +93,9 @@ const FoodCard = ({ data }) => {
           </div>
         </div>
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl font-bold text-black">₹{data.price}</span>
+          <span className="text-lg md:text-xl font-bold text-black">
+            ₹{data.price}
+          </span>
           {data.originalPrice && (
             <span className="text-sm text-gray-400 line-through">
               ₹{data.originalPrice}
@@ -81,7 +111,7 @@ const FoodCard = ({ data }) => {
                 className="p-2 text-black cursor-pointer hover:bg-gray-300 rounded-lg transition-all duration-300"
               />
             </button>
-            <span className="text-black text-lg">{quantity}</span>
+            <span className="text-base md:text-lg text-black">{quantity}</span>
             <button onClick={handleIncrease}>
               <IoIosAdd
                 size={36}
@@ -89,8 +119,15 @@ const FoodCard = ({ data }) => {
               />
             </button>
           </div>
-          <button className="p-2 bg-green-700 hover:bg-green-800 text-white font-semibold py-2 rounded-lg transition-all duration-300 cursor-pointer">
-            Add to Cart
+          <button
+            className={`${
+              cartItems.some((i) => i.id == data._id)
+                ? "bg-gray-700 hover:bg-gray-900"
+                : "bg-green-700 hover:bg-green-900"
+            } text-sm md:text-base text-white font-semibold py-1 px-2 md:py-2 md:px-4 rounded-lg transition-all duration-300 cursor-pointer flex items-center gap-2`}
+            onClick={handleAddToCart}
+          >
+            <IoIosCart size={30} /> Add
           </button>
         </div>
       </div>
