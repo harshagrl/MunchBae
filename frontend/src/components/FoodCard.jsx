@@ -23,7 +23,7 @@ const FoodCard = ({ data }) => {
             price: data.price,
             quantity,
             foodType: data.foodType,
-          })
+          }),
         );
     }
     setQuantity(0);
@@ -36,7 +36,7 @@ const FoodCard = ({ data }) => {
           <FaStar className="text-yellow-500 text-base md:text-lg" />
         ) : (
           <CiStar className="text-yellow-500 text-base md:text-lg" />
-        )
+        ),
       );
     }
     return stars;
@@ -108,14 +108,14 @@ const FoodCard = ({ data }) => {
             <button onClick={handleDecrease}>
               <TiMinus
                 size={34}
-                className="p-2 text-black cursor-pointer hover:bg-gray-300 rounded-lg transition-all duration-300"
+                className="p-2 text-black cursor-pointer hover:bg-gray-400 rounded-lg transition-all duration-300 bg-gray-200"
               />
             </button>
             <span className="text-base md:text-lg text-black">{quantity}</span>
             <button onClick={handleIncrease}>
               <IoIosAdd
                 size={36}
-                className="p-1 rounded-lg text-black cursor-pointer hover:bg-gray-300 transition-all duration-300"
+                className="p-1 rounded-lg text-black cursor-pointer hover:bg-gray-400 transition-all duration-300 bg-gray-200"
               />
             </button>
           </div>
