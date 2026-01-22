@@ -6,6 +6,7 @@ import {
   setCurrentCity,
   setCurrentState,
 } from "../store/user.slice";
+import { setAddress, setLocation } from "../store/map.slice";
 
 const useGetCity = () => {
   const { userData } = useSelector((state) => state.user);
@@ -15,10 +16,11 @@ const useGetCity = () => {
     navigator.geolocation.getCurrentPosition(async (position) => {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
+      dispatch(setLocation({ lat: latitude, long: longitude }));
       const fetchLocation = async () => {
         try {
           const result = await axios.get(
-            `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${geoApiKey}`
+            `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${geoApiKey}`,
           );
           dispatch(setCurrentCity("Kapurthala"));
           // dispatch(setCurrentCity(result?.data?.results[0].state_district));
@@ -26,8 +28,14 @@ const useGetCity = () => {
           dispatch(
             setCurrentAddress(
               result?.data?.results[0].formatted ||
-                result?.data?.results[0].address_line2
-            )
+                result?.data?.results[0].address_line2,
+            ),
+          );
+          dispatch(
+            setAddress(
+              result?.data?.results[0].formatted ||
+                result?.data?.results[0].address_line2,
+            ),
           );
         } catch (error) {
           console.error("Error fetching location:", error);

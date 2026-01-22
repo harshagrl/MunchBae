@@ -136,3 +136,7 @@ MunchBae is a food delivery application that connects users with local restauran
 - created Checkout.jsx page for checkout process
 
 - created order.model.js for checkout and giving orders to different shops
+
+- created map.slice.js for managing map related states
+- added setLatitude and setLongitude actions in map.slice.js
+- dispatched latitude and longitude in useGetCity hook
