@@ -134,3 +134,5 @@ MunchBae is a food delivery application that connects users with local restauran
 - totalamount state in user.slice.js to calculate total amount of cart items
 - accessed totalAmount in Cart.jsx to show total amount of cart items
 - created Checkout.jsx page for checkout process
+
+- created order.model.js for checkout and giving orders to different shops
