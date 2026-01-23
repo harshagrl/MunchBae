@@ -142,3 +142,6 @@
 - created ReCenterMap component to recenter map based on marker location in Checkout.jsx
 - created getAddressByLatLng function in Checkout.jsx to get address from latitude and longitude using geoapify api
 - dispatched setAddress action in getAddressByLatLng function
+- created getLatLngByAddress function in Checkout.jsx to get latitude and longitude from address using geoapify api
+- set latitude and longitude in getLatLngByAddress function
+- dispatched setAddress action in getLatLngByAddress function

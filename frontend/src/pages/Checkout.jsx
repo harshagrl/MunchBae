@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
@@ -12,24 +12,14 @@ import axios from "axios";
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const geoApiKey = import.meta.env.VITE_GEO_APIKEY;
+  const { location, address } = useSelector((state) => state.map);
   const dispatch = useDispatch();
   const mapRef = useRef();
-
-  const getCurrentLocation = () => {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      dispatch(setLocation({ lat: latitude, long: longitude }));
-      getAddressbyLatLng(latitude, longitude);
-      if (mapRef.current) {
-        mapRef.current.setView([latitude, longitude], 16, { animate: true });
-      }
-    });
-  };
+  const [addressInput, setAddressInput] = useState("");
 
   const getAddressbyLatLng = async (lat, lng) => {
     try {
-      const geoApiKey = import.meta.env.VITE_GEO_APIKEY;
       const result = await axios.get(
         `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&format=json&apiKey=${geoApiKey}`,
       );
@@ -43,6 +33,19 @@ const Checkout = () => {
       console.log("Finding address error: ", error);
     }
   };
+
+  const getCurrentLocation = () => {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      dispatch(setLocation({ lat: latitude, long: longitude }));
+      getAddressbyLatLng(latitude, longitude);
+      if (mapRef.current) {
+        mapRef.current.setView([latitude, longitude], 16, { animate: true });
+      }
+    });
+  };
+
   const onDragEnd = (e) => {
     const { lat, lng } = e.target._latlng;
     dispatch(setLocation({ lat, long: lng }));
@@ -51,7 +54,26 @@ const Checkout = () => {
       mapRef.current.setView([lat, lng], 16, { animate: true });
     }
   };
-  const { location, address } = useSelector((state) => state.map);
+
+  const getLatLongByAddress = async () => {
+    try {
+      const result = await axios.get(
+        `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(addressInput)}&apiKey=${geoApiKey}`,
+      );
+      const { lat, lon } = result.data.features[0].properties;
+      dispatch(setLocation({ lat, long: lon }));
+      dispatch(setAddress(addressInput));
+      if (mapRef.current) {
+        mapRef.current.setView([lat, lon], 16, { animate: true });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    setAddressInput(address);
+  }, [address]);
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-700 flex justify-center items-center p-6">
       <div
@@ -73,9 +95,13 @@ const Checkout = () => {
               type="text"
               placeholder="Enter your delivery address..."
               className="flex-1 border border-gray-400 rounded-lg focus:outline:none focus:ring-green-600 focus:ring-2 p-2 text-black font-serif"
-              value={address}
+              value={addressInput}
+              onChange={(e) => setAddressInput(e.target.value)}
             />
-            <button className="py-2 px-3.5 bg-green-500 hover:bg-green-600 rounded-lg text-white flex items-center justify-center cursor-pointer">
+            <button
+              className="py-2 px-3.5 bg-green-500 hover:bg-green-600 rounded-lg text-white flex items-center justify-center cursor-pointer"
+              onClick={getLatLongByAddress}
+            >
               <FaSearch size={16} />
             </button>
             <button
