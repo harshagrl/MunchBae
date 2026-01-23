@@ -1,26 +1,31 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useNavigate } from "react-router";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { BiCurrentLocation } from "react-icons/bi";
-import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { useDispatch, useSelector } from "react-redux";
 import "leaflet/dist/leaflet.css";
 import { setAddress, setLocation } from "../store/map.slice";
 import axios from "axios";
 
-const ReCenterMap = ({ location }) => {
-  const map = useMap();
-  if (location.lat && location.long) {
-    map.setView([location.lat, location.long], 16, { animate: true });
-  }
-  return null;
-};
-
 const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const mapRef = useRef();
+
+  const getCurrentLocation = () => {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      dispatch(setLocation({ lat: latitude, long: longitude }));
+      getAddressbyLatLng(latitude, longitude);
+      if (mapRef.current) {
+        mapRef.current.setView([latitude, longitude], 16, { animate: true });
+      }
+    });
+  };
 
   const getAddressbyLatLng = async (lat, lng) => {
     try {
@@ -42,6 +47,9 @@ const Checkout = () => {
     const { lat, lng } = e.target._latlng;
     dispatch(setLocation({ lat, long: lng }));
     getAddressbyLatLng(lat, lng);
+    if (mapRef.current) {
+      mapRef.current.setView([lat, lng], 16, { animate: true });
+    }
   };
   const { location, address } = useSelector((state) => state.map);
   return (
@@ -70,15 +78,19 @@ const Checkout = () => {
             <button className="py-2 px-3.5 bg-green-500 hover:bg-green-600 rounded-lg text-white flex items-center justify-center cursor-pointer">
               <FaSearch size={16} />
             </button>
-            <button className="py-2 px-2.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-white flex items-center justify-center cursor-pointer">
+            <button
+              className="py-2 px-2.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-white flex items-center justify-center cursor-pointer"
+              onClick={getCurrentLocation}
+            >
               <BiCurrentLocation size={21} />
             </button>
           </div>
           <div className="rounded-xl overflow-hidden border border-gray-400">
             <div className="h-64 w-full flex items-center justify-center text-black">
               <MapContainer
+                ref={mapRef}
                 className={"w-full h-full"}
-                center={[location?.lat, location?.long]}
+                center={[location?.lat || 0, location?.long || 0]}
                 zoom={16}
               >
                 <TileLayer
@@ -90,7 +102,6 @@ const Checkout = () => {
                   draggable
                   eventHandlers={{ dragend: onDragEnd }}
                 />
-                <ReCenterMap location={location} />
               </MapContainer>
             </div>
           </div>
