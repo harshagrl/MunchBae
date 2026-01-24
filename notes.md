@@ -147,3 +147,4 @@
 - dispatched setAddress action in getLatLngByAddress function
 - paymentMethod state in Checkout.jsx for selecting payment method
 - created payment method selection cards in Checkout.jsx
+- listed orders and their quantities in Checkout.jsx

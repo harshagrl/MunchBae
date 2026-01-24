@@ -10,15 +10,24 @@ import "leaflet/dist/leaflet.css";
 import { setAddress, setLocation } from "../store/map.slice";
 import axios from "axios";
 import { FaPaypal } from "react-icons/fa";
+import { MdDeliveryDining } from "react-icons/md";
+import { FaMobileAlt } from "react-icons/fa";
+import { CiCreditCard1 } from "react-icons/ci";
+import { MdStickyNote2 } from "react-icons/md";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const geoApiKey = import.meta.env.VITE_GEO_APIKEY;
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const { location, address } = useSelector((state) => state.map);
+  const { cartItems, totalAmount } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const mapRef = useRef();
   const [addressInput, setAddressInput] = useState("");
+  const deliveryCharge = totalAmount > 500 ? 0 : 30;
+  const packingCharge = 15;
+  const GST = totalAmount * 0.05;
+  const amountWithCharges = totalAmount + deliveryCharge + packingCharge + GST;
 
   const getAddressbyLatLng = async (lat, lng) => {
     try {
@@ -76,6 +85,7 @@ const Checkout = () => {
   useEffect(() => {
     setAddressInput(address);
   }, [address]);
+
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-700 flex justify-center items-center p-6">
       <div
@@ -85,12 +95,12 @@ const Checkout = () => {
         <IoIosArrowRoundBack size={30} />
         <h2 className="text-md sm:text-xl">Back</h2>
       </div>
-      <div className="w-full max-w-225 bg-white rounded-2xl shadow-xl p-6 space-y-4">
-        <h1 className="text-black font-bold text-2xl underline underline-offset-3">
+      <div className="w-full mt-10 max-w-225 bg-white rounded-2xl shadow-xl p-6 space-y-4">
+        <h1 className="text-green-700 font-bold text-center text-2xl underline underline-offset-3">
           Checkout
         </h1>
         <section>
-          <h1 className="flex text-gray-800 text-xl font-mono font-semibold items-center gap-2 mb-3">
+          <h1 className="flex text-gray-800 text-xl font-mono font-semibold items-center gap-2 mb-3 mt-6">
             <FaLocationDot size={16} className="text-green-600" />
             Delivery Location
           </h1>
@@ -137,7 +147,7 @@ const Checkout = () => {
           </div>
         </section>
         <section>
-          <h1 className="flex text-gray-800 text-xl font-mono font-semibold items-center gap-1 mb-3">
+          <h1 className="flex text-gray-800 text-xl font-mono font-semibold items-center gap-1 mb-3 mt-6">
             <FaPaypal size={18} className="text-blue-600" />
             Payment Method
           </h1>
@@ -145,13 +155,83 @@ const Checkout = () => {
             <div
               className={`flex items-center gap-3 rounded-xl border-2 p-4 text-left transition duration-300 ${paymentMethod === "cod" ? "hover:border-green-300 bg-green-100 shadow hover:bg-green-50" : "border-gray-200 hover:border-gray-300 hover:bg-slate-100"} cursor-pointer`}
               onClick={() => setPaymentMethod("cod")}
-            ></div>
+            >
+              <span className="inline-flex h-12 w-12 rounded-full bg-orange-100 items-center justify-center shadow">
+                <MdDeliveryDining className="text-orange-500 text-3xl" />
+              </span>
+              <div>
+                <p className="text-gray-800 font-sans font-semibold text-lg">
+                  Cash on delivery
+                </p>
+                <p className="text-gray-500 text-xs">Pay at your doorstep</p>
+              </div>
+            </div>
             <div
               className={`flex items-center gap-3 rounded-xl border-2 p-4 text-left transition duration-300 ${paymentMethod === "online" ? "hover:border-green-300 bg-green-100 shadow hover:bg-green-50" : "border-gray-200 hover:border-gray-300 hover:bg-slate-100"} cursor-pointer`}
               onClick={() => setPaymentMethod("online")}
-            ></div>
+            >
+              <span className="inline-flex h-12 w-12 rounded-full bg-purple-100 items-center justify-center shadow">
+                <FaMobileAlt className="text-purple-500 text-3xl" />
+              </span>
+              <span className="inline-flex h-12 w-12 rounded-full bg-blue-100 items-center justify-center shadow">
+                <CiCreditCard1 className="text-blue-500 text-3xl" />
+              </span>
+              <div>
+                <p className="text-gray-800 font-sans font-semibold text-lg">
+                  UPI / Credit / Debit card
+                </p>
+                <p className="text-gray-500 text-xs">Pay securely online</p>
+              </div>
+            </div>
           </div>
         </section>
+        <section>
+          <h1 className="flex text-gray-800 text-xl font-mono font-semibold items-center gap-1 mb-3 mt-6">
+            <MdStickyNote2 size={18} className="text-cyan-700" />
+            Order summary
+          </h1>
+          <div className="rounded-xl border-2 bg-gray-50 p-4 border-gray-200">
+            {cartItems.map((item, index) => (
+              <div
+                key={index}
+                className="flex justify-between gap-3 font-mono text-md text-slate-600"
+              >
+                <span>
+                  {item.name} x {item.quantity}
+                </span>
+                <span>₹{item.price * item.quantity}</span>
+              </div>
+            ))}
+            <hr className="text-gray-300 my-2" />
+            <div className="flex justify-between gap-3 font-mono text-lg text-gray-700 font-bold">
+              <span>Subtotal</span>
+              <span>₹{totalAmount}</span>
+            </div>
+            <div className="flex justify-between font-mono gap-3 text-md text-gray-700 font-medium">
+              <span>Delivery Fee</span>
+              <span>{totalAmount > 500 ? "Free" : `₹${deliveryCharge}`}</span>
+            </div>
+            {totalAmount < 500 && (
+              <p className="text-gray-500 text-xs mb-1">{`(Add items worth ₹${500 - totalAmount} more for free delivery)`}</p>
+            )}
+            <div className="flex justify-between font-mono gap-3 text-md text-gray-700 font-medium">
+              <span>Packing charges</span>
+              <span>₹{packingCharge}</span>
+            </div>
+            <div className="flex justify-between font-mono gap-3 text-md text-gray-700 font-medium">
+              <span>Gst(5%)</span>
+              <span>₹{GST}</span>
+            </div>
+
+            <div className="flex font-mono justify-between gap-3 text-xl text-green-600 font-bold mt-2">
+              <span>Total</span>
+              <span>₹{amountWithCharges}</span>
+            </div>
+          </div>
+        </section>
+        <button className="text-white bg-green-500 hover:bg-green-600 transition-all duration-300 cursor-pointer rounded-xl py-3 text-xl font-bold w-full mt-4 font-mono">
+          {paymentMethod === "cod" ? "Place order" : "Pay online"}
+        </button>
       </div>
     </div>
   );

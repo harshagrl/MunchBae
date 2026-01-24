@@ -40,7 +40,7 @@ const Cart = () => {
                 title="Place order"
                 onClick={() => navigate("/checkout")}
               >
-                Place Order <span className="text-sm">➤</span>
+                Checkout <span className="text-sm">➤</span>
               </button>
             </div>
           </>
