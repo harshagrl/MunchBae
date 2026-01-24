@@ -145,3 +145,5 @@
 - created getLatLngByAddress function in Checkout.jsx to get latitude and longitude from address using geoapify api
 - set latitude and longitude in getLatLngByAddress function
 - dispatched setAddress action in getLatLngByAddress function
+- paymentMethod state in Checkout.jsx for selecting payment method
+- created payment method selection cards in Checkout.jsx

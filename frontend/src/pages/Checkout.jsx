@@ -9,10 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import "leaflet/dist/leaflet.css";
 import { setAddress, setLocation } from "../store/map.slice";
 import axios from "axios";
+import { FaPaypal } from "react-icons/fa";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const geoApiKey = import.meta.env.VITE_GEO_APIKEY;
+  const [paymentMethod, setPaymentMethod] = useState("cod");
   const { location, address } = useSelector((state) => state.map);
   const dispatch = useDispatch();
   const mapRef = useRef();
@@ -84,9 +86,11 @@ const Checkout = () => {
         <h2 className="text-md sm:text-xl">Back</h2>
       </div>
       <div className="w-full max-w-225 bg-white rounded-2xl shadow-xl p-6 space-y-4">
-        <h1 className="text-black font-bold text-2xl">Checkout</h1>
+        <h1 className="text-black font-bold text-2xl underline underline-offset-3">
+          Checkout
+        </h1>
         <section>
-          <h1 className="flex text-gray-800 text-xl font-sans font-semibold items-center gap-2 mb-3">
+          <h1 className="flex text-gray-800 text-xl font-mono font-semibold items-center gap-2 mb-3">
             <FaLocationDot size={16} className="text-green-600" />
             Delivery Location
           </h1>
@@ -130,6 +134,22 @@ const Checkout = () => {
                 />
               </MapContainer>
             </div>
+          </div>
+        </section>
+        <section>
+          <h1 className="flex text-gray-800 text-xl font-mono font-semibold items-center gap-1 mb-3">
+            <FaPaypal size={18} className="text-blue-600" />
+            Payment Method
+          </h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div
+              className={`flex items-center gap-3 rounded-xl border-2 p-4 text-left transition duration-300 ${paymentMethod === "cod" ? "hover:border-green-300 bg-green-100 shadow hover:bg-green-50" : "border-gray-200 hover:border-gray-300 hover:bg-slate-100"} cursor-pointer`}
+              onClick={() => setPaymentMethod("cod")}
+            ></div>
+            <div
+              className={`flex items-center gap-3 rounded-xl border-2 p-4 text-left transition duration-300 ${paymentMethod === "online" ? "hover:border-green-300 bg-green-100 shadow hover:bg-green-50" : "border-gray-200 hover:border-gray-300 hover:bg-slate-100"} cursor-pointer`}
+              onClick={() => setPaymentMethod("online")}
+            ></div>
           </div>
         </section>
       </div>
