@@ -148,3 +148,10 @@
 - paymentMethod state in Checkout.jsx for selecting payment method
 - created payment method selection cards in Checkout.jsx
 - listed orders and their quantities in Checkout.jsx
+
+- created placeOrder controller in controllers/order.controller.js to place order
+- routed it in routes/order.router.js
+
+- created OrderPlaced.jsx page to show order placed message
+- redirected to OrderPlaced.jsx page after successful order placement in Checkout.jsx
+- Created Myorders.jsx page to show user's orders

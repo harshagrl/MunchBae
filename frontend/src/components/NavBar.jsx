@@ -12,7 +12,7 @@ import { TbReceiptRupee } from "react-icons/tb";
 import { Link, useNavigate } from "react-router";
 const NavBar = () => {
   const { userData, currentCity, cartItems } = useSelector(
-    (state) => state.user
+    (state) => state.user,
   );
   const { myShopData } = useSelector((state) => state.owner);
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const NavBar = () => {
       await axios.get(
         `${serverUrl}/api/auth/signout`,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
       dispatch(setUserData(null));
     } catch (err) {
@@ -90,7 +90,10 @@ const NavBar = () => {
           )}
 
           {userData.role == "user" && (
-            <button className="bg-green-700 text-white px-2 py-1.5 rounded-lg text-sm hover:bg-green-800 transition cursor-pointer">
+            <button
+              className="bg-green-700 text-white px-2 py-1.5 rounded-lg text-sm hover:bg-green-800 transition cursor-pointer"
+              onClick={() => navigate("/my-orders")}
+            >
               My Orders
             </button>
           )}
@@ -228,7 +231,10 @@ const NavBar = () => {
                     <p className="text-xs text-gray-500">{userData?.email}</p>
                   </div>
                   {userData.role == "user" && (
-                    <button className="w-full text-left px-4 py-3 text-green-700 hover:bg-gray-50 cursor-pointer">
+                    <button
+                      className="w-full text-left px-4 py-3 text-green-700 hover:bg-gray-50 cursor-pointer"
+                      onClick={() => navigate("/my-orders")}
+                    >
                       My Orders
                     </button>
                   )}

@@ -14,6 +14,7 @@ import { MdDeliveryDining } from "react-icons/md";
 import { FaMobileAlt } from "react-icons/fa";
 import { CiCreditCard1 } from "react-icons/ci";
 import { MdStickyNote2 } from "react-icons/md";
+import { serverUrl } from "../App";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -82,6 +83,28 @@ const Checkout = () => {
     }
   };
 
+  const handlePlaceOrder = async () => {
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/order/place-order`,
+        {
+          paymentMethod,
+          deliveryAddress: {
+            text: addressInput,
+            latitude: location.lat,
+            longitude: location.long,
+          },
+          totalAmount,
+          cartItems,
+        },
+        { withCredentials: true },
+      );
+      console.log(result.data);
+      navigate("/order-placed");
+    } catch (error) {
+      console.error(`Place order error: ${error}`);
+    }
+  };
   useEffect(() => {
     setAddressInput(address);
   }, [address]);
@@ -229,7 +252,10 @@ const Checkout = () => {
             </div>
           </div>
         </section>
-        <button className="text-white bg-green-500 hover:bg-green-600 transition-all duration-300 cursor-pointer rounded-xl py-3 text-xl font-bold w-full mt-4 font-mono">
+        <button
+          className="text-white bg-green-500 hover:bg-green-600 transition-all duration-300 cursor-pointer rounded-xl py-3 text-xl font-bold w-full mt-4 font-mono"
+          onClick={handlePlaceOrder}
+        >
           {paymentMethod === "cod" ? "Place order" : "Pay online"}
         </button>
       </div>
