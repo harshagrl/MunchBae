@@ -155,3 +155,5 @@
 - created OrderPlaced.jsx page to show order placed message
 - redirected to OrderPlaced.jsx page after successful order placement in Checkout.jsx
 - Created Myorders.jsx page to show user's orders
+
+- built getUserOrders api for getting user orders
