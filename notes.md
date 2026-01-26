@@ -168,3 +168,5 @@
 - accessed order items in UserOrderCard.jsx to show ordered items
 
 - added status in order.model.js
+
+- completed userOrderCard.jsx
