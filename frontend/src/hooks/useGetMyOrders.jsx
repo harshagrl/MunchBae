@@ -2,23 +2,24 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { serverUrl } from "../App";
 import { useDispatch, useSelector } from "react-redux";
-import { setMyShopData } from "../store/owner.slice";
-const useGetMyShop = () => {
+import { setMyOrders } from "../store/user.slice";
+const useGetMyOrders = () => {
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.user);
   useEffect(() => {
-    const fetchShop = async () => {
+    const fetchOrder = async () => {
       try {
-        const result = await axios.get(`${serverUrl}/api/shop/get-my-shop`, {
+        const result = await axios.get(`${serverUrl}/api/order/my-orders`, {
           withCredentials: true,
         });
-        dispatch(setMyShopData(result.data));
+        dispatch(setMyOrders(result.data));
+        console.log(result.data);
       } catch (error) {
-        console.error(`shop fetch error: ${error}`);
+        console.error(`order fetching error:${error}`);
       }
     };
-    fetchShop();
+    fetchOrder();
   }, [userData]);
 };
 
-export default useGetMyShop;
+export default useGetMyOrders;

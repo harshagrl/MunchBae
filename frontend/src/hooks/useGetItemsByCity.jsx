@@ -10,17 +10,17 @@ const useGetItemsByCity = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      if (!currentCity) return; // Skip if no city selected
+      if (!currentCity) return;
       try {
         const result = await axios.get(
           `${serverUrl}/api/item/get-item-by-city/${currentCity}`,
           {
             withCredentials: true,
-          }
+          },
         );
         dispatch(setItemsInMyCity(result.data || []));
       } catch (error) {
-        // Silent fail - items might not exist yet
+        console.error(`items in my city error: ${error}`);
         dispatch(setItemsInMyCity([]));
       }
     };

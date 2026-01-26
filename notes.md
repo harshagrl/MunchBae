@@ -159,3 +159,6 @@
 - built getUserOrders api for getting user orders
 - built getOwnerOrders api for getting owner orders
 - routed both of them in order.router.js
+
+- created useGetMyOrders custom hook to fetch user's orders
+- called useGetMyOrders in App.jsx

@@ -1,5 +1,6 @@
 import Order from "../models/order.model.js";
 import Shop from "../models/shop.model.js";
+import User from "../models/user.model.js";
 
 export const placeOrder = async (req, res) => {
   try {
@@ -59,42 +60,42 @@ export const placeOrder = async (req, res) => {
   }
 };
 
-export const getUserOrders = async (req, res) => {
+export const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.userId })
-      .sort({
-        createdAt: -1,
-      })
-      .populate("shopOrders.shop", "name")
-      .populate("shopOrders.owner", "fullName email mobile")
-      .populate("shopOrders.shopOrderItem.item", "name image price");
-
-    if (!orders) {
-      return res.status(400).json({ message: "Orders not found" });
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
     }
+    if (user.role === "user") {
+      const orders = await Order.find({ user: req.userId })
+        .sort({
+          createdAt: -1,
+        })
+        .populate("shopOrders.shop", "name")
+        .populate("shopOrders.owner", "fullName email mobile")
+        .populate("shopOrders.shopOrderItem.item", "name image price");
 
-    return res.status(200).json(orders);
-  } catch (error) {
-    return res.status(500).json({ message: `Get User Orders error: ${error}` });
-  }
-};
+      if (!orders) {
+        return res.status(400).json({ message: "Orders not found" });
+      }
 
-export const getOwnerorders = async (req, res) => {
-  try {
-    const orders = await Order.find({ "shopOrders.owner": req.userId })
-      .sort({
-        createdAt: -1,
-      })
-      .populate("shopOrders.shop", "name")
-      .populate("user")
-      .populate("shopOrders.shopOrderItem.item", "name image price");
+      return res.status(200).json(orders);
+    } else if (user.role === "owner") {
+      const orders = await Order.find({ "shopOrders.owner": req.userId })
+        .sort({
+          createdAt: -1,
+        })
+        .populate("shopOrders.shop", "name")
+        .populate("user")
+        .populate("shopOrders.shopOrderItem.item", "name image price");
 
-    if (!orders) {
-      return res.status(400).json({ message: "Orders not found" });
+      if (!orders) {
+        return res.status(400).json({ message: "Orders not found" });
+      }
+
+      return res.status(200).json(orders);
     }
-
-    return res.status(200).json(orders);
   } catch (error) {
-    return res.status(500).json({ message: `Get User Orders error: ${error}` });
+    return res.status(500).json({ message: `Get My Orders error: ${error}` });
   }
 };

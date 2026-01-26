@@ -10,18 +10,17 @@ const useGetShopByCity = () => {
 
   useEffect(() => {
     const fetchShops = async () => {
-      if (!currentCity) return; // Skip if no city selected
+      if (!currentCity) return;
       try {
         const result = await axios.get(
           `${serverUrl}/api/shop/get-shop-by-city/${currentCity}`,
           {
             withCredentials: true,
-          }
+          },
         );
         dispatch(setShopsInMyCity(result.data || []));
       } catch (error) {
-        // Silent fail - shops might not exist yet
-
+        console.error(`shops in my city error: ${error}`);
         dispatch(setShopsInMyCity([]));
       }
     };
