@@ -157,3 +157,5 @@
 - Created Myorders.jsx page to show user's orders
 
 - built getUserOrders api for getting user orders
+- built getOwnerOrders api for getting owner orders
+- routed both of them in order.router.js
