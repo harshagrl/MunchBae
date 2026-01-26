@@ -1,7 +1,38 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { IoIosArrowRoundBack } from "react-icons/io";
+import UserOrderCard from "../components/UserOrderCard";
+import OwnerDashBoard from "../components/OwnerDashBoard";
 
 const MyOrders = () => {
-  return <div>MyOrders</div>;
+  const { userData, myOrders } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  return (
+    <div className="w-full min-h-screen flex justify-center p-4 bg-linear-to-b from-slate-900 via-slate-800 to-slate-700">
+      <div className="w-full max-w-200 p-4">
+        <div
+          className="absolute top-4 left-6 z-10 mb-2.5 flex items-center cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          <IoIosArrowRoundBack size={30} />
+          <h2 className="text-md sm:text-xl">Back</h2>
+        </div>
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-2xl font-bold text-green-600 underline text-center mb-2.5">
+          My Orders
+        </div>
+        <div className="space-y-6 flex items-center justify-center flex-col mt-20">
+          {myOrders.map((order, index) =>
+            userData.role === "user" ? (
+              <UserOrderCard data={order} key={index} />
+            ) : userData.role === "owner" ? (
+              <OwnerDashBoard data={order} key={index} />
+            ) : null,
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default MyOrders;

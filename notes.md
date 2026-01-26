@@ -162,3 +162,9 @@
 
 - created useGetMyOrders custom hook to fetch user's orders
 - called useGetMyOrders in App.jsx
+- accessed myOrders data in MyOrders.jsx to show orders based on user role
+- created UserOrderCard.jsx component to show each user order details
+- created OwnerDashBoard.jsx component to show each order details in owner dashboard
+- accessed order items in UserOrderCard.jsx to show ordered items
+
+- added status in order.model.js

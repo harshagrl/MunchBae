@@ -67,9 +67,12 @@ const NavBar = () => {
               </button>
             )}
 
-            <button className="relative bg-green-700 text-white px-2 py-1.5 rounded-lg hover:bg-green-800 transition cursor-pointer flex items-center gap-1">
+            <button
+              className="relative bg-green-700 text-white px-2 py-1.5 rounded-lg hover:bg-green-800 transition cursor-pointer flex items-center gap-1"
+              onClick={() => navigate("/my-orders")}
+            >
               <TbReceiptRupee size={20} />
-              <span className="text-md">Pending Orders</span>
+              <span className="text-md">My Orders</span>
               <span className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold shadow">
                 1
               </span>
@@ -193,7 +196,10 @@ const NavBar = () => {
           )}
 
           {userData.role == "owner" && (
-            <button className="relative rounded-full bg-green-700 text-white w-7 h-7 flex items-center justify-center text-sm shadow cursor-pointer ml-2 hover:bg-green-800">
+            <button
+              className="relative rounded-full bg-green-700 text-white w-7 h-7 flex items-center justify-center text-sm shadow cursor-pointer ml-2 hover:bg-green-800"
+              onClick={() => navigate("/my-orders")}
+            >
               <TbReceiptRupee size={20} />
               <span className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full w-4.5 h-4.5 flex items-center justify-center text-xs font-semibold shadow">
                 1
