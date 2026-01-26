@@ -8,6 +8,7 @@ import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { useDispatch, useSelector } from "react-redux";
 import "leaflet/dist/leaflet.css";
 import { setAddress, setLocation } from "../store/map.slice";
+import { addMyOrder } from "../store/user.slice";
 import axios from "axios";
 import { FaPaypal } from "react-icons/fa";
 import { MdDeliveryDining } from "react-icons/md";
@@ -99,7 +100,7 @@ const Checkout = () => {
         },
         { withCredentials: true },
       );
-      console.log(result.data);
+      dispatch(addMyOrder(result.data));
       navigate("/order-placed");
     } catch (error) {
       console.error(`Place order error: ${error}`);

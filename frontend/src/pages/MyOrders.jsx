@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import UserOrderCard from "../components/UserOrderCard";
-import OwnerDashBoard from "../components/OwnerDashBoard";
+import OwnerOrderCard from "../components/OwnerOrderCard";
 
 const MyOrders = () => {
   const { userData, myOrders } = useSelector((state) => state.user);
@@ -21,12 +21,12 @@ const MyOrders = () => {
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-2xl font-bold text-green-600 underline text-center mb-2.5">
           My Orders
         </div>
-        <div className="space-y-6 flex items-center justify-center flex-col mt-20">
+        <div className="space-y-6 flex items-center justify-center flex-col mt-10">
           {myOrders.map((order, index) =>
             userData.role === "user" ? (
               <UserOrderCard data={order} key={index} />
             ) : userData.role === "owner" ? (
-              <OwnerDashBoard data={order} key={index} />
+              <OwnerOrderCard data={order} key={index} />
             ) : null,
           )}
         </div>

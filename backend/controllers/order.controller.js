@@ -54,6 +54,11 @@ export const placeOrder = async (req, res) => {
       totalAmount,
       shopOrders,
     });
+    await newOrder.populate(
+      "shopOrders.shopOrderItem.item",
+      "name image price",
+    );
+    await newOrder.populate("shopOrders.shop", "name");
     return res.status(201).json(newOrder);
   } catch (error) {
     return res.status(500).json({ message: `Place order error: ${error}` });
@@ -93,7 +98,16 @@ export const getMyOrders = async (req, res) => {
         return res.status(400).json({ message: "Orders not found" });
       }
 
-      return res.status(200).json(orders);
+      const particularShopOrders = orders.map((order) => ({
+        _id: order._id,
+        paymentMethod: order.paymentMethod,
+        user: order.user,
+        shopOrders: order.shopOrders.find((o) => o.owner._id == req.userId),
+        createdAt: order.createdAt,
+        deliveryAddress: order.deliveryAddress,
+      }));
+
+      return res.status(200).json(particularShopOrders);
     }
   } catch (error) {
     return res.status(500).json({ message: `Get My Orders error: ${error}` });

@@ -9,12 +9,12 @@ import useGetItemsByCity from "../hooks/useGetItemsByCity";
 
 const UserDashboard = () => {
   const { currentCity, shopsInMyCity, itemsInMyCity } = useSelector(
-    (state) => state.user
+    (state) => state.user,
   );
   useGetShopByCity();
   useGetItemsByCity();
   return (
-    <div className="w-screen min-h-screen flex flex-col bg-linear-to-b from-slate-900 via-slate-800 to-slate-700">
+    <div className="w-screen min-h-screen flex flex-col bg-linear-to-b from-slate-900 via-slate-800 to-slate-700 py-4 px-2">
       <div className="sticky top-0 z-50">
         <NavBar />
       </div>

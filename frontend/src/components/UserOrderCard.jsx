@@ -16,7 +16,7 @@ function UserOrderCard({ data }) {
           </h3>
           <p className="text-sm font-medium text-gray-500 font-sans">
             Status:{" "}
-            <span className="text-blue-600">
+            <span className="text-blue-600 capitalize">
               {data.shopOrders?.[0]?.status || "Pending"}
             </span>
           </p>
@@ -54,7 +54,7 @@ function UserOrderCard({ data }) {
             <p className="font-semibold font-sans">
               Subtotal: ₹{shopOrder.subtotal}
             </p>
-            <span className="text-blue-600 text-sm font-medium">
+            <span className="text-blue-600 text-sm font-medium capitalize">
               {shopOrder.status}
             </span>
           </div>
