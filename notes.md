@@ -170,6 +170,6 @@
 - added status in order.model.js
 
 - completed userOrderCard.jsx
-- modified ownerDashBoard.jsx to update order status
+- completed OwnerDashBoard.jsx
 
 - populated shop and shoporderitems in place order controller in order.controller.js
