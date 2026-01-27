@@ -173,3 +173,6 @@
 - completed OwnerDashBoard.jsx
 
 - populated shop and shoporderitems in place order controller in order.controller.js
+
+- localstorage to avoid login when reloading the page from signin or signup page
+- stored token in localstorage during signin and signup

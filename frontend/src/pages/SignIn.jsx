@@ -27,9 +27,10 @@ const SignIn = () => {
           email,
           password,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       dispatch(setUserData(result.data));
+      localStorage.setItem("userData", JSON.stringify(result.data));
       setErr("");
       setLoading(false);
     } catch (error) {
@@ -46,10 +47,11 @@ const SignIn = () => {
         {
           email: result.user.email,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       dispatch(setUserData(data));
+      localStorage.setItem("userData", JSON.stringify(data));
     } catch (error) {
       console.error(error);
     }

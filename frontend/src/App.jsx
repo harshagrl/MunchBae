@@ -2,8 +2,7 @@ import { Navigate, Route, Routes } from "react-router";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/signin";
 import ForgotPassword from "./pages/ForgotPassword";
-import useGetCurrentUser from "./hooks/useGetCurrentUser";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Home from "./pages/Home";
 import useGetCity from "./hooks/useGetCity";
 import useGetMyShop from "./hooks/useGetMyShop";
@@ -17,17 +16,27 @@ import Checkout from "./pages/Checkout";
 import OrderPlaced from "./pages/OrderPlaced";
 import MyOrders from "./pages/MyOrders";
 import useGetMyOrders from "./hooks/useGetMyOrders";
+import { useEffect } from "react";
+import { setUserData } from "./store/user.slice";
 
 export const serverUrl = "http://localhost:8000";
 
 const App = () => {
-  useGetCurrentUser();
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userData");
+    if (storedUser) {
+      dispatch(setUserData(JSON.parse(storedUser)));
+    }
+  }, [dispatch]);
+
   useGetCity();
   useGetMyShop();
   useGetShopByCity();
   useGetItemByCity();
   useGetMyOrders();
-  const { userData } = useSelector((state) => state.user);
   return (
     <Routes>
       <Route

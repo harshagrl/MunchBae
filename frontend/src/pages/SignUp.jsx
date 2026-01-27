@@ -39,9 +39,10 @@ const SignUp = () => {
           password,
           role,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       dispatch(setUserData(result.data));
+      localStorage.setItem("userData", JSON.stringify(result.data));
       setErr("");
       setLoading(false);
     } catch (error) {
@@ -65,9 +66,10 @@ const SignUp = () => {
           mobile,
           role,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       dispatch(setUserData(data));
+      localStorage.setItem("userData", JSON.stringify(data));
     } catch (error) {
       console.error(error);
     }

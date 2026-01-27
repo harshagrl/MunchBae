@@ -22,12 +22,11 @@ const NavBar = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      await axios.get(
-        `${serverUrl}/api/auth/signout`,
-        {},
-        { withCredentials: true },
-      );
+      await axios.get(`${serverUrl}/api/auth/signout`, {
+        withCredentials: true,
+      });
       dispatch(setUserData(null));
+      localStorage.removeItem("userData");
     } catch (err) {
       console.error(err);
     }
