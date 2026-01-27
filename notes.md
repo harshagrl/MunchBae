@@ -176,3 +176,8 @@
 
 - localstorage to avoid login when reloading the page from signin or signup page
 - stored token in localstorage during signin and signup
+
+- updateorderstatus api in order.controller.js
+- routed it in order.router.js
+
+- handleupdatestatus function in ownerordercard.jsx

@@ -1,7 +1,20 @@
 import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
-
+import axios from "axios";
+import { serverUrl } from "../App";
 function OwnerOrderCard({ data }) {
+  const handleUpdateStatus = async (orderId, shopId, status) => {
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/order/update-status/${orderId}/${shopId}`,
+        { status },
+        { withCredentials: true },
+      );
+      console.log(result.data);
+    } catch (error) {
+      console.error("Error fetching status:", error);
+    }
+  };
   return (
     <div className="bg-white shadow rounded-lg p-4 space-y-4 w-full max-w-3xl">
       <div className="text-black">
@@ -57,9 +70,16 @@ function OwnerOrderCard({ data }) {
           </span>
         </span>
         <select
-          value={data.shopOrders.status}
           className="text-black rounded-lg border-2 px-2 text-sm focus:outline-none focus:ring-2 border-green-600 shadow py-1"
+          onChange={(e) =>
+            handleUpdateStatus(
+              data._id,
+              data.shopOrders.shop._id,
+              e.target.value,
+            )
+          }
         >
+          <option value="">--Select status--</option>
           <option value="pending">Pending</option>
           <option value="preparing">Preparing</option>
           <option value="out for delivery">Out For Delivery</option>
