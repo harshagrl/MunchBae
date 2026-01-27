@@ -181,3 +181,7 @@
 - routed it in order.router.js
 
 - handleupdatestatus function in ownerordercard.jsx
+- onChange event in select tag to update order status
+- added default option --select status-- in select tag in OwnerOrderCard.jsx
+- updateorderstatus redux action in order.slice.js
+- dispatched updateorderstatus action in handleUpdateStatus function in OwnerOrderCard.jsx

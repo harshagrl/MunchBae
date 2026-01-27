@@ -2,7 +2,10 @@ import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import axios from "axios";
 import { serverUrl } from "../App";
+import { useDispatch } from "react-redux";
+import { updateOrderStatus } from "../store/user.slice";
 function OwnerOrderCard({ data }) {
+  const dispatch = useDispatch();
   const handleUpdateStatus = async (orderId, shopId, status) => {
     try {
       const result = await axios.post(
@@ -10,7 +13,7 @@ function OwnerOrderCard({ data }) {
         { status },
         { withCredentials: true },
       );
-      console.log(result.data);
+      dispatch(updateOrderStatus({ orderId, shopId, status }));
     } catch (error) {
       console.error("Error fetching status:", error);
     }
