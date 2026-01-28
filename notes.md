@@ -185,3 +185,13 @@
 - added default option --select status-- in select tag in OwnerOrderCard.jsx
 - updateorderstatus redux action in order.slice.js
 - dispatched updateorderstatus action in handleUpdateStatus function in OwnerOrderCard.jsx
+
+- created deliveryassignment.model.js for assigning deliveries to delivery partners
+- added field assignment in order.model.js to reference delivery assignment
+- added location index in user.model.js for geospatial queries
+- created updateUserLocation controller in controllers/user.controller.js to update delivery partner location
+- routed it in routes/user.router.js
+
+- created useUpdateUserLocation hook to update delivery partner location periodically
+- handleUpdateUserLocation function in useUpdateUserLocation hook
+- called useUpdateUserLocation in App.jsx

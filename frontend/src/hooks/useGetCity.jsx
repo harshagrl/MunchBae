@@ -22,8 +22,8 @@ const useGetCity = () => {
           const result = await axios.get(
             `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${geoApiKey}`,
           );
-          dispatch(setCurrentCity("Kapurthala"));
-          // dispatch(setCurrentCity(result?.data?.results[0].state_district));
+          // dispatch(setCurrentCity("Kapurthala"));
+          dispatch(setCurrentCity(result?.data?.results[0].state_district));
           dispatch(setCurrentState(result?.data?.results[0].state));
           dispatch(
             setCurrentAddress(
@@ -37,6 +37,7 @@ const useGetCity = () => {
                 result?.data?.results[0].address_line2,
             ),
           );
+          console.log(result.data);
         } catch (error) {
           console.error("Error fetching location:", error);
         }

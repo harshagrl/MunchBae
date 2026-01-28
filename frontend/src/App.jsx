@@ -18,6 +18,7 @@ import MyOrders from "./pages/MyOrders";
 import useGetMyOrders from "./hooks/useGetMyOrders";
 import { useEffect } from "react";
 import { setUserData } from "./store/user.slice";
+import useUpdateUserLocation from "./hooks/useUpdateUserLocation";
 
 export const serverUrl = "http://localhost:8000";
 
@@ -37,6 +38,7 @@ const App = () => {
   useGetShopByCity();
   useGetItemByCity();
   useGetMyOrders();
+  useUpdateUserLocation();
   return (
     <Routes>
       <Route
