@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { serverUrl } from "../App";
 
 const useUpdateUserLocation = () => {
   const { userData } = useSelector((state) => state.user);
@@ -9,7 +10,7 @@ const useUpdateUserLocation = () => {
     const updateUserLocation = async (lat, long) => {
       try {
         const result = await axios.post(
-          `/api/user/update-location`,
+          `${serverUrl}/api/user/update-location`,
           {
             lat,
             long,

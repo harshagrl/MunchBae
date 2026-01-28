@@ -1,7 +1,7 @@
 import Order from "../models/order.model.js";
 import Shop from "../models/shop.model.js";
 import User from "../models/user.model.js";
-
+import DeliveryAssignment from "../models/deliveryAssignment.model.js";
 export const placeOrder = async (req, res) => {
   try {
     const { cartItems, paymentMethod, deliveryAddress, totalAmount } = req.body;
@@ -124,8 +124,58 @@ export const updateOrderStatus = async (req, res) => {
       return res.status(400).json({ message: `Shop Order not found` });
     }
     shopOrder.status = status;
+    let deliveryBoyPayload = [];
+    if (order === "out for delivery" || !shopOrder.assignment) {
+      const { longitude, latitude } = order.deliveryAddress;
+      const nearByDeliveryPartners = await User.find({
+        role: "deliveryBoy",
+        location: {
+          $near: {
+            $geometry: {
+              type: "Point",
+              coordinates: [Number(longitude), Number(latitude)],
+            },
+            $maxDistance: 5000,
+          },
+        },
+      });
+
+      const nearByIds = nearByDeliveryPartners.map((b) => b._id);
+      const busyIds = await DeliveryAssignment.find({
+        assignedTo: { $in: nearByIds },
+        status: { $nin: ["broadcasted", "completed"] },
+      }).distinct("assignedTo");
+      const busyIdSet = new Set(busyIds.map((id) => id.toString()));
+      const availableDeliveryPartners = nearByDeliveryPartners.filter(
+        (b) => !busyIdSet.has(b._id.toString()),
+      );
+      const candidates = availableDeliveryPartners.map((b) => b._id);
+      if (candidates.length === 0) {
+        await order.save();
+        return res
+          .status(200)
+          .json({ message: "No delivery partners available at the moment" });
+      }
+      const deliveryAssignment = await DeliveryAssignment.create({
+        order: order._id,
+        shop: shopOrder.shop,
+        shopOrderId: shopOrder._id,
+        broadcastedTo: candidates,
+        status: "broadcasted",
+      });
+      shopOrder.assignment = deliveryAssignment._id;
+      deliveryBoyPayload = availableDeliveryPartners.map((b) => ({
+        id: b._id,
+        fullName: b.fullName,
+        longitude: b.location.coordinates?.[0],
+        latitude: b.location.coordinates?.[1],
+        mobile: b.mobile,
+      }));
+    }
     await shopOrder.save();
     await order.save();
+    await order.populate("shopOrders.shop", "name");
+    await order.populate("shopOrders.shop", "name");
     return res.status(200).json(shopOrder.status);
   } catch (error) {
     return res
