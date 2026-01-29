@@ -195,3 +195,10 @@
 - created useUpdateUserLocation hook to update delivery partner location periodically
 - handleUpdateUserLocation function in useUpdateUserLocation hook
 - called useUpdateUserLocation in App.jsx
+
+- modified order controller to create delivery assignment during order placement
+
+- stored assignedDeliveryPartner in shop order during assignment
+- populated assignedDeliveryPartner in update order status controller
+- accessed assignedDeliveryPartner in OwnerOrderCard.jsx to show assigned delivery partner details
+- completed delivery assignment functionality

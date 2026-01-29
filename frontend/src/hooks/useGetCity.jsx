@@ -37,7 +37,6 @@ const useGetCity = () => {
                 result?.data?.results[0].address_line2,
             ),
           );
-          console.log(result.data);
         } catch (error) {
           console.error("Error fetching location:", error);
         }

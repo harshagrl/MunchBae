@@ -124,8 +124,8 @@ export const updateOrderStatus = async (req, res) => {
       return res.status(400).json({ message: `Shop Order not found` });
     }
     shopOrder.status = status;
-    let deliveryBoyPayload = [];
-    if (order === "out for delivery" || !shopOrder.assignment) {
+    let deliveryBoysPayload = [];
+    if (status === "out for delivery" || !shopOrder.assignment) {
       const { longitude, latitude } = order.deliveryAddress;
       const nearByDeliveryPartners = await User.find({
         role: "deliveryBoy",
@@ -163,8 +163,9 @@ export const updateOrderStatus = async (req, res) => {
         broadcastedTo: candidates,
         status: "broadcasted",
       });
+      shopOrder.assignedDeliveryPartner = deliveryAssignment.assignedTo;
       shopOrder.assignment = deliveryAssignment._id;
-      deliveryBoyPayload = availableDeliveryPartners.map((b) => ({
+      deliveryBoysPayload = availableDeliveryPartners.map((b) => ({
         id: b._id,
         fullName: b.fullName,
         longitude: b.location.coordinates?.[0],
@@ -174,9 +175,18 @@ export const updateOrderStatus = async (req, res) => {
     }
     await shopOrder.save();
     await order.save();
+    const updatedShopOrder = order.shopOrders.find((o) => o.shop == shopId);
     await order.populate("shopOrders.shop", "name");
-    await order.populate("shopOrders.shop", "name");
-    return res.status(200).json(shopOrder.status);
+    await order.populate(
+      "shopOrders.assignedDeliveryPartner",
+      "fullName email mobile",
+    );
+    return res.status(200).json({
+      shopOrder: updatedShopOrder,
+      assignedDeliveryPartner: updatedShopOrder?.assignedDeliveryPartner,
+      availableDeliveryPartners: deliveryBoysPayload,
+      assignment: updatedShopOrder?.assignment._id,
+    });
   } catch (error) {
     return res
       .status(500)

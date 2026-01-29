@@ -4,8 +4,10 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { useDispatch } from "react-redux";
 import { updateOrderStatus } from "../store/user.slice";
+import { useState } from "react";
 function OwnerOrderCard({ data }) {
   const dispatch = useDispatch();
+  const [availablePartners, setAvailablePartners] = useState([]);
   const handleUpdateStatus = async (orderId, shopId, status) => {
     try {
       const result = await axios.post(
@@ -14,6 +16,8 @@ function OwnerOrderCard({ data }) {
         { withCredentials: true },
       );
       dispatch(updateOrderStatus({ orderId, shopId, status }));
+      setAvailablePartners(result.data.availableDeliveryPartners);
+      console.log(result.data);
     } catch (error) {
       console.error("Error fetching status:", error);
     }
@@ -88,6 +92,25 @@ function OwnerOrderCard({ data }) {
           <option value="out for delivery">Out For Delivery</option>
         </select>
       </div>
+      {data.shopOrders.status === "out for delivery" &&
+      availablePartners.length > 0 ? (
+        <div className="mt-4">
+          <h2 className="text-black font-semibold mb-2">
+            Available Delivery Partners:
+          </h2>
+          <ul className="list-disc list-inside">
+            {availablePartners.map((partner) => (
+              <li key={partner.id} className="text-black">
+                {partner.fullName} - {partner.mobile}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <div className="text-lg text-black font-semibold">
+          Waiting for delivery partners....
+        </div>
+      )}
       <div className="text-right text-black font-bold text-md">
         Total: ₹{data.shopOrders.subtotal}
       </div>

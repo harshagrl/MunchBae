@@ -17,7 +17,6 @@ const useUpdateUserLocation = () => {
           },
           { withCredentials: true },
         );
-        console.log("User location updated:", result.data);
       } catch (error) {
         console.error("Error updating user location:", error);
       }
