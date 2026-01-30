@@ -17,9 +17,7 @@ const useUpdateUserLocation = () => {
           },
           { withCredentials: true },
         );
-      } catch (error) {
-        console.error("Error updating user location:", error);
-      }
+      } catch (error) {}
     };
     navigator.geolocation.watchPosition((pos) => {
       updateUserLocation(pos.coords.latitude, pos.coords.longitude);

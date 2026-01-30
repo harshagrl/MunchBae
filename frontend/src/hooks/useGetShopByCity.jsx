@@ -20,7 +20,6 @@ const useGetShopByCity = () => {
         );
         dispatch(setShopsInMyCity(result.data || []));
       } catch (error) {
-        console.error(`shops in my city error: ${error}`);
         dispatch(setShopsInMyCity([]));
       }
     };

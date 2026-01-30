@@ -5,9 +5,9 @@ const deliveryAssignmentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shop",
     },
-    owner: {
+    order: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Owner",
+      ref: "Order",
     },
     shopOrderId: {
       type: mongoose.Schema.Types.ObjectId,

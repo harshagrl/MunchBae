@@ -33,13 +33,15 @@ const NavBar = () => {
   };
 
   return (
-    <div className="relative px-0 md:max-w-5xl md:mx-auto md:px-4 mt-10">
+    <div
+      className={`relative px-0 ${userData?.role === "deliveryBoy" ? "md:max-w-xl md:mx-auto md:px-4" : "md:max-w-5xl md:mx-auto md:px-4"} mt-10`}
+    >
       {/* Desktop */}
       <div className="hidden md:flex items-center bg-white rounded-xl shadow-2xl px-10 py-5 pl-44 gap-6 relative overflow-visible">
         <div className="flex items-center gap-2">
           <FaLocationDot className="text-green-700 text-xl" />
           <div className="text-gray-700 font-medium truncate">
-            {currentCity || "Enable your location"}{" "}
+            {currentCity || "Location"}{" "}
           </div>
         </div>
 
@@ -78,7 +80,14 @@ const NavBar = () => {
             </button>
           </>
         )}
-
+        {userData.role === "deliveryBoy" && (
+          <button
+            className="bg-green-700 text-white px-2 py-1.5 rounded-lg text-sm hover:bg-green-800 transition cursor-pointer"
+            onClick={() => navigate("/my-orders")}
+          >
+            My Orders
+          </button>
+        )}
         <div className="flex-1" />
 
         <div className="flex items-center gap-6 cursor-pointer">
@@ -236,6 +245,14 @@ const NavBar = () => {
                     <p className="text-xs text-gray-500">{userData?.email}</p>
                   </div>
                   {userData.role == "user" && (
+                    <button
+                      className="w-full text-left px-4 py-3 text-green-700 hover:bg-gray-50 cursor-pointer"
+                      onClick={() => navigate("/my-orders")}
+                    >
+                      My Orders
+                    </button>
+                  )}
+                  {userData.role === "deliveryBoy" && (
                     <button
                       className="w-full text-left px-4 py-3 text-green-700 hover:bg-gray-50 cursor-pointer"
                       onClick={() => navigate("/my-orders")}

@@ -12,9 +12,7 @@ const useGetCurrentUser = () => {
           withCredentials: true,
         });
         dispatch(setUserData(result.data));
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     };
     fetchUser();
   }, []);

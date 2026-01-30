@@ -13,9 +13,7 @@ const useGetMyShop = () => {
           withCredentials: true,
         });
         dispatch(setMyShopData(result.data));
-      } catch (error) {
-        console.error(`shop fetch error: ${error}`);
-      }
+      } catch (error) {}
     };
     fetchShop();
   }, [userData]);

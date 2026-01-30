@@ -193,3 +193,47 @@ export const updateOrderStatus = async (req, res) => {
       .json({ message: `Updating order status error: ${error}` });
   }
 };
+
+export const getDeliveryPartnerAssignment = async (req, res) => {
+  try {
+    const deliveryPartnerId = req.userId;
+    const assignments = await DeliveryAssignment.find({
+      broadcastedTo: deliveryPartnerId,
+      status: "broadcasted",
+    })
+      .populate("order")
+      .populate("shop");
+
+    if (!assignments || assignments.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    const formatted = assignments
+      .map((a) => {
+        if (!a.order || !a.shop || !Array.isArray(a.order.shopOrders)) {
+          return null;
+        }
+
+        const shopOrder = a.order.shopOrders.find(
+          (so) => so._id && a.shopOrderId && so._id.equals(a.shopOrderId),
+        );
+
+        return {
+          orderId: a.order._id,
+          assignmentId: a._id,
+          shopName: a.shop?.name || null,
+          deliveryAddress: a.order?.deliveryAddress || null,
+          items: shopOrder?.shopOrderItem || [],
+          subtotal: shopOrder?.subtotal || 0,
+          status: a.status,
+        };
+      })
+      .filter(Boolean);
+
+    return res.status(200).json(formatted);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `Get Delivery Partner Assignment error: ${error}` });
+  }
+};

@@ -13,9 +13,7 @@ const useGetMyOrders = () => {
           withCredentials: true,
         });
         dispatch(setMyOrders(result.data));
-      } catch (error) {
-        console.error(`order fetching error:${error}`);
-      }
+      } catch (error) {}
     };
     fetchOrder();
   }, [userData]);

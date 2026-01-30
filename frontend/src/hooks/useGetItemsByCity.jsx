@@ -20,7 +20,6 @@ const useGetItemsByCity = () => {
         );
         dispatch(setItemsInMyCity(result.data || []));
       } catch (error) {
-        console.error(`items in my city error: ${error}`);
         dispatch(setItemsInMyCity([]));
       }
     };

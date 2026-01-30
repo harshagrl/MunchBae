@@ -202,3 +202,8 @@
 - populated assignedDeliveryPartner in update order status controller
 - accessed assignedDeliveryPartner in OwnerOrderCard.jsx to show assigned delivery partner details
 - completed delivery assignment functionality
+- getDeliveryAssignments controller in controllers/deliveryAssignment.controller.js to get delivery assignments for delivery partner
+- routed it in routes/deliveryAssignment.router.js
+
+- created DeliveryBoyDashBoard.jsx component for delivery partner dashboard
+- fetched delivery assignments in DeliveryBoyDashBoard.jsx
