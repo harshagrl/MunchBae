@@ -92,7 +92,7 @@ function OwnerOrderCard({ data }) {
           <option value="out for delivery">Out For Delivery</option>
         </select>
       </div>
-      {data.shopOrders.status === "out for delivery" &&
+      {data.shopOrders.status === "preparing" &&
       availablePartners.length > 0 ? (
         <div className="mt-4">
           <h2 className="text-black font-semibold mb-2">
@@ -108,7 +108,7 @@ function OwnerOrderCard({ data }) {
         </div>
       ) : (
         <div className="text-lg text-black font-semibold">
-          Waiting for delivery partners....
+          Waiting for food preparation...
         </div>
       )}
       <div className="text-right text-black font-bold text-md">

@@ -21,6 +21,11 @@ const MyOrders = () => {
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-2xl font-bold text-green-600 underline text-center mb-2.5">
           My Orders
         </div>
+        {myOrders.length === 0 && (
+          <div className="flex flex-col items-center justify-center mt-20">
+            <h2 className="text-xl text-white mb-4">No orders found</h2>
+          </div>
+        )}
         <div className="space-y-6 flex items-center justify-center flex-col mt-10">
           {myOrders.map((order, index) =>
             userData.role === "user" ? (

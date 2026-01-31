@@ -2,9 +2,10 @@ import { useSelector } from "react-redux";
 import NavBar from "./NavBar";
 import axios from "axios";
 import { serverUrl } from "../App";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const DeliveryBoyDashBoard = () => {
+  const [availableAssignments, setAvailableAssignments] = useState([]);
   const { userData } = useSelector((state) => state.user);
   const getDeliveryPartnerAssignments = async () => {
     try {
@@ -13,6 +14,7 @@ const DeliveryBoyDashBoard = () => {
         { withCredentials: true },
       );
       console.log(result.data);
+      setAvailableAssignments(result.data);
     } catch (error) {
       console.log(error);
     }
@@ -22,12 +24,11 @@ const DeliveryBoyDashBoard = () => {
   }, [userData]);
   return (
     <div className="w-screen min-h-screen flex flex-col bg-linear-to-b from-slate-900 via-slate-800 to-slate-700 py-4 px-2 items-center">
-      <div className="sticky top-0 z-50">
-        <NavBar />
-      </div>
+      <NavBar />
+
       <div className="w-full max-w-200 flex flex-col gap-5 items-center mt-0 md:mt-20 justify-center">
         <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col text-center justify-center gap-2 items-center w-[90%] border border-green-100">
-          <h1 className="text-2xl font-semibold text-gray-800 font-mono">
+          <h1 className="text-2xl font-semibold text-green-700 font-mono">
             Welcome,{" "}
             <span className="text-green-700 underline underline-offset-2">
               {userData?.fullName || "Delivery Boy"}!
@@ -39,6 +40,42 @@ const DeliveryBoyDashBoard = () => {
             <span className="underline font-semibold">Longitude:</span>{" "}
             {userData?.location?.coordinates?.[0]}
           </p>
+        </div>
+        <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col text-center justify-center w-[90%] max-w-200 border border-green-100 gap-4">
+          <h1 className="text-xl font-semibold text-gray-800">
+            Available Orders
+          </h1>
+          <div className="space-y-4">
+            {availableAssignments.length === 0 ? (
+              <p className="text-gray-600">No available orders.</p>
+            ) : (
+              availableAssignments.map((a, index) => (
+                <div
+                  className="border border-gray-300 bg-gray-100 rounded-lg p-4 flex justify-between items-center"
+                  key={index}
+                >
+                  <div className="text-gray-800 text-start">
+                    <p className="text-gray-900 text-lg font-semibold">
+                      {a?.shopName}
+                    </p>
+                    <p>
+                      <span className="text-md font-medium font-sans">
+                        Address:
+                      </span>{" "}
+                      {a?.deliveryAddress.text}
+                    </p>
+                    <p className="text-md font-medium font-sans">
+                      {a.items.length} items |{" "}
+                      <span className="text-green-700">₹{a.subtotal}</span>
+                    </p>
+                  </div>
+                  <button className="bg-green-600 text-white px-4 font-semibold py-2 rounded-lg hover:bg-green-700 cursor-pointer transition-colors duration-200">
+                    Accept
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>
