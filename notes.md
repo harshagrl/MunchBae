@@ -217,3 +217,6 @@
 - populated assignedDeliveryPartner in getMyOrders controller in order.controller.js
 - built getCurrentOrder controller in controllers/order.controller.js to get current order for delivery partner
 - routed it in routes/order.router.js
+
+- created getCurrentOrder function in DeliveryBoyDashBoard.jsx to fetch current order for delivery partner
+- called getCurrentOrder in useEffect in DeliveryBoyDashBoard.jsx

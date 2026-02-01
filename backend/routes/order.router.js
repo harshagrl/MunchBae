@@ -20,6 +20,6 @@ orderRouter.get(
 );
 orderRouter.post("/update-status/:orderId/:shopId", isAuth, updateOrderStatus);
 orderRouter.get("/accept-order/:assignmentId", isAuth, acceptOrderAssignment);
-orderRouter.get("/get-current-order/:assignmentId", isAuth, getCurrentOrder);
+orderRouter.get("/get-current-order", isAuth, getCurrentOrder);
 
 export default orderRouter;

@@ -13,8 +13,21 @@ const DeliveryBoyDashBoard = () => {
         `${serverUrl}/api/order/delivery-partner-assignment`,
         { withCredentials: true },
       );
-      console.log(result.data);
       setAvailableAssignments(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCurrentOrder = async () => {
+    try {
+      const result = await axios.get(
+        `${serverUrl}/api/order/get-current-order`,
+        {
+          withCredentials: true,
+        },
+      );
+      console.log(result.data);
     } catch (error) {
       console.log(error);
     }
@@ -26,7 +39,7 @@ const DeliveryBoyDashBoard = () => {
         `${serverUrl}/api/order/accept-order/${assignmentId}`,
         { withCredentials: true },
       );
-      console.log(result.data);
+      await getCurrentOrder();
     } catch (error) {
       console.log(error);
     }
@@ -34,6 +47,7 @@ const DeliveryBoyDashBoard = () => {
 
   useEffect(() => {
     getDeliveryPartnerAssignments();
+    getCurrentOrder();
   }, [userData]);
   return (
     <div className="w-screen min-h-screen flex flex-col bg-linear-to-b from-slate-900 via-slate-800 to-slate-700 py-4 px-2 items-center">
