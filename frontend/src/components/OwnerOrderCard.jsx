@@ -92,23 +92,30 @@ function OwnerOrderCard({ data }) {
           <option value="out for delivery">Out For Delivery</option>
         </select>
       </div>
-      {data.shopOrders.status === "preparing" &&
-      availablePartners.length > 0 ? (
+      {data.shopOrders.status === "out for delivery" && (
         <div className="mt-4">
-          <h2 className="text-black font-semibold mb-2">
-            Available Delivery Partners:
-          </h2>
-          <ul className="list-disc list-inside">
-            {availablePartners.map((partner) => (
-              <li key={partner.id} className="text-black">
-                {partner.fullName} - {partner.mobile}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <div className="text-lg text-black font-semibold">
-          Waiting for food preparation...
+          {availablePartners && availablePartners.length > 0 ? (
+            <>
+              <h2 className="text-black font-semibold mb-2">
+                Available Delivery Partners:
+              </h2>
+              <ul className="list-disc list-inside">
+                {availablePartners.map((partner) => (
+                  <li key={partner.id} className="text-black">
+                    {partner.fullName} - {partner.mobile}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : data.shopOrders.assignedDeliveryPartner ? (
+            <p className="text-black">
+              Assigned Delivery Partner:{" "}
+              {data.shopOrders.assignedDeliveryPartner.fullName} -{" "}
+              {data.shopOrders.assignedDeliveryPartner.mobile}
+            </p>
+          ) : (
+            <p className="text-black">No available delivery partners found.</p>
+          )}
         </div>
       )}
       <div className="text-right text-black font-bold text-md">

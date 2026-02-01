@@ -207,3 +207,11 @@
 
 - created DeliveryBoyDashBoard.jsx component for delivery partner dashboard
 - fetched delivery assignments in DeliveryBoyDashBoard.jsx
+
+- built acceptOrderAssignment controller in controllers/deliveryAssignment.controller.js
+- routed it in routes/deliveryAssignment.router.js
+
+- acceptOrderAssignment function in DeliveryBoyDashBoard.jsx to accept order assignment
+- called acceptOrderAssignment api on button click in DeliveryBoyDashBoard.jsx
+
+- populated assignedDeliveryPartner in getMyOrders controller in order.controller.js

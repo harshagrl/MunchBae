@@ -92,7 +92,8 @@ export const getMyOrders = async (req, res) => {
         })
         .populate("shopOrders.shop", "name")
         .populate("user")
-        .populate("shopOrders.shopOrderItem.item", "name image price");
+        .populate("shopOrders.shopOrderItem.item", "name image price")
+        .populate("shopOrders.assignedDeliveryPartner", "fullName mobile");
 
       if (!orders) {
         return res.status(400).json({ message: "Orders not found" });
@@ -125,7 +126,7 @@ export const updateOrderStatus = async (req, res) => {
     }
     shopOrder.status = status;
     let deliveryBoysPayload = [];
-    if (status === "out for delivery" || !shopOrder.assignment) {
+    if (status === "out for delivery" && !shopOrder.assignment) {
       const { longitude, latitude } = order.deliveryAddress;
       const nearByDeliveryPartners = await User.find({
         role: "deliveryBoy",
@@ -235,5 +236,48 @@ export const getDeliveryPartnerAssignment = async (req, res) => {
     return res
       .status(500)
       .json({ message: `Get Delivery Partner Assignment error: ${error}` });
+  }
+};
+
+export const acceptOrderAssignment = async (req, res) => {
+  try {
+    const { assignmentId } = req.params;
+    const assignment = await DeliveryAssignment.findById(assignmentId);
+    if (!assignment) {
+      return res.status(400).json({ message: "Assignment not found" });
+    }
+    if (assignment.status !== "broadcasted") {
+      return res.status(400).json({ message: "Assignment is not available" });
+    }
+    const alreadyAssigned = await DeliveryAssignment.findOne({
+      assignedTo: req.userId,
+      status: { $nin: ["broadcasted", "completed"] },
+    });
+    if (alreadyAssigned) {
+      return res
+        .status(400)
+        .json({ message: "You have already an active assignment" });
+    }
+    assignment.assignedTo = req.userId;
+    assignment.status = "assigned";
+    assignment.acceptedAt = new Date();
+    await assignment.save();
+    const order = await Order.findById(assignment.order);
+    if (!order) {
+      return res.status(400).json({ message: "Order not found" });
+    }
+    const shopOrder = order.shopOrders.find((o) =>
+      o._id.equals(assignment.shopOrderId),
+    );
+    shopOrder.assignedDeliveryPartner = req.userId;
+    await order.save();
+
+    return res
+      .status(200)
+      .json({ message: "Assignment accepted successfully", order });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `Accepting order assignment error: ${error}` });
   }
 };

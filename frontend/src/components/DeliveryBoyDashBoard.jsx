@@ -19,6 +19,19 @@ const DeliveryBoyDashBoard = () => {
       console.log(error);
     }
   };
+
+  const acceptOrderAssignment = async (assignmentId) => {
+    try {
+      const result = await axios.get(
+        `${serverUrl}/api/order/accept-order/${assignmentId}`,
+        { withCredentials: true },
+      );
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getDeliveryPartnerAssignments();
   }, [userData]);
@@ -69,7 +82,10 @@ const DeliveryBoyDashBoard = () => {
                       <span className="text-green-700">₹{a.subtotal}</span>
                     </p>
                   </div>
-                  <button className="bg-green-600 text-white px-4 font-semibold py-2 rounded-lg hover:bg-green-700 cursor-pointer transition-colors duration-200">
+                  <button
+                    className="bg-green-600 text-white px-4 font-semibold py-2 rounded-lg hover:bg-green-700 cursor-pointer transition-colors duration-200"
+                    onClick={() => acceptOrderAssignment(a.assignmentId)}
+                  >
                     Accept
                   </button>
                 </div>
