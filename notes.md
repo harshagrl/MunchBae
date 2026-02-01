@@ -215,3 +215,5 @@
 - called acceptOrderAssignment api on button click in DeliveryBoyDashBoard.jsx
 
 - populated assignedDeliveryPartner in getMyOrders controller in order.controller.js
+- built getCurrentOrder controller in controllers/order.controller.js to get current order for delivery partner
+- routed it in routes/order.router.js

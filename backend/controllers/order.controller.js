@@ -281,3 +281,60 @@ export const acceptOrderAssignment = async (req, res) => {
       .json({ message: `Accepting order assignment error: ${error}` });
   }
 };
+
+export const getCurrentOrder = async (req, res) => {
+  try {
+    const assignment = await DeliveryAssignment.findOne({
+      assignedTo: req.userId,
+      status: "assigned",
+    })
+      .populate("shop", "name")
+      .populate("assignedTo", "fullName mobile email location")
+      .populate({
+        path: "order",
+        populate: [
+          {
+            path: "user",
+            select: "fullName mobile email location",
+          },
+        ],
+      });
+    if (!assignment) {
+      return res.status(200).json({ message: "No current active assignment" });
+    }
+    if (!assignment.order) {
+      return res.status(200).json({ message: "No current active order" });
+    }
+    const shopOrder = assignment.order.shopOrders.find((so) =>
+      so._id.equals(assignment.shopOrderId),
+    );
+    if (!shopOrder) {
+      return res.status(200).json({ message: "No current active shop order" });
+    }
+    let deliveryPartnerLocation = { lat: null, long: null };
+    if (assignment.assignedTo.location.coordinates.length === 2) {
+      deliveryPartnerLocation.lat =
+        assignment.assignedTo.location.coordinates[1];
+      deliveryPartnerLocation.long =
+        assignment.assignedTo.location.coordinates[0];
+    }
+
+    const customerLocation = { lat: null, long: null };
+    if (assignment.order.deliveryAddress) {
+      customerLocation.lat = assignment.order.deliveryAddress.latitude;
+      customerLocation.long = assignment.order.deliveryAddress.longitude;
+    }
+    return res.status(200).json({
+      _id: assignment.order._id,
+      user: assignment.order.user,
+      shopOrder: shopOrder,
+      deliveryAddress: assignment.order.deliveryAddress,
+      deliveryPartnerLocation,
+      customerLocation,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `Get Current Order error: ${error}` });
+  }
+};
