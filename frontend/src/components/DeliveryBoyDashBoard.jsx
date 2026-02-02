@@ -42,10 +42,9 @@ const DeliveryBoyDashBoard = () => {
 
   const acceptOrderAssignment = async (assignmentId) => {
     try {
-      const result = await axios.get(
-        `${serverUrl}/api/order/accept-order/${assignmentId}`,
-        { withCredentials: true },
-      );
+      await axios.get(`${serverUrl}/api/order/accept-order/${assignmentId}`, {
+        withCredentials: true,
+      });
       await getCurrentOrder();
     } catch (error) {
       console.log(error);

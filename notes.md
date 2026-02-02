@@ -229,3 +229,4 @@
 - TrackOrderPage.jsx page to track order by user
 - called getOrderById api in TrackOrderPage.jsx to fetch order details
 - accessed order details in TrackOrderPage.jsx to show delivery tracking map using DeliveryTracking.jsx component
+- routed TrackOrderPage.jsx in App.jsx
