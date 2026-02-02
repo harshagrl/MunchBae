@@ -220,3 +220,12 @@
 
 - created getCurrentOrder function in DeliveryBoyDashBoard.jsx to fetch current order for delivery partner
 - called getCurrentOrder in useEffect in DeliveryBoyDashBoard.jsx
+- created DeliveryTracking.jsx component to show delivery tracking map
+- configured DeliveryTracking.jsx component using react-leaflet to show delivery tracking map
+
+- built getOrderById controller in controllers/order.controller.js to get order by id for user to track order
+- routed it in routes/order.router.js
+
+- TrackOrderPage.jsx page to track order by user
+- called getOrderById api in TrackOrderPage.jsx to fetch order details
+- accessed order details in TrackOrderPage.jsx to show delivery tracking map using DeliveryTracking.jsx component

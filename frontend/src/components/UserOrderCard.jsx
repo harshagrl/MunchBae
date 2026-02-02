@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router";
+
 function UserOrderCard({ data }) {
+  const navigate = useNavigate();
   return (
     <div className="bg-white shadow rounded-lg p-4 space-y-4 w-full max-w-3xl">
       <div className="flex justify-between p-2">
@@ -64,7 +67,10 @@ function UserOrderCard({ data }) {
         <h1 className="text-black text-xl font-bold font-sans">
           Total: ₹{data.totalAmount}
         </h1>
-        <button className="text-white bg-green-500 rounded-lg p-2 font-medium font-sans cursor-pointer hover:bg-green-600 transition-all duration-300">
+        <button
+          className="text-white bg-green-500 rounded-lg p-2 font-medium font-sans cursor-pointer hover:bg-green-600 transition-all duration-300"
+          onClick={() => navigate(`/track-order/${data._id}`)}
+        >
           Track order
         </button>
       </div>

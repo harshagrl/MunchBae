@@ -19,6 +19,7 @@ import useGetMyOrders from "./hooks/useGetMyOrders";
 import { useEffect } from "react";
 import { setUserData } from "./store/user.slice";
 import useUpdateUserLocation from "./hooks/useUpdateUserLocation";
+import TrackOrderPage from "./pages/TrackOrderPage";
 
 export const serverUrl = "http://localhost:8000";
 
@@ -84,6 +85,10 @@ const App = () => {
       <Route
         path="/my-orders"
         element={userData ? <MyOrders /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/track-order/:orderId"
+        element={userData ? <TrackOrderPage /> : <Navigate to={"/signin"} />}
       />
     </Routes>
   );

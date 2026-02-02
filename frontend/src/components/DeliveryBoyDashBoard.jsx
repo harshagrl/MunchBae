@@ -3,9 +3,12 @@ import NavBar from "./NavBar";
 import axios from "axios";
 import { serverUrl } from "../App";
 import { useEffect, useState } from "react";
+import DeliveryTracking from "./DeliveryTracking";
 
 const DeliveryBoyDashBoard = () => {
   const [availableAssignments, setAvailableAssignments] = useState([]);
+  const [currentOrder, setCurrentOrder] = useState();
+  const [showOtpBox, setShowOtpBox] = useState(false);
   const { userData } = useSelector((state) => state.user);
   const getDeliveryPartnerAssignments = async () => {
     try {
@@ -19,6 +22,9 @@ const DeliveryBoyDashBoard = () => {
     }
   };
 
+  const handleSendOtp = () => {
+    setShowOtpBox(true);
+  };
   const getCurrentOrder = async () => {
     try {
       const result = await axios.get(
@@ -28,6 +34,7 @@ const DeliveryBoyDashBoard = () => {
         },
       );
       console.log(result.data);
+      setCurrentOrder(result.data);
     } catch (error) {
       console.log(error);
     }
@@ -68,45 +75,83 @@ const DeliveryBoyDashBoard = () => {
             {userData?.location?.coordinates?.[0]}
           </p>
         </div>
-        <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col text-center justify-center w-[90%] max-w-200 border border-green-100 gap-4">
-          <h1 className="text-xl font-semibold text-gray-800">
-            Available Orders
-          </h1>
-          <div className="space-y-4">
-            {availableAssignments.length === 0 ? (
-              <p className="text-gray-600">No available orders.</p>
-            ) : (
-              availableAssignments.map((a, index) => (
-                <div
-                  className="border border-gray-300 bg-gray-100 rounded-lg p-4 flex justify-between items-center"
-                  key={index}
-                >
-                  <div className="text-gray-800 text-start">
-                    <p className="text-gray-900 text-lg font-semibold">
-                      {a?.shopName}
-                    </p>
-                    <p>
-                      <span className="text-md font-medium font-sans">
-                        Address:
-                      </span>{" "}
-                      {a?.deliveryAddress.text}
-                    </p>
-                    <p className="text-md font-medium font-sans">
-                      {a.items.length} items |{" "}
-                      <span className="text-green-700">₹{a.subtotal}</span>
-                    </p>
-                  </div>
-                  <button
-                    className="bg-green-600 text-white px-4 font-semibold py-2 rounded-lg hover:bg-green-700 cursor-pointer transition-colors duration-200"
-                    onClick={() => acceptOrderAssignment(a.assignmentId)}
+        {!currentOrder && (
+          <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col text-center justify-center w-[90%] max-w-200 border border-green-100 gap-4">
+            <h1 className="text-xl font-semibold text-gray-800">
+              Available Orders
+            </h1>
+            <div className="space-y-4">
+              {availableAssignments.length === 0 ? (
+                <p className="text-gray-600">No available orders.</p>
+              ) : (
+                availableAssignments.map((a, index) => (
+                  <div
+                    className="border border-gray-300 bg-gray-100 rounded-lg p-4 flex justify-between items-center"
+                    key={index}
                   >
-                    Accept
-                  </button>
-                </div>
-              ))
+                    <div className="text-gray-800 text-start">
+                      <p className="text-gray-900 text-lg font-semibold">
+                        {a?.shopName}
+                      </p>
+                      <p>
+                        <span className="text-md font-medium font-sans">
+                          Address:
+                        </span>{" "}
+                        {a?.deliveryAddress.text}
+                      </p>
+                      <p className="text-md font-medium font-sans">
+                        {a.items.length} items |{" "}
+                        <span className="text-green-700">₹{a.subtotal}</span>
+                      </p>
+                    </div>
+                    <button
+                      className="bg-green-600 text-white px-4 font-semibold py-2 rounded-lg hover:bg-green-700 cursor-pointer transition-colors duration-200"
+                      onClick={() => acceptOrderAssignment(a.assignmentId)}
+                    >
+                      Accept
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+        {currentOrder && (
+          <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col text-center justify-center w-[90%] max-w-200 border border-green-100 gap-4">
+            <h1 className="text-xl font-bold  text-gray-800">
+              📦Current Order
+            </h1>
+            <div className="text-gray-800 text-lg border border-gray-300 bg-gray-100 rounded-lg p-4 flex flex-col gap-2">
+              <p>{currentOrder?.shopOrder.shop.name}</p>
+              <p>{currentOrder?.deliveryAddress.text}</p>
+              <p>
+                {currentOrder?.shopOrder.shopOrderItem.length} items | ₹
+                {currentOrder?.shopOrder.subtotal}
+              </p>
+            </div>
+            <DeliveryTracking data={currentOrder} />
+            {!showOtpBox ? (
+              <button
+                className="bg-green-600 text-white px-4 font-semibold py-2 rounded-lg hover:bg-green-700 cursor-pointer transition-all duration-200"
+                onClick={handleSendOtp}
+              >
+                Mark as Delivered
+              </button>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <input
+                  type="text"
+                  placeholder={`Enter OTP sent to ${currentOrder?.user.fullName}`}
+                  className="border border-gray-300 rounded-lg p-2 w-full text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2"
+                />
+                <button className="bg-green-600 text-white px-4 font-semibold py-2 rounded-lg hover:bg-green-700 cursor-pointer transition-all duration-200">
+                  Submit OTP
+                </button>
+              </div>
             )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
