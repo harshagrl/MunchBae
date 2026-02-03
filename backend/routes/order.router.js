@@ -7,7 +7,9 @@ import {
   getMyOrders,
   getOrderById,
   placeOrder,
+  sendDeliveryOtp,
   updateOrderStatus,
+  verifyDeliveryOtp,
 } from "../controllers/order.controller.js";
 
 const orderRouter = express.Router();
@@ -19,6 +21,8 @@ orderRouter.get(
   isAuth,
   getDeliveryPartnerAssignment,
 );
+orderRouter.post("/send-delivery-otp", isAuth, sendDeliveryOtp);
+orderRouter.post("/verify-delivery-otp", isAuth, verifyDeliveryOtp);
 orderRouter.post("/update-status/:orderId/:shopId", isAuth, updateOrderStatus);
 orderRouter.get("/accept-order/:assignmentId", isAuth, acceptOrderAssignment);
 orderRouter.get("/get-current-order", isAuth, getCurrentOrder);

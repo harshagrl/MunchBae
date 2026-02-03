@@ -230,3 +230,9 @@
 - called getOrderById api in TrackOrderPage.jsx to fetch order details
 - accessed order details in TrackOrderPage.jsx to show delivery tracking map using DeliveryTracking.jsx component
 - routed TrackOrderPage.jsx in App.jsx
+
+- created sendDeliveryOtpMail function in utils/mail.js to send otp mail to delivery partner
+- built sendDeliveryOtp controller in controllers/deliveryAssignment.controller.js to send otp to delivery partner
+- routed it in routes/deliveryAssignment.router.js
+- built verifyDeliveryOtp controller in controllers/deliveryAssignment.controller.js to verify otp of delivery partner
+- routed it in routes/deliveryAssignment.router.js
