@@ -236,3 +236,8 @@
 - routed it in routes/deliveryAssignment.router.js
 - built verifyDeliveryOtp controller in controllers/deliveryAssignment.controller.js to verify otp of delivery partner
 - routed it in routes/deliveryAssignment.router.js
+
+- created sendDeliveryOtp function in DeliveryBoyDashBoard.jsx to send otp mail to delivery partner
+- created verifyDeliveryOtp function in DeliveryBoyDashBoard.jsx to verify otp entered by delivery partner
+- otp state in DeliveryBoyDashBoard.jsx to store entered otp by delivery partner
+- accessed otp state in input field in DeliveryBoyDashBoard.jsx

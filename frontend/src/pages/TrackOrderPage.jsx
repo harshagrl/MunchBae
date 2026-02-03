@@ -76,30 +76,33 @@ const TrackOrderPage = () => {
                     </p>
                   </div>
                 ) : (
-                  <p>Delivery partner not assigned yet</p>
+                  <p className="text-gray-500 text-2xl font-semibold">
+                    Delivery partner not assigned yet
+                  </p>
                 )}
               </>
             ) : (
               <p className="text-green-700 font-semibold">Delivered</p>
             )}
-            {shopOrder.assignedDeliveryPartner && (
-              <div className="h-100 w-full rounded-2xl overflow-hidden shadow-md">
-                <DeliveryTracking
-                  data={{
-                    deliveryPartnerLocation: {
-                      lat: shopOrder.assignedDeliveryPartner.location
-                        .coordinates[1],
-                      long: shopOrder.assignedDeliveryPartner.location
-                        .coordinates[0],
-                    },
-                    customerLocation: {
-                      lat: currentOrder.deliveryAddress.latitude,
-                      long: currentOrder.deliveryAddress.longitude,
-                    },
-                  }}
-                />
-              </div>
-            )}
+            {shopOrder.assignedDeliveryPartner &&
+              shopOrder.status !== "delivered" && (
+                <div className="h-100 w-full rounded-2xl overflow-hidden shadow-md">
+                  <DeliveryTracking
+                    data={{
+                      deliveryPartnerLocation: {
+                        lat: shopOrder.assignedDeliveryPartner.location
+                          .coordinates[1],
+                        long: shopOrder.assignedDeliveryPartner.location
+                          .coordinates[0],
+                      },
+                      customerLocation: {
+                        lat: currentOrder.deliveryAddress.latitude,
+                        long: currentOrder.deliveryAddress.longitude,
+                      },
+                    }}
+                  />
+                </div>
+              )}
           </div>
         ))}
       </div>
