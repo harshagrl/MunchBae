@@ -16,20 +16,17 @@ const AddFoodItem = () => {
   const [foodType, setFoodType] = useState("Veg");
   const [loading, setLoading] = useState(false);
   const categories = [
-    "Beverages",
     "Snacks",
-    "Meals",
-    "Desserts",
-    "Pizza",
-    "Burgers",
-    "Sushi",
-    "Salads",
-    "Sandwiches",
-    "South Indian",
-    "North Indian",
-    "Chinese",
     "Fast Food",
-    "Others",
+    "Desert",
+    "Pizza",
+    "Burger",
+    "Sandwich",
+    "South Indian",
+    "Meals",
+    "Noodles",
+    "Chinese",
+    "Drinks",
   ];
 
   const [frontendImage, setFrontendImage] = useState(null);
@@ -59,7 +56,7 @@ const AddFoodItem = () => {
       const result = await axios.post(
         `${serverUrl}/api/item/add-item`,
         formData,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       dispatch(setMyShopData(result.data));
       setLoading(false);

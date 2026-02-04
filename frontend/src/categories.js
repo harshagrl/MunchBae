@@ -11,15 +11,15 @@ import image10 from "./assets/image10.avif";
 import image11 from "./assets/image11.jpg";
 
 export const categories = [
-  { category: "Pizza", image: image1 },
-  { category: "Burger", image: image2 },
-  { category: "Sushi", image: image3 },
-  { category: "Dessert", image: image4 },
-  { category: "Pasta", image: image5 },
-  { category: "Salad", image: image6 },
-  { category: "Steak", image: image7 },
-  { category: "Seafood", image: image8 },
-  { category: "Tacos", image: image9 },
-  { category: "Sandwich", image: image10 },
+  { category: "Snacks", image: image1 },
+  { category: "Fast Food", image: image2 },
+  { category: "Desert", image: image3 },
+  { category: "Pizza", image: image4 },
+  { category: "Burger", image: image5 },
+  { category: "Sandwich", image: image6 },
+  { category: "South Indian", image: image7 },
+  { category: "Meals", image: image8 },
+  { category: "Noodles", image: image9 },
+  { category: "Chinese", image: image10 },
   { category: "Drinks", image: image11 },
 ];

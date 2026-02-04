@@ -18,20 +18,17 @@ const itemSchema = new mongoose.Schema(
     category: {
       type: String,
       enum: [
-        "Beverages",
         "Snacks",
-        "Meals",
-        "Desserts",
-        "Pizza",
-        "Burgers",
-        "Sushi",
-        "Salads",
-        "Sandwiches",
-        "South Indian",
-        "North Indian",
-        "Chinese",
         "Fast Food",
-        "Others",
+        "Desert",
+        "Pizza",
+        "Burger",
+        "Sandwich",
+        "South Indian",
+        "Meals",
+        "Noodles",
+        "Chinese",
+        "Drinks",
       ],
       required: true,
     },
@@ -50,7 +47,7 @@ const itemSchema = new mongoose.Schema(
       count: { type: Number, default: 0 },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Item = mongoose.model("Item", itemSchema);
