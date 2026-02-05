@@ -248,3 +248,6 @@
 - routed it in routes/item.router.js
 
 - created Shop.jsx page to show shop details and its items
+
+- built searchItems controller in controllers/item.controller.js to search items
+- routed it in routes/item.router.js
