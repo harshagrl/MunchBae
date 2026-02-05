@@ -1,8 +1,11 @@
 import React from "react";
 
-const CategoryCard = ({ data }) => {
+const CategoryCard = ({ data, onClick }) => {
   return (
-    <div className="relative w-40 h-40 md:w-45 md:h-45 shrink-0 overflow-hidden transition-shadow cursor-pointer rounded-2xl">
+    <div
+      className="relative w-40 h-40 md:w-45 md:h-45 shrink-0 overflow-hidden transition-shadow cursor-pointer rounded-2xl"
+      onClick={() => onClick()}
+    >
       <img
         src={data.image}
         alt=""

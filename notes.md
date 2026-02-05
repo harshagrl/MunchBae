@@ -241,3 +241,5 @@
 - created verifyDeliveryOtp function in DeliveryBoyDashBoard.jsx to verify otp entered by delivery partner
 - otp state in DeliveryBoyDashBoard.jsx to store entered otp by delivery partner
 - accessed otp state in input field in DeliveryBoyDashBoard.jsx
+- category wise items filtering in UserDashboard.jsx
+- created handleFilterByCategory function in UserDashboard.jsx

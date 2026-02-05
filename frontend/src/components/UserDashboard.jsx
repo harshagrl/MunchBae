@@ -6,13 +6,26 @@ import CityShopsCard from "./CityShopsCard";
 import FoodCard from "./FoodCard";
 import useGetShopByCity from "../hooks/useGetShopByCity";
 import useGetItemsByCity from "../hooks/useGetItemsByCity";
+import { useEffect, useState } from "react";
 
 const UserDashboard = () => {
+  const [updatedItemsList, setUpdatedItemsList] = useState([]);
   const { currentCity, shopsInMyCity, itemsInMyCity } = useSelector(
     (state) => state.user,
   );
   useGetShopByCity();
   useGetItemsByCity();
+  const handleFilterByCategory = (category) => {
+    if (category === "All") {
+      setUpdatedItemsList(itemsInMyCity);
+      return;
+    }
+    const filteredList = itemsInMyCity.filter((i) => i.category === category);
+    setUpdatedItemsList(filteredList);
+  };
+  useEffect(() => {
+    setUpdatedItemsList(itemsInMyCity);
+  }, [itemsInMyCity]);
   return (
     <div className="w-screen min-h-screen flex flex-col bg-linear-to-b from-slate-900 via-slate-800 to-slate-700 py-4 px-2">
       <div className="sticky top-0 z-50">
@@ -27,7 +40,10 @@ const UserDashboard = () => {
           <div className="carousel carousel-end space-x-4 py-4 flex overflow-x-auto ">
             {categories.map((category, index) => (
               <div key={index} className="carousel-item mr-4">
-                <CategoryCard data={category} />
+                <CategoryCard
+                  data={category}
+                  onClick={() => handleFilterByCategory(category.category)}
+                />
               </div>
             ))}
           </div>
@@ -54,7 +70,7 @@ const UserDashboard = () => {
           Explore food items
         </h1>
         <div className="w-full h-auto flex flex-wrap gap-5 justify-center">
-          {(itemsInMyCity || []).map((item, index) => {
+          {(updatedItemsList || []).map((item, index) => {
             return (
               <div key={index}>
                 <FoodCard data={item} />
