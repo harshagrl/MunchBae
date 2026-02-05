@@ -251,3 +251,6 @@
 
 - built searchItems controller in controllers/item.controller.js to search items
 - routed it in routes/item.router.js
+
+- search functionality in NavBar.jsx
+- query state in NavBar.jsx to store search query

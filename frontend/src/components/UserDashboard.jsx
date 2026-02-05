@@ -8,6 +8,8 @@ import useGetShopByCity from "../hooks/useGetShopByCity";
 import useGetItemsByCity from "../hooks/useGetItemsByCity";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import axios from "axios";
+import { serverUrl } from "../App";
 
 const UserDashboard = () => {
   const [updatedItemsList, setUpdatedItemsList] = useState([]);
@@ -25,6 +27,7 @@ const UserDashboard = () => {
     const filteredList = itemsInMyCity.filter((i) => i.category === category);
     setUpdatedItemsList(filteredList);
   };
+
   useEffect(() => {
     setUpdatedItemsList(itemsInMyCity);
   }, [itemsInMyCity]);

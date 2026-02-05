@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../assets/munch-bae-logo.png";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
@@ -18,7 +18,8 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const [showInfo, setShowInfo] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const [search, setSearch] = useState("");
+
+  const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
@@ -31,6 +32,24 @@ const NavBar = () => {
       console.error(err);
     }
   };
+
+  const handleSearchItems = async () => {
+    try {
+      const result = await axios.get(
+        `${serverUrl}/api/item/search-items?query=${query}&city=${currentCity}`,
+        { withCredentials: true },
+      );
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (query) {
+      handleSearchItems();
+    }
+  }, [query]);
 
   return (
     <div
@@ -49,8 +68,8 @@ const NavBar = () => {
           <div className="flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2 shadow-sm w-96">
             <FaSearch className="text-green-700 mr-3" />
             <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               className="w-full bg-transparent outline-none text-sm text-gray-700"
               placeholder="Search for foods..."
             />
@@ -177,8 +196,8 @@ const NavBar = () => {
                   <FaSearch className="text-green-700" />
                   <input
                     autoFocus
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
                     onBlur={() =>
                       setTimeout(() => setMobileSearchOpen(false), 150)
                     }
