@@ -256,3 +256,5 @@
 - query state in NavBar.jsx to store search query
 - searchItems state in user.slice.js to store searched items
 - dispatched setSearchItems action in handleSearchItems function in NavBar.jsx
+- accessed searchItems in UserDashboard.jsx to show searched items if exist
+- modified getCurrentLocation in checkout.jsx to set address only if not set already

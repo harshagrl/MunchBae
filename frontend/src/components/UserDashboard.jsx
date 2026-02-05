@@ -8,14 +8,11 @@ import useGetShopByCity from "../hooks/useGetShopByCity";
 import useGetItemsByCity from "../hooks/useGetItemsByCity";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import axios from "axios";
-import { serverUrl } from "../App";
 
 const UserDashboard = () => {
   const [updatedItemsList, setUpdatedItemsList] = useState([]);
-  const { currentCity, shopsInMyCity, itemsInMyCity } = useSelector(
-    (state) => state.user,
-  );
+  const { currentCity, shopsInMyCity, itemsInMyCity, searchItems } =
+    useSelector((state) => state.user);
   const navigate = useNavigate();
   useGetShopByCity();
   useGetItemsByCity();
@@ -36,7 +33,22 @@ const UserDashboard = () => {
       <div className="sticky top-0 z-50">
         <NavBar />
       </div>
-
+      {searchItems && searchItems.length > 0 && (
+        <div className="flex flex-col items-center text-white w-full space-y-6 mt-4 p-3">
+          <h1 className="text-2xl md:text-3xl font-bold font-sans">
+            Search Results
+          </h1>
+          <div className="w-full h-auto flex flex-wrap gap-5 justify-center">
+            {searchItems.map((item, index) => {
+              return (
+                <div key={index}>
+                  <FoodCard data={item} />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
       <div className="flex flex-col items-center text-white w-full space-y-6 mt-0 md:mt-10 p-3">
         <h1 className="text-2xl md:text-3xl font-bold font-sans">
           What's on your mind?
