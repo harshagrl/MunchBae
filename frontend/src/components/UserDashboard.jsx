@@ -7,12 +7,14 @@ import FoodCard from "./FoodCard";
 import useGetShopByCity from "../hooks/useGetShopByCity";
 import useGetItemsByCity from "../hooks/useGetItemsByCity";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 const UserDashboard = () => {
   const [updatedItemsList, setUpdatedItemsList] = useState([]);
   const { currentCity, shopsInMyCity, itemsInMyCity } = useSelector(
     (state) => state.user,
   );
+  const navigate = useNavigate();
   useGetShopByCity();
   useGetItemsByCity();
   const handleFilterByCategory = (category) => {
@@ -56,9 +58,12 @@ const UserDashboard = () => {
         </h1>
         <div className="w-full md:w-[80%]">
           <div className="carousel carousel-end space-x-4 py-4 flex overflow-x-auto flex-nowrap justify-center">
-            {(shopsInMyCity || []).map((category, index) => (
+            {(shopsInMyCity || []).map((shop, index) => (
               <div key={index} className="carousel-item mr-4">
-                <CityShopsCard data={category} />
+                <CityShopsCard
+                  data={shop}
+                  onClick={() => navigate(`/shop/${shop._id}`)}
+                />
               </div>
             ))}
           </div>

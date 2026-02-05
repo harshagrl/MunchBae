@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { setUserData } from "./store/user.slice";
 import useUpdateUserLocation from "./hooks/useUpdateUserLocation";
 import TrackOrderPage from "./pages/TrackOrderPage";
+import Shop from "./pages/Shop";
 
 export const serverUrl = "http://localhost:8000";
 
@@ -89,6 +90,10 @@ const App = () => {
       <Route
         path="/track-order/:orderId"
         element={userData ? <TrackOrderPage /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/shop/:shopId"
+        element={userData ? <Shop /> : <Navigate to={"/signin"} />}
       />
     </Routes>
   );

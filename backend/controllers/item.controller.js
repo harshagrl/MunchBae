@@ -64,7 +64,7 @@ export const editItem = async (req, res) => {
         price,
         image,
       },
-      { new: true }
+      { new: true },
     );
     if (!item) {
       return res.status(400).json({ message: `item not found` });
@@ -133,5 +133,20 @@ export const getItemByCity = async (req, res) => {
     return res
       .status(500)
       .json({ message: `Getting items by city error: ${error}` });
+  }
+};
+
+export const getItemByShop = async (req, res) => {
+  try {
+    const { shopId } = req.params;
+    const shop = await Shop.findById(shopId).populate("items");
+    if (!shop) {
+      return res.status(400).json({ message: `Shop not found` });
+    }
+    return res.status(200).json({ shop, items: shop.items });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `Getting items by shop error: ${error}` });
   }
 };

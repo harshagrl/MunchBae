@@ -1,6 +1,9 @@
-const CityShopsCard = ({ data }) => {
+const CityShopsCard = ({ data, onClick }) => {
   return (
-    <div className="relative w-60 h-50 md:w-80 md:h-70 shrink-0 overflow-hidden transition-shadow cursor-pointer rounded-2xl">
+    <div
+      className="relative w-60 h-50 md:w-80 md:h-70 shrink-0 overflow-hidden transition-shadow cursor-pointer rounded-2xl"
+      onClick={onClick}
+    >
       <img
         src={data.image}
         alt=""

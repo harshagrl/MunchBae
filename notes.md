@@ -243,3 +243,8 @@
 - accessed otp state in input field in DeliveryBoyDashBoard.jsx
 - category wise items filtering in UserDashboard.jsx
 - created handleFilterByCategory function in UserDashboard.jsx
+
+- getItemsByShop controller in controllers/item.controller.js to get items based on shop id
+- routed it in routes/item.router.js
+
+- created Shop.jsx page to show shop details and its items
