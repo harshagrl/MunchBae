@@ -254,3 +254,5 @@
 
 - search functionality in NavBar.jsx
 - query state in NavBar.jsx to store search query
+- searchItems state in user.slice.js to store searched items
+- dispatched setSearchItems action in handleSearchItems function in NavBar.jsx

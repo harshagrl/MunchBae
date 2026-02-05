@@ -6,7 +6,7 @@ import { IoIosCart } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { serverUrl } from "../App";
-import { setUserData } from "../store/user.slice";
+import { setSearchItems, setUserData } from "../store/user.slice";
 import { IoIosAdd } from "react-icons/io";
 import { TbReceiptRupee } from "react-icons/tb";
 import { Link, useNavigate } from "react-router";
@@ -20,6 +20,7 @@ const NavBar = () => {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const [query, setQuery] = useState("");
+
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
@@ -39,7 +40,7 @@ const NavBar = () => {
         `${serverUrl}/api/item/search-items?query=${query}&city=${currentCity}`,
         { withCredentials: true },
       );
-      console.log(result.data);
+      dispatch(setSearchItems(result.data));
     } catch (error) {
       console.log(error);
     }
@@ -48,6 +49,8 @@ const NavBar = () => {
   useEffect(() => {
     if (query) {
       handleSearchItems();
+    } else {
+      dispatch(setSearchItems(null));
     }
   }, [query]);
 
