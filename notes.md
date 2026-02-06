@@ -258,3 +258,7 @@
 - dispatched setSearchItems action in handleSearchItems function in NavBar.jsx
 - accessed searchItems in UserDashboard.jsx to show searched items if exist
 - modified getCurrentLocation in checkout.jsx to set address only if not set already
+
+- installed razorpay for online payment
+- configured razorpay instance in order.controller.js using key id and secret from .env file
+- created razorOrder in placeOrder controller for online payment method
