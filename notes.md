@@ -262,3 +262,5 @@
 - installed razorpay for online payment
 - configured razorpay instance in order.controller.js using key id and secret from .env file
 - created razorOrder in placeOrder controller for online payment method
+- created verifyPayment controller in order.controller.js to verify payment signature from frontend
+- routed it in routes/order.router.js
