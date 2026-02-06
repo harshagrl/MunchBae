@@ -14,9 +14,15 @@ function UserOrderCard({ data }) {
           </p>
         </div>
         <div className="text-right">
-          <h3 className="text-lg font-semibold text-gray-800">
-            Payment Method: {data.paymentMethod?.toUpperCase()}
-          </h3>
+          {data.paymentMethod === "cod" ? (
+            <h3 className="text-lg font-semibold text-gray-800">
+              Payment Method: {data.paymentMethod?.toUpperCase()}
+            </h3>
+          ) : (
+            <h3 className="text-lg font-semibold text-gray-800">
+              Payment verified: {data.payment ? "Yes" : "No"}
+            </h3>
+          )}
           <p className="text-sm font-medium text-gray-500 font-sans">
             Status:{" "}
             <span className="text-blue-600 capitalize">

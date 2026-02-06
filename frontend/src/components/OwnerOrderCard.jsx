@@ -4,6 +4,7 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { useDispatch } from "react-redux";
 import { updateOrderStatus } from "../store/user.slice";
+import { MdPayments } from "react-icons/md";
 import { useState } from "react";
 function OwnerOrderCard({ data }) {
   const dispatch = useDispatch();
@@ -17,11 +18,11 @@ function OwnerOrderCard({ data }) {
       );
       dispatch(updateOrderStatus({ orderId, shopId, status }));
       setAvailablePartners(result.data.availableDeliveryPartners);
-      console.log(result.data);
     } catch (error) {
       console.error("Error fetching status:", error);
     }
   };
+
   return (
     <div className="bg-white shadow rounded-lg p-4 space-y-4 w-full max-w-3xl">
       <div className="text-black">
@@ -34,6 +35,17 @@ function OwnerOrderCard({ data }) {
           <FaPhoneAlt size={14} />
           {data.user.mobile}
         </p>
+
+        <p className="flex items-center gap-1 text-sm text-gray-500 font-medium">
+          <MdPayments size={14} />
+          Payment Method:{" "}
+          {data.paymentMethod === "cod" ? "Cash on Delivery" : "Online Payment"}
+        </p>
+        {data.paymentMethod === "online" && (
+          <p className="text-gray-600 font-bold text-sm ">
+            Payment Verified: {data.payment ? "Yes" : "No"}
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1 items-start">

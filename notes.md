@@ -264,3 +264,7 @@
 - created razorOrder in placeOrder controller for online payment method
 - created verifyPayment controller in order.controller.js to verify payment signature from frontend
 - routed it in routes/order.router.js
+
+- created openRazorpay function in Checkout.jsx to open razorpay payment gateway
+- called openRazorpay function in handlePlaceOrder function in Checkout.jsx after successful order placement
+- redirected to order placed page after successful payment in Checkout.jsx

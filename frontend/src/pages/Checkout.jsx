@@ -100,11 +100,43 @@ const Checkout = () => {
         },
         { withCredentials: true },
       );
-      dispatch(addMyOrder(result.data));
-      navigate("/order-placed");
+      if (paymentMethod === "cod") {
+        dispatch(addMyOrder(result.data));
+        navigate("/order-placed");
+      } else {
+        const orderId = result.data.orderId;
+        const razorOrder = result.data.razorOrder;
+        openRazorpay(orderId, razorOrder);
+        navigate("/order-placed");
+      }
     } catch (error) {
       console.error(`Place order error: ${error}`);
     }
+  };
+  const openRazorpay = (orderId, razorOrder) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: razorOrder.amount,
+      currency: "INR",
+      name: "MunchBae",
+      description: "Food Delivery website",
+      order_id: razorOrder.id,
+      handler: async function (response) {
+        try {
+          const result = await axios.post(
+            `${serverUrl}/api/order/verify-payment`,
+            { razorpay_payment_id: response.razorpay_payment_id, orderId },
+            { withCredentials: true },
+          );
+          dispatch(addMyOrder(result.data));
+          navigate("/order-placed");
+        } catch (error) {
+          console.error(`Payment verification error: ${error}`);
+        }
+      },
+    };
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
   useEffect(() => {
     setAddressInput(address);
