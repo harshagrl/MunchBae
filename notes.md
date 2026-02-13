@@ -268,3 +268,6 @@
 - created openRazorpay function in Checkout.jsx to open razorpay payment gateway
 - called openRazorpay function in handlePlaceOrder function in Checkout.jsx after successful order placement
 - redirected to order placed page after successful payment in Checkout.jsx
+
+- installed socket.io for real time order status updates
+- configured socket.io in index.js and made it available throughout the app using app.set("io", io)

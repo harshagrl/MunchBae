@@ -9,8 +9,19 @@ import userRouter from "./routes/user.router.js";
 import shopRouter from "./routes/shop.router.js";
 import itemRouter from "./routes/item.router.js";
 import orderRouter from "./routes/order.router.js";
-
+import http from "http";
+import { Server } from "socket.io";
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST"],
+  },
+});
+
+app.set("io", io);
 const port = process.env.PORT || 5000;
 
 app.use(
@@ -29,7 +40,7 @@ app.use("/api/shop", shopRouter);
 app.use("/api/item", itemRouter);
 app.use("/api/order", orderRouter);
 
-app.listen(port, async () => {
+server.listen(port, async () => {
   await connectDB();
   console.log(`Server is running on ${port}`);
 });
