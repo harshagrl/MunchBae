@@ -215,6 +215,9 @@ export const updateOrderStatus = async (req, res) => {
     const { orderId, shopId } = req.params;
     const { status } = req.body;
     const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(400).json({ message: "Order not found" });
+    }
     const shopOrder = order.shopOrders.find((o) => o.shop == shopId);
     if (!shopOrder) {
       return res.status(400).json({ message: `Shop Order not found` });
@@ -259,6 +262,7 @@ export const updateOrderStatus = async (req, res) => {
         broadcastedTo: candidates,
         status: "broadcasted",
       });
+
       shopOrder.assignedDeliveryPartner = deliveryAssignment.assignedTo;
       shopOrder.assignment = deliveryAssignment._id;
       deliveryBoysPayload = availableDeliveryPartners.map((b) => ({
@@ -268,20 +272,56 @@ export const updateOrderStatus = async (req, res) => {
         latitude: b.location.coordinates?.[1],
         mobile: b.mobile,
       }));
+      await deliveryAssignment.populate("order");
+      await deliveryAssignment.populate("shop");
+      const io = req.app.get("io");
+      if (io) {
+        availableDeliveryPartners.forEach((boy) => {
+          const deliveryPartnerSocketId = boy.socketId;
+          if (deliveryPartnerSocketId) {
+            io.to(deliveryPartnerSocketId).emit("newAssignment", {
+              sentTo: boy._id,
+              orderId: deliveryAssignment.order._id,
+              assignmentId: deliveryAssignment._id,
+              shopName: deliveryAssignment.shop?.name || null,
+              deliveryAddress:
+                deliveryAssignment.order?.deliveryAddress || null,
+              items: shopOrder?.shopOrderItem || [],
+              subtotal: shopOrder?.subtotal || 0,
+              status: deliveryAssignment.status,
+            });
+          }
+        });
+      }
     }
+
     await shopOrder.save();
     await order.save();
     const updatedShopOrder = order.shopOrders.find((o) => o.shop == shopId);
     await order.populate("shopOrders.shop", "name");
+    await order.populate("shopOrders.owner", "fullName socketId");
     await order.populate(
       "shopOrders.assignedDeliveryPartner",
       "fullName email mobile",
     );
+    await order.populate("user", "socketId");
+    const io = req.app.get("io");
+    if (io) {
+      const userSocketId = order.user?.socketId;
+      if (userSocketId) {
+        io.to(userSocketId).emit("update-status", {
+          orderId: order._id,
+          shopId: updatedShopOrder.shop._id,
+          status: updatedShopOrder.status,
+          userId: order.user._id,
+        });
+      }
+    }
     return res.status(200).json({
       shopOrder: updatedShopOrder,
       assignedDeliveryPartner: updatedShopOrder?.assignedDeliveryPartner,
       availableDeliveryPartners: deliveryBoysPayload,
-      assignment: updatedShopOrder?.assignment._id,
+      assignment: updatedShopOrder?.assignment?._id,
     });
   } catch (error) {
     return res

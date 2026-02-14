@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import UserOrderCard from "../components/UserOrderCard";
 import OwnerOrderCard from "../components/OwnerOrderCard";
-import { setMyOrders } from "../store/user.slice";
+import { setMyOrders, updateRealTimeOrderStatus } from "../store/user.slice";
 
 const MyOrders = () => {
   const { userData, myOrders, socket } = useSelector((state) => state.user);
@@ -16,8 +16,14 @@ const MyOrders = () => {
         dispatch(setMyOrders([data, ...myOrders]));
       }
     });
+    socket?.on("update-status", ({ orderId, shopId, status, userId }) => {
+      if (userId === userData._id) {
+        dispatch(updateRealTimeOrderStatus({ orderId, shopId, status }));
+      }
+    });
     return () => {
       socket?.off("newOrder");
+      socket?.off("update-status");
     };
   }, [socket]);
   return (

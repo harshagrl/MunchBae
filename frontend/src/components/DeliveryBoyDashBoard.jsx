@@ -10,7 +10,7 @@ const DeliveryBoyDashBoard = () => {
   const [currentOrder, setCurrentOrder] = useState();
   const [showOtpBox, setShowOtpBox] = useState(false);
   const [otp, setOtp] = useState("");
-  const { userData } = useSelector((state) => state.user);
+  const { userData, socket } = useSelector((state) => state.user);
   const getDeliveryPartnerAssignments = async () => {
     try {
       const result = await axios.get(
@@ -91,7 +91,16 @@ const DeliveryBoyDashBoard = () => {
       console.log(error);
     }
   };
-
+  useEffect(() => {
+    socket?.on("newAssignment", (data) => {
+      if (data.sentTo === userData._id) {
+        setAvailableAssignments((prev) => [...prev, data]);
+      }
+    });
+    return () => {
+      socket?.off("newAssignment");
+    };
+  }, [socket]);
   useEffect(() => {
     getDeliveryPartnerAssignments();
     getCurrentOrder();
