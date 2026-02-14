@@ -274,3 +274,4 @@
 - socketId and isOnline fields in user.model.js to manage user online status and socket connections
 - updated socketId and isOnline fields in user document during user signin and signout in auth.controller.js
 - created socket event listeners in index.js for user connection and disconnection to update user online status
+- emitted order status updates from order.controller.js after updating order status

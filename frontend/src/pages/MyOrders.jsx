@@ -1,13 +1,25 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import UserOrderCard from "../components/UserOrderCard";
 import OwnerOrderCard from "../components/OwnerOrderCard";
+import { setMyOrders } from "../store/user.slice";
 
 const MyOrders = () => {
-  const { userData, myOrders } = useSelector((state) => state.user);
+  const { userData, myOrders, socket } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    socket?.on("newOrder", (data) => {
+      if (data.shopOrders?.owner._id === userData._id) {
+        dispatch(setMyOrders([data, ...myOrders]));
+      }
+    });
+    return () => {
+      socket?.off("newOrder");
+    };
+  }, [socket]);
   return (
     <div className="w-full min-h-screen flex justify-center p-4 bg-linear-to-b from-slate-900 via-slate-800 to-slate-700">
       <div className="w-full max-w-200 p-4">
