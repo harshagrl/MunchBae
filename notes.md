@@ -271,3 +271,6 @@
 
 - installed socket.io for real time order status updates
 - configured socket.io in index.js and made it available throughout the app using app.set("io", io)
+- socketId and isOnline fields in user.model.js to manage user online status and socket connections
+- updated socketId and isOnline fields in user document during user signin and signout in auth.controller.js
+- created socket event listeners in index.js for user connection and disconnection to update user online status

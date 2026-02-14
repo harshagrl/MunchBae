@@ -36,6 +36,10 @@ const userSchema = mongoose.Schema(
     socketId: {
       type: String,
     },
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
     location: {
       type: {
         type: String,

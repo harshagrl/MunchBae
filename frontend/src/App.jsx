@@ -17,16 +17,17 @@ import OrderPlaced from "./pages/OrderPlaced";
 import MyOrders from "./pages/MyOrders";
 import useGetMyOrders from "./hooks/useGetMyOrders";
 import { useEffect } from "react";
-import { setUserData } from "./store/user.slice";
+import { setSocket, setUserData } from "./store/user.slice";
 import useUpdateUserLocation from "./hooks/useUpdateUserLocation";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import Shop from "./pages/Shop";
+import { io } from "socket.io-client";
 
 export const serverUrl = "http://localhost:8000";
 
 const App = () => {
   const dispatch = useDispatch();
-  const { userData } = useSelector((state) => state.user);
+  const { userData, socket } = useSelector((state) => state.user);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("userData");
@@ -41,6 +42,24 @@ const App = () => {
   useGetItemByCity();
   useGetMyOrders();
   useUpdateUserLocation();
+  useEffect(() => {
+    const socketInstance = io(serverUrl, { withCredentials: true });
+    dispatch(setSocket(socketInstance));
+    socketInstance.on("connect", () => {
+      if (userData) {
+        socketInstance.emit("identity", { userId: userData._id });
+      }
+    });
+    return () => {
+      socketInstance.disconnect();
+    };
+  }, [userData?._id]);
+
+  useEffect(() => {
+    if (userData && socket) {
+      socket.emit("identity", { userId: userData._id });
+    }
+  }, [userData, socket]);
   return (
     <Routes>
       <Route

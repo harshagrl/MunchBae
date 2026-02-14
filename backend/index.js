@@ -11,6 +11,7 @@ import itemRouter from "./routes/item.router.js";
 import orderRouter from "./routes/order.router.js";
 import http from "http";
 import { Server } from "socket.io";
+import { socketHandler } from "./socket.js";
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -39,7 +40,7 @@ app.use("/api/user", userRouter);
 app.use("/api/shop", shopRouter);
 app.use("/api/item", itemRouter);
 app.use("/api/order", orderRouter);
-
+socketHandler(io);
 server.listen(port, async () => {
   await connectDB();
   console.log(`Server is running on ${port}`);
