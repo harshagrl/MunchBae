@@ -10,7 +10,83 @@ const DeliveryBoyDashBoard = () => {
   const [currentOrder, setCurrentOrder] = useState();
   const [showOtpBox, setShowOtpBox] = useState(false);
   const [otp, setOtp] = useState("");
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [distanceError, setDistanceError] = useState(null);
+  const [currentDistance, setCurrentDistance] = useState(null);
   const { userData, socket } = useSelector((state) => state.user);
+
+  // Function to calculate distance between two coordinates using Haversine formula
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371000; // Earth's radius in meters
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in meters
+    return distance;
+  };
+
+  useEffect(() => {
+    if (!socket || userData?.role !== "deliveryBoy") return;
+    let watchId;
+    if (navigator.geolocation) {
+      watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          // Update local state with real-time location
+          setCurrentLocation({
+            latitude: latitude.toFixed(6),
+            longitude: longitude.toFixed(6),
+          });
+
+          // Emit to server
+          socket.emit("updateLocation", {
+            latitude,
+            longitude,
+            userId: userData._id,
+          });
+        },
+        (error) => {
+          console.error("Error watching position:", error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        },
+      );
+    }
+    return () => {
+      if (watchId) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    };
+  }, [socket, userData]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleLocationUpdate = ({ deliveryBoyId, latitude, longitude }) => {
+      setCurrentLocation({
+        latitude: latitude.toFixed(6),
+        longitude: longitude.toFixed(6),
+      });
+    };
+
+    socket.on("updateDeliveryLocation", handleLocationUpdate);
+
+    return () => {
+      socket.off("updateDeliveryLocation", handleLocationUpdate);
+    };
+  }, [socket]);
+
   const getDeliveryPartnerAssignments = async () => {
     try {
       const result = await axios.get(
@@ -32,7 +108,7 @@ const DeliveryBoyDashBoard = () => {
         },
       );
       console.log(result.data);
-      // backend returns { message: 'No current active ...' } when there's no assignment
+
       if (result.data && result.data.message) {
         setCurrentOrder(null);
       } else {
@@ -55,6 +131,45 @@ const DeliveryBoyDashBoard = () => {
   };
   const sendDeliveryOtp = async () => {
     try {
+      // Check if current location exists
+      if (!currentLocation) {
+        setDistanceError("Location not available. Please enable GPS.");
+        return;
+      }
+
+      // Get customer location
+      const customerLat =
+        currentOrder?.deliveryAddress?.latitude ||
+        currentOrder?.order?.deliveryAddress?.latitude;
+      const customerLon =
+        currentOrder?.deliveryAddress?.longitude ||
+        currentOrder?.order?.deliveryAddress?.longitude;
+
+      if (!customerLat || !customerLon) {
+        setDistanceError("Customer location not available.");
+        return;
+      }
+
+      // Calculate distance
+      const distance = calculateDistance(
+        parseFloat(currentLocation.latitude),
+        parseFloat(currentLocation.longitude),
+        customerLat,
+        customerLon,
+      );
+
+      setCurrentDistance(distance);
+
+      // Check if within 10 meters
+      if (distance > 10) {
+        setDistanceError(
+          `You are ${distance.toFixed(2)} meters away. You must be within 10 meters to send OTP.`,
+        );
+        return;
+      }
+
+      setDistanceError(null);
+
       const result = await axios.post(
         `${serverUrl}/api/order/send-delivery-otp`,
         {
@@ -70,6 +185,7 @@ const DeliveryBoyDashBoard = () => {
       console.log(result.data);
     } catch (error) {
       console.log(error);
+      setDistanceError("Error sending OTP. Please try again.");
     }
   };
 
@@ -92,15 +208,18 @@ const DeliveryBoyDashBoard = () => {
     }
   };
   useEffect(() => {
-    socket?.on("newAssignment", (data) => {
+    const handleNewAssignment = (data) => {
       if (data.sentTo === userData._id) {
         setAvailableAssignments((prev) => [...prev, data]);
       }
-    });
-    return () => {
-      socket?.off("newAssignment");
     };
-  }, [socket]);
+
+    socket?.on("newAssignment", handleNewAssignment);
+    return () => {
+      socket?.off("newAssignment", handleNewAssignment);
+    };
+  }, [socket, userData]);
+
   useEffect(() => {
     getDeliveryPartnerAssignments();
     getCurrentOrder();
@@ -119,10 +238,19 @@ const DeliveryBoyDashBoard = () => {
           </h1>
           <p className="text-gray-800 text-md">
             <span className="underline font-semibold">Latitude:</span>{" "}
-            {userData?.location?.coordinates?.[1]},{" "}
-            <span className="underline font-semibold">Longitude:</span>{" "}
-            {userData?.location?.coordinates?.[0]}
+            {currentLocation?.latitude ||
+              userData?.location?.coordinates?.[1] ||
+              "N/A"}
+            , <span className="underline font-semibold">Longitude:</span>{" "}
+            {currentLocation?.longitude ||
+              userData?.location?.coordinates?.[0] ||
+              "N/A"}
           </p>
+          {currentLocation && (
+            <p className="text-xs text-green-600 font-semibold animate-pulse">
+              ● Live tracking active
+            </p>
+          )}
         </div>
         {!currentOrder?.shopOrder && (
           <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col text-center justify-center w-[90%] max-w-200 border border-green-100 gap-4">
@@ -179,7 +307,48 @@ const DeliveryBoyDashBoard = () => {
                 {currentOrder?.shopOrder?.subtotal || 0}
               </p>
             </div>
-            <DeliveryTracking data={currentOrder} />
+            <DeliveryTracking
+              data={{
+                deliveryPartnerLocation: currentLocation
+                  ? {
+                      lat: parseFloat(currentLocation.latitude),
+                      long: parseFloat(currentLocation.longitude),
+                    }
+                  : {
+                      lat: userData?.location?.coordinates?.[1] || 0,
+                      long: userData?.location?.coordinates?.[0] || 0,
+                    },
+                customerLocation: {
+                  lat:
+                    currentOrder?.deliveryAddress?.latitude ||
+                    currentOrder?.order?.deliveryAddress?.latitude ||
+                    0,
+                  long:
+                    currentOrder?.deliveryAddress?.longitude ||
+                    currentOrder?.order?.deliveryAddress?.longitude ||
+                    0,
+                },
+              }}
+            />
+            {currentDistance !== null && !showOtpBox && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+                <p className="text-blue-700 font-semibold">
+                  Distance: {currentDistance.toFixed(2)} meters
+                </p>
+                {currentDistance <= 10 && (
+                  <p className="text-green-600 text-sm font-semibold">
+                    ✓ Within delivery range
+                  </p>
+                )}
+              </div>
+            )}
+            {distanceError && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-red-700 font-semibold text-sm text-center">
+                  {distanceError}
+                </p>
+              </div>
+            )}
             {!showOtpBox ? (
               <button
                 className="bg-green-600 text-white px-4 font-semibold py-2 rounded-lg hover:bg-green-700 cursor-pointer transition-all duration-200"
@@ -189,6 +358,21 @@ const DeliveryBoyDashBoard = () => {
               </button>
             ) : (
               <div className="flex flex-col gap-2">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Enter OTP
+                  </h3>
+                  <button
+                    onClick={() => {
+                      setShowOtpBox(false);
+                      setDistanceError(null);
+                      setOtp("");
+                    }}
+                    className="text-gray-500 hover:text-gray-700 font-bold text-xl"
+                  >
+                    ✕
+                  </button>
+                </div>
                 <input
                   type="text"
                   onChange={(e) => setOtp(e.target.value)}

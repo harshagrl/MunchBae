@@ -278,3 +278,5 @@
 - modified OwnerOrderCard.jsx to listen for order status updates using socket.io and update order status in real time
 - emitted new order assignment to delivery partner from order.controller.js after creating delivery assignment
 - listened for new order assignment in DeliveryBoyDashBoard.jsx using socket.io and updated available assignments in real time
+
+- real time location tracking for delivery partner using socket.io

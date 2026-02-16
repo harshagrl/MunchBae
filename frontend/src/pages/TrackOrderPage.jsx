@@ -1,14 +1,17 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { serverUrl } from "../App";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import DeliveryTracking from "../components/DeliveryTracking";
+import { useSelector } from "react-redux";
 
 const TrackOrderPage = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [currentOrder, setCurrentOrder] = useState();
+  const [liveLocations, setLiveLocations] = useState({});
+  const { socket } = useSelector((state) => state.user);
   const handleGetOrder = async () => {
     try {
       const result = await axios.get(
@@ -21,6 +24,22 @@ const TrackOrderPage = () => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleLocationUpdate = ({ deliveryBoyId, latitude, longitude }) => {
+      setLiveLocations((prev) => ({
+        ...prev,
+        [deliveryBoyId]: { lat: latitude, long: longitude },
+      }));
+    };
+
+    socket.on("updateDeliveryLocation", handleLocationUpdate);
+
+    return () => {
+      socket.off("updateDeliveryLocation", handleLocationUpdate);
+    };
+  }, [socket]);
   useEffect(() => {
     handleGetOrder();
   }, [orderId]);
@@ -89,7 +108,9 @@ const TrackOrderPage = () => {
                 <div className="h-100 w-full rounded-2xl overflow-hidden shadow-md">
                   <DeliveryTracking
                     data={{
-                      deliveryPartnerLocation: {
+                      deliveryPartnerLocation: liveLocations[
+                        shopOrder.assignedDeliveryPartner._id
+                      ] || {
                         lat: shopOrder.assignedDeliveryPartner.location
                           .coordinates[1],
                         long: shopOrder.assignedDeliveryPartner.location

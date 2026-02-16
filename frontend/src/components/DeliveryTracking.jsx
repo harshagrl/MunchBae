@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import scooter from "../assets/scooter.png";
 import home from "../assets/home.png";
 import L from "leaflet";
@@ -9,6 +9,7 @@ import {
   Polyline,
   Popup,
   TileLayer,
+  useMap,
 } from "react-leaflet";
 
 const deliveryPartnerIcon = L.icon({
@@ -21,6 +22,19 @@ const customerIcon = L.icon({
   iconSize: [50, 50],
   iconAnchor: [25, 50],
 });
+
+const MapUpdater = ({ deliveryPartnerLat, deliveryPartnerLong }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (map) {
+      map.setView([deliveryPartnerLat, deliveryPartnerLong], 16);
+    }
+  }, [deliveryPartnerLat, deliveryPartnerLong, map]);
+
+  return null;
+};
+
 const DeliveryTracking = ({ data }) => {
   const deliveryPartnerLat = data.deliveryPartnerLocation.lat;
   const deliveryPartnerLong = data.deliveryPartnerLocation.long;
@@ -37,6 +51,10 @@ const DeliveryTracking = ({ data }) => {
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <MapUpdater
+          deliveryPartnerLat={deliveryPartnerLat}
+          deliveryPartnerLong={deliveryPartnerLong}
         />
         <Marker
           position={[deliveryPartnerLat, deliveryPartnerLong]}

@@ -16,6 +16,33 @@ export const socketHandler = (io) => {
         console.error("Error updating user socket ID:", error);
       }
     });
+
+    socket.on(
+      "updateLocation",
+      async ({ latitude, longitude, userId, orderId }) => {
+        try {
+          const user = await User.findByIdAndUpdate(userId, {
+            location: {
+              type: "Point",
+              coordinates: [longitude, latitude],
+            },
+            isOnline: true,
+            socketId: socket.id,
+          });
+          if (user) {
+            // Broadcast to all clients (or use orderId to target specific room if implemented)
+            io.emit("updateDeliveryLocation", {
+              deliveryBoyId: userId,
+              latitude,
+              longitude,
+            });
+          }
+        } catch (error) {
+          console.error("Error updating delivery location:", error);
+        }
+      },
+    );
+
     socket.on("disconnect", async () => {
       try {
         await User.findOneAndUpdate(
