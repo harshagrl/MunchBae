@@ -280,3 +280,8 @@
 - listened for new order assignment in DeliveryBoyDashBoard.jsx using socket.io and updated available assignments in real time
 
 - real time location tracking for delivery partner using socket.io
+
+- rating api in item.controller.js to rate food items
+- routed it in routes/item.router.js
+- created handleRating function in userordercaard.jsx to rate food items
+- called handleRating function on button click in UserOrderCard.jsx
