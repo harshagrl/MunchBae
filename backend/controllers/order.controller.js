@@ -561,3 +561,54 @@ export const verifyDeliveryOtp = async (req, res) => {
       .json({ message: `Verify Delivery OTP error: ${error}` });
   }
 };
+
+export const getTodayDeliveries = async (req, res) => {
+  try {
+    const deliveryPartnerId = req.userId;
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const orders = await Order.find({
+      "shopOrders.assignedDeliveryPartner": deliveryPartnerId,
+      "shopOrders.status": "delivered",
+      "shopOrders.deliveredAt": { $gte: startOfDay, $lte: endOfDay },
+    }).lean();
+
+    let todayDeliveries = [];
+    orders.forEach((order) => {
+      order.shopOrders.forEach((shopOrder) => {
+        if (
+          shopOrder.assignedDeliveryPartner?.toString() ===
+            deliveryPartnerId.toString() &&
+          shopOrder.status === "delivered" &&
+          shopOrder.deliveredAt &&
+          shopOrder.deliveredAt >= startOfDay &&
+          shopOrder.deliveredAt <= endOfDay
+        ) {
+          todayDeliveries.push(shopOrder);
+        }
+      });
+    });
+
+    let stats = {};
+    todayDeliveries.forEach((shopOrder) => {
+      const hour = new Date(shopOrder.deliveredAt).getHours();
+      stats[hour] = (stats[hour] || 0) + 1;
+    });
+
+    let formattedStats = Object.keys(stats).map((h) => ({
+      hour: parseInt(h),
+      count: stats[h],
+      time: `${parseInt(h)}:00 - ${parseInt(h) + 1}:00`,
+    }));
+    formattedStats.sort((a, b) => a.hour - b.hour);
+
+    return res.status(200).json(formattedStats);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `Get Today Deliveries error: ${error}` });
+  }
+};

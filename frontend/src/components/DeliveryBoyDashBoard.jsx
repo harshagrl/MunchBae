@@ -9,6 +9,7 @@ const DeliveryBoyDashBoard = () => {
   const [availableAssignments, setAvailableAssignments] = useState([]);
   const [currentOrder, setCurrentOrder] = useState();
   const [showOtpBox, setShowOtpBox] = useState(false);
+  const [todayDeliveries, setTodayDeliveries] = useState([]);
   const [otp, setOtp] = useState("");
   const [currentLocation, setCurrentLocation] = useState(null);
   const [distanceError, setDistanceError] = useState(null);
@@ -73,7 +74,7 @@ const DeliveryBoyDashBoard = () => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleLocationUpdate = ({ deliveryBoyId, latitude, longitude }) => {
+    const handleLocationUpdate = ({ latitude, longitude }) => {
       setCurrentLocation({
         latitude: latitude.toFixed(6),
         longitude: longitude.toFixed(6),
@@ -107,8 +108,6 @@ const DeliveryBoyDashBoard = () => {
           withCredentials: true,
         },
       );
-      console.log(result.data);
-
       if (result.data && result.data.message) {
         setCurrentOrder(null);
       } else {
@@ -170,7 +169,7 @@ const DeliveryBoyDashBoard = () => {
 
       setDistanceError(null);
 
-      const result = await axios.post(
+      await axios.post(
         `${serverUrl}/api/order/send-delivery-otp`,
         {
           orderId: currentOrder._id,
@@ -181,8 +180,6 @@ const DeliveryBoyDashBoard = () => {
         },
       );
       setShowOtpBox(true);
-
-      console.log(result.data);
     } catch (error) {
       console.log(error);
       setDistanceError("Error sending OTP. Please try again.");
@@ -191,7 +188,7 @@ const DeliveryBoyDashBoard = () => {
 
   const verifyOtp = async () => {
     try {
-      const result = await axios.post(
+      await axios.post(
         `${serverUrl}/api/order/verify-delivery-otp`,
         {
           orderId: currentOrder._id,
@@ -202,6 +199,20 @@ const DeliveryBoyDashBoard = () => {
           withCredentials: true,
         },
       );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleTodayDeliveries = async () => {
+    try {
+      const result = await axios.get(
+        `${serverUrl}/api/order/get-today-deliveries`,
+        {
+          withCredentials: true,
+        },
+      );
+      setTodayDeliveries(result.data);
       console.log(result.data);
     } catch (error) {
       console.log(error);
@@ -223,6 +234,7 @@ const DeliveryBoyDashBoard = () => {
   useEffect(() => {
     getDeliveryPartnerAssignments();
     getCurrentOrder();
+    handleTodayDeliveries();
   }, [userData]);
   return (
     <div className="w-screen min-h-screen flex flex-col bg-linear-to-b from-slate-900 via-slate-800 to-slate-700 py-4 px-2 items-center">

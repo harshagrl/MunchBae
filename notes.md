@@ -285,3 +285,10 @@
 - routed it in routes/item.router.js
 - created handleRating function in userordercaard.jsx to rate food items
 - called handleRating function on button click in UserOrderCard.jsx
+
+- created getTodayDeliveries controller in controllers/order.controller.js to get today's deliveries for delivery partner
+- routed it in routes/order.router.js
+- created handleTodayDeliveries function in DeliveryBoyDashBoard.jsx to fetch today's deliveries for delivery partner
+- called handleTodayDeliveries in useEffect in DeliveryBoyDashBoard.jsx to fetch today's deliveries on component mount
+
+- installed recharts for data visualization
