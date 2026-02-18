@@ -4,6 +4,16 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { useEffect, useState } from "react";
 import DeliveryTracking from "./DeliveryTracking";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { ClipLoader } from "react-spinners";
 
 const DeliveryBoyDashBoard = () => {
   const [availableAssignments, setAvailableAssignments] = useState([]);
@@ -14,6 +24,8 @@ const DeliveryBoyDashBoard = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [distanceError, setDistanceError] = useState(null);
   const [currentDistance, setCurrentDistance] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const { userData, socket } = useSelector((state) => state.user);
 
   // Function to calculate distance between two coordinates using Haversine formula
@@ -70,6 +82,12 @@ const DeliveryBoyDashBoard = () => {
       }
     };
   }, [socket, userData]);
+
+  const ratePerDelivery = 50;
+  const totalEarning = todayDeliveries.reduce(
+    (sum, d) => sum + d.count * ratePerDelivery,
+    0,
+  );
 
   useEffect(() => {
     if (!socket) return;
@@ -129,6 +147,7 @@ const DeliveryBoyDashBoard = () => {
     }
   };
   const sendDeliveryOtp = async () => {
+    setLoading(true);
     try {
       // Check if current location exists
       if (!currentLocation) {
@@ -179,16 +198,19 @@ const DeliveryBoyDashBoard = () => {
           withCredentials: true,
         },
       );
+      setLoading(false);
       setShowOtpBox(true);
     } catch (error) {
       console.log(error);
       setDistanceError("Error sending OTP. Please try again.");
+      setLoading(false);
     }
   };
 
   const verifyOtp = async () => {
+    setMessage("");
     try {
-      await axios.post(
+      const result = await axios.post(
         `${serverUrl}/api/order/verify-delivery-otp`,
         {
           orderId: currentOrder._id,
@@ -199,6 +221,8 @@ const DeliveryBoyDashBoard = () => {
           withCredentials: true,
         },
       );
+      setMessage(result.data.message);
+      location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -262,6 +286,37 @@ const DeliveryBoyDashBoard = () => {
             <p className="text-xs text-green-600 font-semibold animate-pulse">
               ● Live tracking active
             </p>
+          )}
+        </div>
+        <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col text-center justify-center gap-2 items-center w-[90%] border border-green-100 text-black">
+          <h1 className="text-xl font-semibold text-gray-800">
+            Today Deliveries
+          </h1>
+          {todayDeliveries && todayDeliveries.length > 0 ? (
+            <>
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={todayDeliveries}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="hour" tickFormatter={(h) => `${h}:00`} />
+                  <YAxis allowDecimals={false} />
+                  <Tooltip
+                    formatter={(value) => [value, "orders"]}
+                    labelFormatter={(label) => `${label}:00`}
+                  />
+                  <Bar dataKey="count" fill="#10B981" />
+                </BarChart>
+              </ResponsiveContainer>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
+                <h1 className="font-semibold text-xl">
+                  Today's Earnings:{" "}
+                  <span className="text-green-700 font-bold">
+                    ₹{totalEarning}
+                  </span>
+                </h1>
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-600">No deliveries today.</p>
           )}
         </div>
         {!currentOrder?.shopOrder && (
@@ -365,8 +420,13 @@ const DeliveryBoyDashBoard = () => {
               <button
                 className="bg-green-600 text-white px-4 font-semibold py-2 rounded-lg hover:bg-green-700 cursor-pointer transition-all duration-200"
                 onClick={sendDeliveryOtp}
+                disabled={loading}
               >
-                Mark as Delivered
+                {loading ? (
+                  <ClipLoader size={20} color="white" />
+                ) : (
+                  "Mark as Delivered"
+                )}
               </button>
             ) : (
               <div className="flex flex-col gap-2">
@@ -392,6 +452,9 @@ const DeliveryBoyDashBoard = () => {
                   placeholder={`Enter OTP sent to ${currentOrder?.user.fullName}`}
                   className="border border-gray-300 rounded-lg p-2 w-full text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2"
                 />
+                {message && (
+                  <p className="text-black text-lg text-center">{message}</p>
+                )}
                 <button
                   className="bg-green-600 text-white px-4 font-semibold py-2 rounded-lg hover:bg-green-700 cursor-pointer transition-all duration-200"
                   onClick={verifyOtp}
