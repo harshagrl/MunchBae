@@ -2,112 +2,159 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { serverUrl } from "../App";
+
 function UserOrderCard({ data }) {
   const navigate = useNavigate();
   const [selectedRating, setSelectedRating] = useState({});
+
   const handleRating = async (itemId, rating) => {
     try {
       await axios.post(
         `${serverUrl}/api/item/rating`,
-        {
-          itemId,
-          rating,
-        },
-        { withCredentials: true },
+        { itemId, rating },
+        { withCredentials: true }
       );
       setSelectedRating((prev) => ({ ...prev, [itemId]: rating }));
     } catch (error) {
       console.error(error);
     }
   };
+
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case "delivered":
+        return "bg-green-100 text-green-700";
+      case "cancelled":
+        return "bg-red-100 text-red-600";
+      case "preparing":
+        return "bg-yellow-100 text-yellow-700";
+      case "out for delivery":
+        return "bg-blue-100 text-blue-700";
+      default:
+        return "bg-orange-100 text-orange-600";
+    }
+  };
+
   return (
-    <div className="bg-white shadow rounded-lg p-4 space-y-4 w-full max-w-3xl">
-      <div className="flex justify-between p-2">
+    <div className="bg-white rounded-2xl shadow-md border border-[#e8e2d8] overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      {/* Order Header */}
+      <div className="px-5 py-4 border-b border-[#f0ece4] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h3 className="text-lg font-semibold text-gray-800">
-            Order #{data._id.slice(-6)}
-          </h3>
-          <p className="text-sm text-gray-500 font-medium font-sans">
-            Placed on: {data.createdAt.slice(0, 10)}
+          <div className="flex items-center gap-3">
+            <h3 className="text-base font-extrabold text-[#2d2d2d]">
+              Order #{data._id.slice(-6)}
+            </h3>
+            <span
+              className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full capitalize ${getStatusColor(
+                data.shopOrders?.[0]?.status
+              )}`}
+            >
+              {data.shopOrders?.[0]?.status || "Pending"}
+            </span>
+          </div>
+          <p className="text-xs text-gray-400 mt-1">
+            Placed on {new Date(data.createdAt).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
           </p>
         </div>
         <div className="text-right">
-          {data.paymentMethod === "cod" ? (
-            <h3 className="text-lg font-semibold text-gray-800">
-              Payment Method: {data.paymentMethod?.toUpperCase()}
-            </h3>
-          ) : (
-            <h3 className="text-lg font-semibold text-gray-800">
-              Payment verified: {data.payment ? "Yes" : "No"}
-            </h3>
-          )}
-          <p className="text-sm font-medium text-gray-500 font-sans">
-            Status:{" "}
-            <span className="text-blue-600 capitalize">
-              {data.shopOrders?.[0]?.status || "Pending"}
-            </span>
-          </p>
+          <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+            {data.paymentMethod === "cod"
+              ? "Cash on Delivery"
+              : data.payment
+              ? "✓ Paid Online"
+              : "Payment Pending"}
+          </span>
         </div>
       </div>
-      {data.shopOrders.map((shopOrder, index) => (
-        <div
-          className="rounded-lg p-3 bg-gray-100 shadow space-y-3"
-          key={index}
-        >
-          <p className="text-green-700 text-lg font-semibold underline underline-offset-2 font-mono">
-            {shopOrder.shop.name}
-          </p>
-          <div className="flex pb-2 space-x-4 overflow-x-auto">
-            {shopOrder.shopOrderItem.map((item, index) => (
-              <div
-                key={index}
-                className="shrink-0 w-40 rounded-lg p-2 shadow-md bg-white"
+
+      {/* Shop Orders */}
+      <div className="px-5 py-4 space-y-4">
+        {data.shopOrders.map((shopOrder, index) => (
+          <div key={index}>
+            {/* Shop Name */}
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 rounded-full bg-green-500" />
+              <p className="text-sm font-bold text-[#2d2d2d]">
+                {shopOrder.shop.name}
+              </p>
+              <span
+                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize ml-auto ${getStatusColor(
+                  shopOrder.status
+                )}`}
               >
-                <img
-                  src={item.item.image}
-                  alt="food-image"
-                  className="w-full h-24 object-cover rounded"
-                />
-                <p className="text-center text-black mt-2 text-sm font-medium">
-                  {item.item.name}
-                </p>
-                <p className="text-gray-500 text-center text-xs font-medium">
-                  ₹{item.item.price} x {item.quantity}
-                </p>
-                {shopOrder.status === "delivered" && (
-                  <div className="flex space-x-1 mt-2 items-center justify-center">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        className={`${selectedRating[item.item._id] >= star ? "text-yellow-500" : "text-gray-300"} cursor-pointer text-lg focus:outline-none`}
-                        onClick={() => handleRating(item.item._id, star)}
-                      >
-                        ★
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                {shopOrder.status}
+              </span>
+            </div>
+
+            {/* Items Row */}
+            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+              {shopOrder.shopOrderItem.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="shrink-0 w-32 bg-[#faf8f4] rounded-xl p-2 border border-[#f0ece4]"
+                >
+                  <img
+                    src={item.item.image}
+                    alt={item.item.name}
+                    className="w-full h-20 object-cover rounded-lg"
+                  />
+                  <p className="text-xs font-semibold text-[#2d2d2d] mt-1.5 truncate">
+                    {item.item.name}
+                  </p>
+                  <p className="text-[11px] text-gray-400">
+                    ₹{item.item.price} × {item.quantity}
+                  </p>
+
+                  {/* Star Rating */}
+                  {shopOrder.status === "delivered" && (
+                    <div className="flex gap-0.5 mt-1.5 justify-center">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          className={`text-sm cursor-pointer transition-colors ${
+                            selectedRating[item.item._id] >= star
+                              ? "text-yellow-400"
+                              : "text-gray-200 hover:text-yellow-300"
+                          }`}
+                          onClick={() => handleRating(item.item._id, star)}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Shop Subtotal */}
+            <div className="flex justify-between items-center mt-3 pt-3 border-t border-dashed border-[#e8e2d8]">
+              <p className="text-xs text-gray-400">Shop Subtotal</p>
+              <p className="text-sm font-bold text-[#2d2d2d]">
+                ₹{shopOrder.subtotal}
+              </p>
+            </div>
           </div>
-          <div className="flex justify-between items-center border-t pt-2 text-black">
-            <p className="font-semibold font-sans">
-              Subtotal: ₹{shopOrder.subtotal}
-            </p>
-            <span className="text-blue-600 text-sm font-medium capitalize">
-              {shopOrder.status}
-            </span>
-          </div>
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div className="px-5 py-4 bg-[#faf8f4] border-t border-[#f0ece4] flex items-center justify-between">
+        <div>
+          <p className="text-xs text-gray-400">Total Amount</p>
+          <p className="text-xl font-extrabold text-[#2d2d2d]">
+            ₹{data.totalAmount}
+          </p>
         </div>
-      ))}
-      <div className="flex justify-between pt-2">
-        <h1 className="text-black text-xl font-bold font-sans">
-          Total: ₹{data.totalAmount}
-        </h1>
         <button
-          className="text-white bg-green-500 rounded-lg p-2 font-medium font-sans cursor-pointer hover:bg-green-600 transition-all duration-300"
+          className="bg-[#2d2d2d] text-white px-5 py-2.5 rounded-xl font-semibold text-sm cursor-pointer hover:bg-[#1a1a1a] transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
           onClick={() => navigate(`/track-order/${data._id}`)}
         >
-          Track order
+          Track Order →
         </button>
       </div>
     </div>

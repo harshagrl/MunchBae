@@ -11,6 +11,7 @@ const FoodCard = ({ data }) => {
   const [quantity, setQuantity] = useState(0);
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.user);
+
   const handleAddToCart = () => {
     {
       quantity > 0 &&
@@ -28,106 +29,121 @@ const FoodCard = ({ data }) => {
     }
     setQuantity(0);
   };
+
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(
         i <= rating ? (
-          <FaStar className="text-yellow-500 text-base md:text-lg" />
+          <FaStar key={i} className="text-amber-400 text-xs" />
         ) : (
-          <CiStar className="text-yellow-500 text-base md:text-lg" />
+          <CiStar key={i} className="text-amber-400 text-xs" />
         ),
       );
     }
     return stars;
   };
+
   const handleIncrease = () => {
-    const newQty = quantity + 1;
-    setQuantity(newQty);
+    setQuantity(quantity + 1);
   };
+
   const handleDecrease = () => {
     if (quantity > 0) {
-      const newQty = quantity - 1;
-      setQuantity(newQty);
+      setQuantity(quantity - 1);
     }
   };
+
+  const isInCart = cartItems.some((i) => i.id == data._id);
+
   return (
-    <div className="w-full max-w-52 md:max-w-64 h-74 md:h-86 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
-      <div className="w-full h-40 md:h-48 bg-gray-200 overflow-hidden flex items-center justify-center relative">
+    <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+      {/* Image */}
+      <div className="relative w-full aspect-square bg-gray-100 overflow-hidden">
         {data.image ? (
           <img
             src={data.image}
             alt={data.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             onError={(e) => {
               e.target.src =
                 "https://t3.ftcdn.net/jpg/02/52/38/80/360_F_252388016_KjPnB9vglSCuUJAumCDNbmMzGdzPAucK.jpg";
             }}
           />
         ) : (
-          <div className="text-gray-400 text-sm">No Image</div>
+          <div className="w-full h-full flex items-center justify-center text-gray-300 text-4xl">
+            🍽️
+          </div>
+        )}
+        {/* Food type badge */}
+        <div
+          className={`absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+            data.foodType === "Veg"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-600"
+          }`}
+        >
+          {data.foodType}
+        </div>
+        {/* Rating */}
+        {data.rating?.average > 0 && (
+          <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-1 shadow-sm">
+            <FaStar className="text-amber-400 text-[10px]" />
+            <span className="text-[10px] font-bold text-[#2d2d2d]">
+              {data.rating?.average}
+            </span>
+          </div>
         )}
       </div>
 
-      <div className="md:p-4 p-2">
-        <div className="flex items-start flex-row justify-between space-x-1">
-          {data.foodType === "Veg" ? (
-            <h3
-              className="text-base md:text-lg font-bold font-mono text-green-600 truncate mb-2"
-              title={data.name}
-            >
-              {data.name}
-            </h3>
-          ) : (
-            <h3
-              className="text-base md:text-lg font-bold font-mono text-red-600 truncate mb-2"
-              title={data.name}
-            >
-              {data.name}
-            </h3>
-          )}
-
-          <div className="flex items-center">
-            {renderStars(data.rating?.average || 0)}
-            <span className="text-black">{data.rating?.count || 0}</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-lg md:text-xl font-bold text-black">
+      {/* Content */}
+      <div className="p-3">
+        <h3
+          className="text-sm font-bold text-[#2d2d2d] truncate mb-1"
+          title={data.name}
+        >
+          {data.name}
+        </h3>
+        <div className="flex items-center gap-1.5 mb-3">
+          <span className="text-base font-extrabold text-[#2d2d2d]">
             ₹{data.price}
           </span>
           {data.originalPrice && (
-            <span className="text-sm text-gray-400 line-through">
+            <span className="text-xs text-gray-400 line-through">
               ₹{data.originalPrice}
             </span>
           )}
         </div>
 
-        <div className="flex items-center justify-between space-x-2">
-          <div className="flex items-center gap-2">
-            <button onClick={handleDecrease}>
-              <TiMinus
-                size={34}
-                className="p-2 text-black cursor-pointer hover:bg-gray-400 rounded-lg transition-all duration-300 bg-gray-200"
-              />
+        {/* Quantity + Add */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 bg-gray-100 rounded-full px-1 py-0.5">
+            <button
+              onClick={handleDecrease}
+              className="w-7 h-7 rounded-full bg-white shadow-sm flex items-center justify-center hover:bg-gray-50 transition cursor-pointer"
+            >
+              <TiMinus size={14} className="text-[#2d2d2d]" />
             </button>
-            <span className="text-base md:text-lg text-black">{quantity}</span>
-            <button onClick={handleIncrease}>
-              <IoIosAdd
-                size={36}
-                className="p-1 rounded-lg text-black cursor-pointer hover:bg-gray-400 transition-all duration-300 bg-gray-200"
-              />
+            <span className="text-sm font-bold text-[#2d2d2d] w-5 text-center">
+              {quantity}
+            </span>
+            <button
+              onClick={handleIncrease}
+              className="w-7 h-7 rounded-full bg-white shadow-sm flex items-center justify-center hover:bg-gray-50 transition cursor-pointer"
+            >
+              <IoIosAdd size={16} className="text-[#2d2d2d]" />
             </button>
           </div>
           <button
-            className={`${
-              cartItems.some((i) => i.id == data._id)
-                ? "bg-gray-700 hover:bg-gray-900"
-                : "bg-green-700 hover:bg-green-900"
-            } text-sm md:text-base text-white font-semibold py-1 px-2 md:py-2 md:px-4 rounded-lg transition-all duration-300 cursor-pointer flex items-center gap-2`}
+            className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 cursor-pointer ${
+              isInCart
+                ? "bg-gray-800 text-white hover:bg-gray-900"
+                : "bg-[#2d2d2d] text-white hover:bg-black"
+            }`}
             onClick={handleAddToCart}
           >
-            <IoIosCart size={30} /> Add
+            <IoIosCart size={14} />
+            Add
           </button>
         </div>
       </div>

@@ -4,6 +4,7 @@ import SignIn from "./pages/signin";
 import ForgotPassword from "./pages/ForgotPassword";
 import { useSelector, useDispatch } from "react-redux";
 import Home from "./pages/Home";
+import LandingPage from "./pages/LandingPage";
 import useGetCity from "./hooks/useGetCity";
 import useGetMyShop from "./hooks/useGetMyShop";
 import CreateEditShop from "./pages/CreateEditShop";
@@ -21,6 +22,10 @@ import { setSocket, setUserData } from "./store/user.slice";
 import useUpdateUserLocation from "./hooks/useUpdateUserLocation";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import Shop from "./pages/Shop";
+import FAQs from "./pages/FAQs";
+import PartnerWithUs from "./pages/PartnerWithUs";
+import Blog from "./pages/Blog";
+import TermsPrivacy from "./pages/TermsPrivacy";
 import { io } from "socket.io-client";
 
 export const serverUrl = "http://localhost:8000";
@@ -64,19 +69,23 @@ const App = () => {
     <Routes>
       <Route
         path="/"
+        element={userData ? <Navigate to={"/home"} /> : <LandingPage />}
+      />
+      <Route
+        path="/home"
         element={userData ? <Home /> : <Navigate to={"/signin"} />}
       />
       <Route
         path="/signup"
-        element={!userData ? <SignUp /> : <Navigate to={"/"} />}
+        element={!userData ? <SignUp /> : <Navigate to={"/home"} />}
       />
       <Route
         path="/signin"
-        element={!userData ? <SignIn /> : <Navigate to={"/"} />}
+        element={!userData ? <SignIn /> : <Navigate to={"/home"} />}
       />
       <Route
         path="/forgot-password"
-        element={!userData ? <ForgotPassword /> : <Navigate to={"/"} />}
+        element={!userData ? <ForgotPassword /> : <Navigate to={"/home"} />}
       />
       <Route
         path="/create-edit-shop"
@@ -114,6 +123,10 @@ const App = () => {
         path="/shop/:shopId"
         element={userData ? <Shop /> : <Navigate to={"/signin"} />}
       />
+      <Route path="/faqs" element={<FAQs />} />
+      <Route path="/partner-with-us" element={<PartnerWithUs />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/terms-privacy" element={<TermsPrivacy />} />
     </Routes>
   );
 };

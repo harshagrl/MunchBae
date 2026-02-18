@@ -1,16 +1,20 @@
 const CityShopsCard = ({ data, onClick }) => {
   return (
     <div
-      className="relative w-60 h-50 md:w-80 md:h-70 shrink-0 overflow-hidden transition-shadow cursor-pointer rounded-2xl"
+      className="shrink-0 w-56 md:w-72 rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
       onClick={onClick}
     >
-      <img
-        src={data.image}
-        alt=""
-        className="w-full h-full object-fill transform hover:scale-110 transition-transform duration-300"
-      />
-      <div className="absolute bottom-0 w-full left-0 bg-[#ffffff96] bg-opacity-95 px-3 py-1 text-center shadow text-md font-semibold font-mono text-gray-800 backdrop-blur">
-        {data.name}
+      <div className="w-full h-40 md:h-52 overflow-hidden">
+        <img
+          src={data.image}
+          alt={data.name}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+      </div>
+      <div className="p-3 md:p-4">
+        <h3 className="text-sm md:text-base font-bold text-[#2d2d2d] truncate">
+          {data.name}
+        </h3>
       </div>
     </div>
   );

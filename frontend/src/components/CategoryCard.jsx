@@ -1,19 +1,31 @@
 import React from "react";
 
-const CategoryCard = ({ data, onClick }) => {
+const CategoryCard = ({ data, onClick, isActive }) => {
   return (
     <div
-      className="relative w-40 h-40 md:w-45 md:h-45 shrink-0 overflow-hidden transition-shadow cursor-pointer rounded-2xl"
+      className={`shrink-0 flex flex-col items-center gap-2 cursor-pointer group transition-all duration-300`}
       onClick={() => onClick()}
     >
-      <img
-        src={data.image}
-        alt=""
-        className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
-      />
-      <div className="absolute bottom-0 w-full left-0 bg-[#ffffff96] bg-opacity-95 px-3 py-1 text-center shadow text-md font-semibold font-mono text-gray-800 backdrop-blur">
-        {data.category}
+      <div
+        className={`w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-3 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 ${
+          isActive
+            ? "border-[#2d2d2d] shadow-lg scale-105"
+            : "border-transparent"
+        }`}
+      >
+        <img
+          src={data.image}
+          alt={data.category}
+          className="w-full h-full object-cover"
+        />
       </div>
+      <span
+        className={`text-xs md:text-sm font-semibold transition-colors duration-300 ${
+          isActive ? "text-[#2d2d2d]" : "text-gray-500 group-hover:text-[#2d2d2d]"
+        }`}
+      >
+        {data.category}
+      </span>
     </div>
   );
 };

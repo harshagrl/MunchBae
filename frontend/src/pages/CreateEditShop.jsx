@@ -51,7 +51,7 @@ const CreateEditShop = () => {
       );
       dispatch(setMyShopData(result.data));
       setLoading(false);
-      navigate("/");
+      navigate("/home");
     } catch (error) {
       console.log("Error in creating/editing shop:", error);
       setLoading(false);
@@ -61,7 +61,7 @@ const CreateEditShop = () => {
     <div className="relative flex justify-center flex-col items-center p-6 min-h-screen bg-linear-to-b from-cyan-700 to-cyan-900">
       <div
         className="absolute top-4 left-6 z-10 mb-2.5 flex items-center cursor-pointer"
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/home")}
       >
         <IoIosArrowRoundBack size={30} />
         <h2 className="text-md sm:text-xl">Back</h2>

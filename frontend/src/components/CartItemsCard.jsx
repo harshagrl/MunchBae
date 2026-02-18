@@ -3,57 +3,71 @@ import { IoIosAdd } from "react-icons/io";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { updateQuantity, removeItem } from "../store/user.slice";
+
 const CartItemsCard = ({ data }) => {
   const dispatch = useDispatch();
+
   const handleIncrease = (id, currentQty) => {
     dispatch(updateQuantity({ id, quantity: currentQty + 1 }));
   };
+
   const handleDecrease = (id, currentQty) => {
     if (currentQty > 1) {
       dispatch(updateQuantity({ id, quantity: currentQty - 1 }));
     }
   };
+
   return (
-    <div className="flex items-center justify-between bg-white p-2 rounded-xl shadow border-2 border-black">
-      <div className="flex items-center gap-4">
-        <img
-          src={data.image}
-          alt={data.name}
-          className="w-30 h-30 object-cover rounded-lg border"
-        />
-        <div>
-          <h1 className="text-black font-bold font-sans text-xl">
-            {data.name}
-          </h1>
-          <p className="text-gray-500 font-sans font-medium text-sm mb-2">
-            ₹{data.price} x {data.quantity}
-          </p>
-          <p className="text-gray-900 font-sans font-bold text-lg">
-            ₹{data.price * data.quantity}
-          </p>
-        </div>
+    <div className="bg-white rounded-2xl shadow-md border border-[#e8e2d8] p-4 flex items-center gap-4 hover:shadow-lg transition-shadow duration-300">
+      {/* Image */}
+      <img
+        src={data.image}
+        alt={data.name}
+        className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-xl flex-shrink-0"
+      />
+
+      {/* Item Info */}
+      <div className="flex-1 min-w-0">
+        <h3 className="text-base md:text-lg font-bold text-[#2d2d2d] truncate">
+          {data.name}
+        </h3>
+        <p className="text-gray-400 text-xs mt-0.5">
+          ₹{data.price} per item
+        </p>
+        <p className="text-[#2d2d2d] font-extrabold text-lg mt-1">
+          ₹{data.price * data.quantity}
+        </p>
       </div>
-      <div className="flex items-center gap-3">
-        <button onClick={() => handleDecrease(data.id, data.quantity)}>
-          <TiMinus
-            size={30}
-            className="p-2 text-black cursor-pointer hover:bg-gray-300 rounded-full transition-all duration-300 bg-slate-100"
-            title="Decrease"
-          />
-        </button>
-        <span className="text-base md:text-lg text-black">{data.quantity}</span>
-        <button onClick={() => handleIncrease(data.id, data.quantity)}>
-          <IoIosAdd
-            size={32}
-            className="p-1 rounded-full text-black cursor-pointer hover:bg-gray-300 transition-all duration-300 bg-slate-100"
-            title="Increase"
-          />
-        </button>
-        <button onClick={() => dispatch(removeItem(data.id))}>
+
+      {/* Quantity Controls */}
+      <div className="flex items-center gap-1">
+        <div className="flex items-center bg-[#f5f0e8] rounded-full border border-[#e8e2d8]">
+          <button
+            onClick={() => handleDecrease(data.id, data.quantity)}
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#e8e2d8] transition-colors cursor-pointer"
+          >
+            <TiMinus size={14} className="text-[#2d2d2d]" />
+          </button>
+          <span className="w-8 text-center text-sm font-bold text-[#2d2d2d] select-none">
+            {data.quantity}
+          </span>
+          <button
+            onClick={() => handleIncrease(data.id, data.quantity)}
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#e8e2d8] transition-colors cursor-pointer"
+          >
+            <IoIosAdd size={18} className="text-[#2d2d2d]" />
+          </button>
+        </div>
+
+        {/* Delete */}
+        <button
+          onClick={() => dispatch(removeItem(data.id))}
+          className="ml-2 w-9 h-9 flex items-center justify-center rounded-full bg-red-50 hover:bg-red-100 transition-colors cursor-pointer group"
+          title="Remove item"
+        >
           <FaTrashAlt
-            size={32}
-            className="p-2 rounded-full text-red-600 cursor-pointer hover:bg-red-200 transition-all duration-300 bg-red-100 mr-3"
-            title="Remove item"
+            size={14}
+            className="text-red-400 group-hover:text-red-600 transition-colors"
           />
         </button>
       </div>

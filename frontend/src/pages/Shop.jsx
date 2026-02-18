@@ -33,7 +33,7 @@ function Shop() {
     <div className="flex flex-col items-center min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-700">
       <div
         className="absolute top-4 left-6 z-10 mb-2.5 flex items-center cursor-pointer text-white bg-black/60 rounded-full px-3 py-1 hover:bg-black/80 transition duration-300 shadow-lg font-sans"
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/home")}
       >
         <IoIosArrowRoundBack size={30} />
         <h2 className="text-md sm:text-xl">Back</h2>
