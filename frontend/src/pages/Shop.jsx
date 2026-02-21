@@ -43,9 +43,7 @@ function Shop() {
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
       {/* NavBar */}
-      <div className="sticky top-0 z-50">
-        <NavBar />
-      </div>
+      <NavBar />
 
       {/* Hero Banner */}
       {shop && (

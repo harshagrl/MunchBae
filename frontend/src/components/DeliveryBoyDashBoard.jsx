@@ -251,9 +251,7 @@ const DeliveryBoyDashBoard = () => {
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
       {/* NavBar */}
-      <div className="sticky top-0 z-50">
-        <NavBar />
-      </div>
+      <NavBar />
 
       {/* ===== Full-Page Decorative Background ===== */}
       <div className="fixed inset-0 top-16 pointer-events-none z-0" aria-hidden="true">

@@ -12,7 +12,7 @@ import { TbReceiptRupee } from "react-icons/tb";
 import { Link, useNavigate } from "react-router";
 
 const NavBar = () => {
-  const { userData, currentCity, cartItems } = useSelector(
+  const { userData, currentCity, cartItems, myOrders } = useSelector(
     (state) => state.user,
   );
   const { myShopData } = useSelector((state) => state.owner);
@@ -21,6 +21,16 @@ const NavBar = () => {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const pendingOrdersCount =
+    myOrders?.filter((order) => {
+      if (userData?.role === "owner") {
+        if (Array.isArray(order.shopOrders)) {
+          return order.shopOrders.some((s) => s.status === "pending");
+        }
+        return order.shopOrders?.status === "pending";
+      }
+      return false;
+    }).length || 0;
 
   const handleLogout = async () => {
     try {
@@ -57,7 +67,7 @@ const NavBar = () => {
   return (
     <>
       {/* Desktop Navbar */}
-      <div className="hidden md:block bg-[#ebe5d9]/90 backdrop-blur-md border-b border-[#d4cec2] shadow-sm">
+      <div className="hidden md:block fixed top-0 left-0 right-0 bg-[#ebe5d9]/90 backdrop-blur-md border-b border-[#d4cec2] shadow-sm z-50">
         <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
           {/* Logo + Brand */}
           <div className="flex items-center gap-3">
@@ -87,27 +97,18 @@ const NavBar = () => {
             )}
 
             {userData.role === "owner" && (
-              <>
-                {myShopData && (
-                  <button
-                    className="bg-[#2d2d2d] text-white px-4 py-2 rounded-full hover:bg-black transition cursor-pointer flex items-center gap-1.5 text-sm font-medium"
-                    onClick={() => navigate("/add-item")}
-                  >
-                    <IoIosAdd size={18} />
-                    Add Item
-                  </button>
-                )}
                 <button
                   className="relative bg-[#2d2d2d] text-white px-4 py-2 rounded-full hover:bg-black transition cursor-pointer flex items-center gap-1.5 text-sm font-medium"
                   onClick={() => navigate("/my-orders")}
                 >
                   <TbReceiptRupee size={16} />
                   Orders
-                  <span className="absolute -top-1.5 -right-1.5 bg-[#e84c3d] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                    1
-                  </span>
+                  {pendingOrdersCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 bg-[#e84c3d] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                      {pendingOrdersCount}
+                    </span>
+                  )}
                 </button>
-              </>
             )}
 
             {userData.role === "deliveryBoy" && (
@@ -221,25 +222,17 @@ const NavBar = () => {
             )}
 
             {userData.role === "owner" && (
-              <>
-                {myShopData && (
-                  <Link
-                    to="/add-item"
-                    className="w-8 h-8 rounded-full bg-[#2d2d2d] text-white flex items-center justify-center shadow cursor-pointer"
-                  >
-                    <IoIosAdd size={18} />
-                  </Link>
-                )}
                 <button
                   className="relative w-8 h-8 rounded-full bg-[#2d2d2d] text-white flex items-center justify-center shadow cursor-pointer"
                   onClick={() => navigate("/my-orders")}
                 >
                   <TbReceiptRupee size={16} />
-                  <span className="absolute -top-1 -right-1 bg-[#e84c3d] text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                    1
-                  </span>
+                  {pendingOrdersCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-[#e84c3d] text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                      {pendingOrdersCount}
+                    </span>
+                  )}
                 </button>
-              </>
             )}
 
             {userData.role === "deliveryBoy" && (
@@ -314,6 +307,7 @@ const NavBar = () => {
         </div>
       </div>
       <div className="md:hidden h-14" />
+      <div className="hidden md:block h-[72px]" />
     </>
   );
 };

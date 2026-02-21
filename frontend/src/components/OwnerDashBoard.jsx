@@ -16,9 +16,7 @@ const OwnerDashBoard = () => {
       className="w-screen min-h-screen bg-[#f5f0e8] relative overflow-x-hidden"
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
-      <div className="sticky top-0 z-50">
-        <NavBar />
-      </div>
+      <NavBar />
 
       {/* ===== Full-Page Decorative Background ===== */}
       <div className="fixed inset-0 top-16 pointer-events-none z-0" aria-hidden="true">
