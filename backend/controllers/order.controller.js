@@ -548,6 +548,20 @@ export const verifyDeliveryOtp = async (req, res) => {
     shopOrder.deliveredAt = Date.now();
 
     await order.save();
+    
+    const io = req.app.get("io");
+    if (io) {
+      const userSocketId = order.user?.socketId;
+      if (userSocketId) {
+        io.to(userSocketId).emit("update-status", {
+          orderId: order._id,
+          shopId: shopOrder.shop,
+          status: "delivered",
+          userId: order.user._id,
+        });
+      }
+    }
+
     await DeliveryAssignment.deleteOne({
       shopOrderId: shopOrder._id,
       order: orderId,

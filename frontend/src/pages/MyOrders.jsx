@@ -13,21 +13,8 @@ const MyOrders = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket?.on("newOrder", (data) => {
-      if (data.shopOrders?.owner._id === userData._id) {
-        dispatch(setMyOrders([data, ...myOrders]));
-      }
-    });
-    socket?.on("update-status", ({ orderId, shopId, status, userId }) => {
-      if (userId === userData._id) {
-        dispatch(updateRealTimeOrderStatus({ orderId, shopId, status }));
-      }
-    });
-    return () => {
-      socket?.off("newOrder");
-      socket?.off("update-status");
-    };
-  }, [socket]);
+    // Note: Socket listeners moved to App.jsx for global real-time updates
+  }, []);
 
   return (
     <div

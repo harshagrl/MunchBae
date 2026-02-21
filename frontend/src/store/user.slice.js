@@ -98,6 +98,10 @@ const userSlice = createSlice({
     setSearchItems: (state, action) => {
       state.searchItems = action.payload;
     },
+    clearCart: (state) => {
+      state.cartItems = [];
+      state.totalAmount = 0;
+    },
   },
 });
 
@@ -117,5 +121,6 @@ export const {
   setSearchItems,
   setSocket,
   updateRealTimeOrderStatus,
+  clearCart,
 } = userSlice.actions;
 export default userSlice.reducer;

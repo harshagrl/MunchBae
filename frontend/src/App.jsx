@@ -18,7 +18,7 @@ import OrderPlaced from "./pages/OrderPlaced";
 import MyOrders from "./pages/MyOrders";
 import useGetMyOrders from "./hooks/useGetMyOrders";
 import { useEffect } from "react";
-import { setSocket, setUserData } from "./store/user.slice";
+import { addMyOrder, setSocket, setUserData, updateRealTimeOrderStatus } from "./store/user.slice";
 import useUpdateUserLocation from "./hooks/useUpdateUserLocation";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import Shop from "./pages/Shop";
@@ -55,7 +55,24 @@ const App = () => {
         socketInstance.emit("identity", { userId: userData._id });
       }
     });
+
+    socketInstance.on("newOrder", (data) => {
+      if (userData?.role === "owner") {
+        if (data.shopOrders?.owner?._id === userData._id || data.shopOrders?.owner === userData._id) {
+          dispatch(addMyOrder(data));
+        }
+      }
+    });
+
+    socketInstance.on("update-status", ({ orderId, shopId, status, userId }) => {
+      if (userId === userData?._id) {
+        dispatch(updateRealTimeOrderStatus({ orderId, shopId, status }));
+      }
+    });
+
     return () => {
+      socketInstance.off("newOrder");
+      socketInstance.off("update-status");
       socketInstance.disconnect();
     };
   }, [userData?._id]);
