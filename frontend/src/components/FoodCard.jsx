@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../store/user.slice";
 import { IoIosCart } from "react-icons/io";
+import toast from "react-hot-toast";
 
 const FoodCard = ({ data }) => {
   const [quantity, setQuantity] = useState(0);
@@ -13,21 +14,23 @@ const FoodCard = ({ data }) => {
   const { cartItems } = useSelector((state) => state.user);
 
   const handleAddToCart = () => {
-    {
-      quantity > 0 &&
-        dispatch(
-          addToCart({
-            id: data._id,
-            name: data.name,
-            image: data.image,
-            shop: data.shop,
-            price: data.price,
-            quantity,
-            foodType: data.foodType,
-          }),
-        );
+    if (quantity > 0) {
+      dispatch(
+        addToCart({
+          id: data._id,
+          name: data.name,
+          image: data.image,
+          shop: data.shop,
+          price: data.price,
+          quantity,
+          foodType: data.foodType,
+        }),
+      );
+      toast.success(`${quantity} ${data.name} added to cart`);
+      setQuantity(0);
+    } else {
+      toast.error("Please select quantity first");
     }
-    setQuantity(0);
   };
 
   const renderStars = (rating) => {

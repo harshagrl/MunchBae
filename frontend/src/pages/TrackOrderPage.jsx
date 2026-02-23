@@ -34,13 +34,26 @@ const TrackOrderPage = () => {
         [deliveryBoyId]: { lat: latitude, long: longitude },
       }));
     };
-    socket.on("updateDeliveryLocation", handleLocationUpdate);
-    
+    const handleAssignmentUpdate = ({ orderId: updatedOrderId, shopId, assignedDeliveryPartner }) => {
+      if (updatedOrderId === orderId) {
+        setCurrentOrder((prev) => {
+          if (!prev) return prev;
+          const updatedShopOrders = prev.shopOrders.map((so) => {
+            if (so.shop._id === shopId || so.shop === shopId) {
+              return { ...so, assignedDeliveryPartner };
+            }
+            return so;
+          });
+          return { ...prev, shopOrders: updatedShopOrders };
+        });
+      }
+    };
+
     const handleStatusUpdate = ({ orderId: updatedOrderId, shopId, status }) => {
       if (updatedOrderId === orderId) {
-        setCurrentOrder(prev => {
+        setCurrentOrder((prev) => {
           if (!prev) return prev;
-          const updatedShopOrders = prev.shopOrders.map(so => {
+          const updatedShopOrders = prev.shopOrders.map((so) => {
             if (so.shop._id === shopId || so.shop === shopId) {
               return { ...so, status };
             }
@@ -50,12 +63,15 @@ const TrackOrderPage = () => {
         });
       }
     };
-    
+
+    socket.on("updateDeliveryLocation", handleLocationUpdate);
     socket.on("update-status", handleStatusUpdate);
+    socket.on("update-assignment", handleAssignmentUpdate);
 
     return () => {
       socket.off("updateDeliveryLocation", handleLocationUpdate);
       socket.off("update-status", handleStatusUpdate);
+      socket.off("update-assignment", handleAssignmentUpdate);
     };
   }, [socket, orderId]);
 
@@ -238,9 +254,9 @@ const TrackOrderPage = () => {
                           shopOrder.assignedDeliveryPartner._id
                         ] || {
                           lat: shopOrder.assignedDeliveryPartner.location
-                            .coordinates[1],
+                            ?.coordinates?.[1] || 0,
                           long: shopOrder.assignedDeliveryPartner.location
-                            .coordinates[0],
+                            ?.coordinates?.[0] || 0,
                         },
                         customerLocation: {
                           lat: currentOrder.deliveryAddress.latitude,

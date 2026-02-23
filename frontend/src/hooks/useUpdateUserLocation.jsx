@@ -19,9 +19,11 @@ const useUpdateUserLocation = () => {
         );
       } catch (error) {}
     };
-    navigator.geolocation.watchPosition((pos) => {
-      updateUserLocation(pos.coords.latitude, pos.coords.longitude);
-    });
+    if (userData) {
+      navigator.geolocation.watchPosition((pos) => {
+        updateUserLocation(pos.coords.latitude, pos.coords.longitude);
+      });
+    }
   }, [userData, dispatch]);
 };
 

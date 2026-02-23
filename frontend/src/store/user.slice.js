@@ -114,13 +114,23 @@ const userSlice = createSlice({
       }
     },
     updateRealTimeOrderStatus: (state, action) => {
-      const { orderId, shopId, status } = action.payload;
+      const { orderId, shopId, status, assignedDeliveryPartner } = action.payload;
       const order = state.myOrders.find((o) => o._id === orderId);
 
       if (order) {
-        const shopOrder = order.shopOrders.find((s) => s.shop._id === shopId);
-        if (shopOrder) {
-          shopOrder.status = status;
+        // For User view: shopOrders is an array
+        if (Array.isArray(order.shopOrders)) {
+          const shopOrder = order.shopOrders.find((s) => s.shop._id === shopId);
+          if (shopOrder) {
+            if (status) shopOrder.status = status;
+            if (assignedDeliveryPartner) shopOrder.assignedDeliveryPartner = assignedDeliveryPartner;
+          }
+        } else {
+          // For Owner view: shopOrders is a single object
+          if (order.shopOrders && order.shopOrders.shop._id === shopId) {
+             if (status) order.shopOrders.status = status;
+             if (assignedDeliveryPartner) order.shopOrders.assignedDeliveryPartner = assignedDeliveryPartner;
+          }
         }
       }
     },

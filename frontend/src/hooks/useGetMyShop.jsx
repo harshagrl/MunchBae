@@ -15,7 +15,9 @@ const useGetMyShop = () => {
         dispatch(setMyShopData(result.data));
       } catch (error) {}
     };
-    fetchShop();
+    if (userData?.role === "owner") {
+      fetchShop();
+    }
   }, [userData]);
 };
 

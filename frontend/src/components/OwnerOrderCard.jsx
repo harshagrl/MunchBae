@@ -146,7 +146,20 @@ function OwnerOrderCard({ data }) {
       {/* Delivery Partners Section */}
       {data.shopOrders.status === "out for delivery" && (
         <div className="mt-4 bg-blue-50/80 rounded-xl p-4 border border-blue-100">
-          {availablePartners && availablePartners.length > 0 ? (
+          {data.shopOrders.assignedDeliveryPartner ? (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">
+                {data.shopOrders.assignedDeliveryPartner.fullName?.slice(0, 1).toUpperCase()}
+              </div>
+              <div>
+                <p className="text-xs text-gray-400 font-medium">Assigned Partner</p>
+                <p className="text-sm font-bold text-[#2d2d2d]">
+                  {data.shopOrders.assignedDeliveryPartner.fullName}
+                </p>
+                <p className="text-xs text-gray-400">{data.shopOrders.assignedDeliveryPartner.mobile}</p>
+              </div>
+            </div>
+          ) : availablePartners && availablePartners.length > 0 ? (
             <>
               <h2 className="text-sm font-bold text-blue-700 mb-2">
                 Available Delivery Partners
@@ -165,19 +178,6 @@ function OwnerOrderCard({ data }) {
                 ))}
               </div>
             </>
-          ) : data.shopOrders.assignedDeliveryPartner ? (
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">
-                {data.shopOrders.assignedDeliveryPartner.fullName?.slice(0, 1).toUpperCase()}
-              </div>
-              <div>
-                <p className="text-xs text-gray-400 font-medium">Assigned Partner</p>
-                <p className="text-sm font-bold text-[#2d2d2d]">
-                  {data.shopOrders.assignedDeliveryPartner.fullName}
-                </p>
-                <p className="text-xs text-gray-400">{data.shopOrders.assignedDeliveryPartner.mobile}</p>
-              </div>
-            </div>
           ) : (
             <p className="text-sm text-gray-500 text-center font-medium">No available delivery partners found.</p>
           )}

@@ -62,14 +62,19 @@ const App = () => {
     });
 
     socketInstance.on("update-status", ({ orderId, shopId, status, userId }) => {
-      if (userId === userData?._id) {
-        dispatch(updateRealTimeOrderStatus({ orderId, shopId, status }));
-      }
+      // In the Owner's my order page, their userId is not the same as the user who placed the order. 
+      // The backend emits to both the user and the shop owner directly now.
+      dispatch(updateRealTimeOrderStatus({ orderId, shopId, status }));
+    });
+    
+    socketInstance.on("update-assignment", ({ orderId, shopId, assignedDeliveryPartner }) => {
+       dispatch(updateRealTimeOrderStatus({ orderId, shopId, assignedDeliveryPartner }));
     });
 
     return () => {
       socketInstance.off("newOrder");
       socketInstance.off("update-status");
+      socketInstance.off("update-assignment");
       socketInstance.disconnect();
     };
   }, [userData?._id]);

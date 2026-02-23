@@ -6,7 +6,7 @@ import { setItemsInMyCity } from "../store/user.slice";
 
 const useGetItemsByCity = () => {
   const dispatch = useDispatch();
-  const { currentCity } = useSelector((state) => state.user);
+  const { currentCity, userData } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -23,8 +23,10 @@ const useGetItemsByCity = () => {
         dispatch(setItemsInMyCity([]));
       }
     };
-    fetchItems();
-  }, [currentCity, dispatch]);
+    if (userData) {
+      fetchItems();
+    }
+  }, [currentCity, userData, dispatch]);
 };
 
 export default useGetItemsByCity;

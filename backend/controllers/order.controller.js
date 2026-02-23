@@ -445,7 +445,11 @@ export const acceptOrderAssignment = async (req, res) => {
     assignment.status = "assigned";
     assignment.acceptedAt = new Date();
     await assignment.save();
-    const order = await Order.findById(assignment.order);
+
+    const order = await Order.findById(assignment.order)
+      .populate("user", "socketId")
+      .populate("shopOrders.owner", "socketId");
+      
     if (!order) {
       return res.status(400).json({ message: "Order not found" });
     }
@@ -454,6 +458,29 @@ export const acceptOrderAssignment = async (req, res) => {
     );
     shopOrder.assignedDeliveryPartner = req.userId;
     await order.save();
+    
+    // Populate the newly requested fields to send to the frontend UI
+    await order.populate("shopOrders.assignedDeliveryPartner", "fullName email mobile location");
+
+    const io = req.app.get("io");
+    if (io) {
+      const userSocketId = order.user?.socketId;
+      const ownerSocketId = shopOrder.owner?.socketId;
+      
+      const payload = {
+        orderId: order._id,
+        shopId: shopOrder.shop,
+        assignedDeliveryPartner: order.shopOrders.find((o) => o._id.equals(assignment.shopOrderId)).assignedDeliveryPartner
+      };
+
+      if (userSocketId) {
+        io.to(userSocketId).emit("update-assignment", payload);
+      }
+      
+      if (ownerSocketId) {
+         io.to(ownerSocketId).emit("update-assignment", payload);
+      }
+    }
 
     return res
       .status(200)
@@ -597,16 +624,27 @@ export const verifyDeliveryOtp = async (req, res) => {
 
     await order.save();
     
+    // Populate the owner to get their socket ID
+    await order.populate("shopOrders.owner", "socketId");
+    
     const io = req.app.get("io");
     if (io) {
       const userSocketId = order.user?.socketId;
-      if (userSocketId) {
-        io.to(userSocketId).emit("update-status", {
+      const ownerSocketId = order.shopOrders.find(o => o._id.equals(shopOrderId))?.owner?.socketId;
+      
+      const payload = {
           orderId: order._id,
           shopId: shopOrder.shop,
           status: "delivered",
           userId: order.user._id,
-        });
+      };
+      
+      if (userSocketId) {
+        io.to(userSocketId).emit("update-status", payload);
+      }
+      
+      if (ownerSocketId) {
+        io.to(ownerSocketId).emit("update-status", payload);
       }
     }
 

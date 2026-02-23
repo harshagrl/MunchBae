@@ -15,7 +15,9 @@ const useGetMyOrders = () => {
         dispatch(setMyOrders(result.data));
       } catch (error) {}
     };
-    fetchOrder();
+    if (userData) {
+      fetchOrder();
+    }
   }, [userData]);
 };
 
