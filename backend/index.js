@@ -14,11 +14,15 @@ import { Server } from "socket.io";
 import { socketHandler } from "./socket.js";
 const app = express();
 const server = http.createServer(app);
+const allowedOrigins = [
+  "http://localhost:5173", // Local testing
+  process.env.FRONTEND_CLIENT_URL // Vercel Production URL
+];
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST","PUT"],
   },
 });
 
@@ -27,7 +31,7 @@ const port = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
   }),
 );

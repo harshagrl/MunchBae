@@ -30,7 +30,7 @@ import EditProfile from "./pages/EditProfile";
 import { io } from "socket.io-client";
 import { Toaster } from "react-hot-toast";
 
-export const serverUrl = "http://localhost:8000";
+export const serverUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
   const dispatch = useDispatch();
