@@ -3,6 +3,7 @@ import { IoIosAdd } from "react-icons/io";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { updateQuantity, removeItem } from "../store/user.slice";
+import toast from "react-hot-toast";
 
 const CartItemsCard = ({ data }) => {
   const dispatch = useDispatch();
@@ -61,7 +62,10 @@ const CartItemsCard = ({ data }) => {
 
         {/* Delete */}
         <button
-          onClick={() => dispatch(removeItem(data.id))}
+          onClick={() => {
+            dispatch(removeItem(data.id));
+            toast.success("Item removed from cart");
+          }}
           className="ml-2 w-9 h-9 flex items-center justify-center rounded-full bg-red-50 hover:bg-red-100 transition-colors cursor-pointer group"
           title="Remove item"
         >

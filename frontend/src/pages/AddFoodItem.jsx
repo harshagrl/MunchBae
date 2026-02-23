@@ -10,6 +10,7 @@ import { setMyShopData } from "../store/owner.slice";
 
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 const AddFoodItem = () => {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const AddFoodItem = () => {
     e.preventDefault();
     setLoading(true);
     if (!name || !price || !category || !backendImage) {
-      alert("Please fill all required fields and select an image");
+      toast.error("Please fill all required fields and select an image");
       setLoading(false);
       return;
     }
@@ -64,10 +65,11 @@ const AddFoodItem = () => {
         { withCredentials: true },
       );
       dispatch(setMyShopData(result.data));
+      toast.success("Food item added to menu!");
       setLoading(false);
       navigate("/home");
     } catch (error) {
-      console.log("Error in adding food item:", error);
+      toast.error(error?.response?.data?.message || "Error adding food item");
       setLoading(false);
     }
   };

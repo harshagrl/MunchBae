@@ -31,3 +31,13 @@ export const sendDeliveryOtpMail = async (user, otp) => {
     html: `<p>Your OTP for delivery is <b>${otp}</b>. It expires in 5 minutes.<p>`,
   });
 };
+
+export const sendSignupOtpMail = async (to, otp) => {
+  const transporter = getTransporter();
+  await transporter.sendMail({
+    from: process.env.EMAIL,
+    to,
+    subject: "Verify Your Email Address",
+    html: `<p>Your OTP for joining MunchBae is <b>${otp}</b>. It expires in 5 minutes.<p>`,
+  });
+};

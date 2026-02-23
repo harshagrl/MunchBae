@@ -6,6 +6,7 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { useDispatch } from "react-redux";
 import { setMyShopData } from "../store/owner.slice";
+import toast from "react-hot-toast";
 
 const OwnerItemCard = ({ data }) => {
   const dispatch = useDispatch();
@@ -16,8 +17,9 @@ const OwnerItemCard = ({ data }) => {
         { withCredentials: true }
       );
       dispatch(setMyShopData(result.data));
+      toast.success("Item deleted successfully");
     } catch (error) {
-      console.error("Error in handle delete: ", error);
+      toast.error("Failed to delete item");
     }
   };
 

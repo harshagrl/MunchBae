@@ -26,7 +26,9 @@ import FAQs from "./pages/FAQs";
 import PartnerWithUs from "./pages/PartnerWithUs";
 import Blog from "./pages/Blog";
 import TermsPrivacy from "./pages/TermsPrivacy";
+import EditProfile from "./pages/EditProfile";
 import { io } from "socket.io-client";
+import { Toaster } from "react-hot-toast";
 
 export const serverUrl = "http://localhost:8000";
 
@@ -34,12 +36,7 @@ const App = () => {
   const dispatch = useDispatch();
   const { userData, socket } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("userData");
-    if (storedUser) {
-      dispatch(setUserData(JSON.parse(storedUser)));
-    }
-  }, [dispatch]);
+
 
   useGetCity();
   useGetMyShop();
@@ -83,68 +80,75 @@ const App = () => {
     }
   }, [userData, socket]);
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={userData ? <Navigate to={"/home"} /> : <LandingPage />}
-      />
-      <Route
-        path="/home"
-        element={userData ? <Home /> : <Navigate to={"/signin"} />}
-      />
-      <Route
-        path="/signup"
-        element={!userData ? <SignUp /> : <Navigate to={"/home"} />}
-      />
-      <Route
-        path="/signin"
-        element={!userData ? <SignIn /> : <Navigate to={"/home"} />}
-      />
-      <Route
-        path="/forgot-password"
-        element={!userData ? <ForgotPassword /> : <Navigate to={"/home"} />}
-      />
-      <Route
-        path="/create-edit-shop"
-        element={userData ? <CreateEditShop /> : <Navigate to={"/signin"} />}
-      />
-      <Route
-        path="/add-item"
-        element={userData ? <AddFoodItem /> : <Navigate to={"/signin"} />}
-      />
-      <Route
-        path="/edit-item/:itemId"
-        element={userData ? <EditItem /> : <Navigate to={"/signin"} />}
-      />
-      <Route
-        path="/cart"
-        element={userData ? <Cart /> : <Navigate to={"/signin"} />}
-      />
-      <Route
-        path="/checkout"
-        element={userData ? <Checkout /> : <Navigate to={"/signin"} />}
-      />
-      <Route
-        path="/order-placed"
-        element={userData ? <OrderPlaced /> : <Navigate to={"/signin"} />}
-      />
-      <Route
-        path="/my-orders"
-        element={userData ? <MyOrders /> : <Navigate to={"/signin"} />}
-      />
-      <Route
-        path="/track-order/:orderId"
-        element={userData ? <TrackOrderPage /> : <Navigate to={"/signin"} />}
-      />
-      <Route
-        path="/shop/:shopId"
-        element={userData ? <Shop /> : <Navigate to={"/signin"} />}
-      />
-      <Route path="/faqs" element={<FAQs />} />
-      <Route path="/partner-with-us" element={<PartnerWithUs />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/terms-privacy" element={<TermsPrivacy />} />
-    </Routes>
+    <>
+      <Toaster position="top-center" reverseOrder={false} />
+      <Routes>
+        <Route
+          path="/"
+          element={userData ? <Navigate to={"/home"} /> : <LandingPage />}
+        />
+        <Route
+          path="/home"
+          element={userData ? <Home /> : <Navigate to={"/signin"} />}
+        />
+        <Route
+          path="/signup"
+          element={!userData ? <SignUp /> : <Navigate to={"/home"} />}
+        />
+        <Route
+          path="/signin"
+          element={!userData ? <SignIn /> : <Navigate to={"/home"} />}
+        />
+        <Route
+          path="/forgot-password"
+          element={!userData ? <ForgotPassword /> : <Navigate to={"/home"} />}
+        />
+        <Route
+          path="/create-edit-shop"
+          element={userData ? <CreateEditShop /> : <Navigate to={"/signin"} />}
+        />
+        <Route
+          path="/add-item"
+          element={userData ? <AddFoodItem /> : <Navigate to={"/signin"} />}
+        />
+        <Route
+          path="/edit-item/:itemId"
+          element={userData ? <EditItem /> : <Navigate to={"/signin"} />}
+        />
+        <Route
+          path="/cart"
+          element={userData ? <Cart /> : <Navigate to={"/signin"} />}
+        />
+        <Route
+          path="/checkout"
+          element={userData ? <Checkout /> : <Navigate to={"/signin"} />}
+        />
+        <Route
+          path="/order-placed"
+          element={userData ? <OrderPlaced /> : <Navigate to={"/signin"} />}
+        />
+        <Route
+          path="/my-orders"
+          element={userData ? <MyOrders /> : <Navigate to={"/signin"} />}
+        />
+        <Route
+          path="/track-order/:orderId"
+          element={userData ? <TrackOrderPage /> : <Navigate to={"/signin"} />}
+        />
+        <Route
+          path="/shop/:shopId"
+          element={userData ? <Shop /> : <Navigate to={"/signin"} />}
+        />
+        <Route path="/faqs" element={<FAQs />} />
+        <Route path="/partner-with-us" element={<PartnerWithUs />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/terms-privacy" element={<TermsPrivacy />} />
+        <Route
+          path="/edit-profile"
+          element={userData ? <EditProfile /> : <Navigate to={"/signin"} />}
+        />
+      </Routes>
+    </>
   );
 };
 

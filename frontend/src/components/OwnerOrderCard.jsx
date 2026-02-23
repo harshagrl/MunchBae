@@ -89,17 +89,23 @@ function OwnerOrderCard({ data }) {
             key={index}
             className="shrink-0 w-36 rounded-xl overflow-hidden bg-white shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 group"
           >
-            <div className="relative overflow-hidden">
-              <img
-                src={item.item.image}
-                alt="food-image"
-                className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+            <div className="relative overflow-hidden w-full h-24 bg-gray-100 flex items-center justify-center">
+              {item.item?.image ? (
+                <img
+                  src={item.item.image}
+                  alt="food-image"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              ) : (
+                <span className="text-xs text-gray-400 font-medium">No Image</span>
+              )}
             </div>
             <div className="p-2 text-center">
-              <p className="text-sm font-bold text-[#2d2d2d] truncate">{item.item.name}</p>
+              <p className="text-sm font-bold text-[#2d2d2d] truncate">
+                {item.item?.name || "Deleted Item"}
+              </p>
               <p className="text-xs text-gray-400 font-medium mt-0.5">
-                ₹{item.item.price} × {item.quantity}
+                ₹{item.item?.price || 0} × {item.quantity}
               </p>
             </div>
           </div>
@@ -108,21 +114,29 @@ function OwnerOrderCard({ data }) {
 
       {/* Status & Total */}
       <div className="flex justify-between items-center pt-4 border-t border-gray-200/80">
-        <select
-          className="text-[#2d2d2d] rounded-full border-2 px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#e84c3d]/30 border-gray-200 bg-white shadow-sm cursor-pointer transition-all duration-300 hover:border-[#e84c3d]/40"
-          onChange={(e) =>
-            handleUpdateStatus(
-              data._id,
-              data.shopOrders.shop._id,
-              e.target.value,
-            )
-          }
-        >
-          <option value="">Update Status</option>
-          <option value="pending">Pending</option>
-          <option value="preparing">Preparing</option>
-          <option value="out for delivery">Out For Delivery</option>
-        </select>
+        {data.shopOrders.status === "delivered" ? (
+          <div className="px-4 py-2 rounded-full border-2 border-green-200 bg-green-50 text-green-700 text-sm font-bold shadow-sm">
+            Delivered ✓
+          </div>
+        ) : (
+          <select
+            className="text-[#2d2d2d] rounded-full border-2 px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#e84c3d]/30 border-gray-200 bg-white shadow-sm cursor-pointer transition-all duration-300 hover:border-[#e84c3d]/40"
+            value={data.shopOrders.status}
+            onChange={(e) =>
+              handleUpdateStatus(
+                data._id,
+                data.shopOrders.shop._id,
+                e.target.value,
+              )
+            }
+          >
+            <option value="" disabled>Update Status</option>
+            <option value="pending">Pending</option>
+            <option value="preparing">Preparing</option>
+            <option value="out for delivery">Out For Delivery</option>
+            <option value="delivered">Delivered</option>
+          </select>
+        )}
         <div className="flex items-center gap-1 bg-[#e84c3d]/10 px-4 py-2 rounded-full">
           <span className="text-xs text-gray-500 font-medium">Total</span>
           <span className="text-[#e84c3d] font-extrabold text-lg ml-1">₹{data.shopOrders.subtotal}</span>

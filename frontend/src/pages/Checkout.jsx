@@ -17,6 +17,7 @@ import { CiCreditCard1 } from "react-icons/ci";
 import { MdStickyNote2 } from "react-icons/md";
 import { FiArrowRight } from "react-icons/fi";
 import { serverUrl } from "../App";
+import toast from "react-hot-toast";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -111,7 +112,7 @@ const Checkout = () => {
         openRazorpay(orderId, razorOrder);
       }
     } catch (error) {
-      console.error(`Place order error: ${error}`);
+      toast.error(error.response?.data?.message || "Failed to place order");
     }
   };
   const openRazorpay = (orderId, razorOrder) => {
@@ -133,7 +134,7 @@ const Checkout = () => {
           dispatch(clearCart());
           navigate("/order-placed");
         } catch (error) {
-          console.error(`Payment verification error: ${error}`);
+          toast.error(error.response?.data?.message || "Payment verification failed");
         }
       },
     };

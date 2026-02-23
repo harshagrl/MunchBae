@@ -5,6 +5,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { TbReceiptRupee } from "react-icons/tb";
 import UserOrderCard from "../components/UserOrderCard";
 import OwnerOrderCard from "../components/OwnerOrderCard";
+import DeliveryBoyOrderCard from "../components/DeliveryBoyOrderCard";
 import { setMyOrders, updateRealTimeOrderStatus } from "../store/user.slice";
 
 const MyOrders = () => {
@@ -32,7 +33,7 @@ const MyOrders = () => {
             <span className="font-semibold text-sm">Back</span>
           </button>
           <h1 className="text-xl md:text-2xl font-extrabold text-[#2d2d2d] tracking-tight">
-            My Orders
+            {userData?.role === "deliveryBoy" ? "My Delivered Orders" : "My Orders"}
           </h1>
           <TbReceiptRupee className="text-[#2d2d2d] text-xl" />
         </div>
@@ -47,16 +48,16 @@ const MyOrders = () => {
               <TbReceiptRupee className="text-5xl text-gray-300" />
             </div>
             <h2 className="text-2xl font-extrabold text-[#2d2d2d] mb-2">
-              No orders yet
+              {userData?.role === "deliveryBoy" ? "No deliveries yet" : "No orders yet"}
             </h2>
             <p className="text-gray-500 mb-6 text-sm">
-              Your order history will appear here
+              {userData?.role === "deliveryBoy" ? "Your delivered orders will appear here" : "Your order history will appear here"}
             </p>
             <button
-              onClick={() => navigate("/home")}
+              onClick={() => navigate(userData?.role === "deliveryBoy" ? "/delivery-partner-dashboard" : "/home")}
               className="bg-[#2d2d2d] text-white px-8 py-3 rounded-full font-semibold text-sm hover:bg-[#1a1a1a] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
             >
-              Start Ordering →
+              {userData?.role === "deliveryBoy" ? "Find Orders →" : "Start Ordering →"}
             </button>
           </div>
         ) : (
@@ -64,7 +65,7 @@ const MyOrders = () => {
             {/* Orders Count */}
             <div className="mb-6">
               <p className="text-gray-500 text-sm font-medium">
-                {myOrders.length} order{myOrders.length > 1 ? "s" : ""} placed
+                {myOrders.length} order{myOrders.length > 1 ? "s" : ""} {userData?.role === "deliveryBoy" ? "delivered" : "placed"}
               </p>
             </div>
 
@@ -75,6 +76,8 @@ const MyOrders = () => {
                   <UserOrderCard data={order} key={index} />
                 ) : userData.role === "owner" ? (
                   <OwnerOrderCard data={order} key={index} />
+                ) : userData.role === "deliveryBoy" ? (
+                  <DeliveryBoyOrderCard data={order} key={index} />
                 ) : null
               )}
             </div>

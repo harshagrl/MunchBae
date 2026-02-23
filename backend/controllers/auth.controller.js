@@ -1,7 +1,8 @@
 import User from "../models/user.model.js";
+import Otp from "../models/otp.model.js";
 import bcrypt from "bcryptjs";
 import genToken from "../utils/token.js";
-import { sendResetOtpMail } from "../utils/mail.js";
+import { sendResetOtpMail, sendSignupOtpMail } from "../utils/mail.js";
 export const SignUp = async (req, res) => {
   try {
     const { fullName, email, password, mobile, role } = req.body;
@@ -10,6 +11,12 @@ export const SignUp = async (req, res) => {
         .status(400)
         .json({ message: "Please write a valid email address." });
     }
+    
+    const nameRegex = /^[A-Za-z\s]+$/;
+    if (!nameRegex.test(fullName)) {
+      return res.status(400).json({ message: "Name should only contain alphabets." });
+    }
+    
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: "User Already exists." });
@@ -24,6 +31,18 @@ export const SignUp = async (req, res) => {
         .status(400)
         .json({ message: "Mobile no. length must be of 10 digits." });
     }
+
+    const { otp } = req.body;
+    if (!otp) {
+      return res.status(400).json({ message: "OTP is required." });
+    }
+
+    // Verify OTP
+    const otpRecord = await Otp.findOne({ email });
+    if (!otpRecord || otpRecord.otp !== otp) {
+      return res.status(400).json({ message: "Invalid or expired OTP." });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     user = await User.create({
       fullName,
@@ -32,6 +51,9 @@ export const SignUp = async (req, res) => {
       role,
       password: hashedPassword,
     });
+
+    // Delete OTP record after successful registration
+    await Otp.deleteOne({ email });
 
     const token = await genToken(user._id);
     res.cookie("token", token, {
@@ -44,6 +66,32 @@ export const SignUp = async (req, res) => {
     return res.status(201).json(user);
   } catch (error) {
     return res.status(500).json(`Sign up error ${error}`);
+  }
+};
+
+export const sendSignupOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Email is required." });
+    }
+
+    const user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: "User Already exists." });
+    }
+
+    // Delete any existing OTP for this email
+    await Otp.deleteOne({ email });
+
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    await Otp.create({ email, otp });
+    
+    await sendSignupOtpMail(email, otp);
+    
+    return res.status(200).json({ message: "OTP sent successfully." });
+  } catch (error) {
+    return res.status(500).json(`Send Signup Otp error: ${error}`);
   }
 };
 

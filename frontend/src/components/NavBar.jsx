@@ -44,25 +44,41 @@ const NavBar = () => {
     }
   };
 
-  const handleSearchItems = async () => {
+  const handleSearchItems = async (signal) => {
     try {
       const result = await axios.get(
         `${serverUrl}/api/item/search-items?query=${query}&city=${currentCity}`,
-        { withCredentials: true },
+        { withCredentials: true, signal },
       );
       dispatch(setSearchItems(result.data));
     } catch (error) {
+      if (axios.isCancel(error)) {
+        return;
+      }
       console.log(error);
     }
   };
 
   useEffect(() => {
-    if (query) {
-      handleSearchItems();
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    if (query.trim()) {
+      const timeoutId = setTimeout(() => {
+        handleSearchItems(signal);
+      }, 300);
+
+      return () => {
+        clearTimeout(timeoutId);
+        controller.abort();
+      };
     } else {
       dispatch(setSearchItems(null));
+      return () => {
+        controller.abort();
+      };
     }
-  }, [query]);
+  }, [query, currentCity]);
 
   return (
     <>
@@ -166,6 +182,15 @@ const NavBar = () => {
                       </p>
                       <p className="text-xs text-gray-400">{userData?.email}</p>
                     </div>
+                    <button
+                      onClick={() => {
+                        navigate("/edit-profile");
+                        setShowInfo(false);
+                      }}
+                      className="w-full text-left px-4 py-3 text-[#2d2d2d] hover:bg-gray-50 text-sm font-medium cursor-pointer transition"
+                    >
+                      Edit Profile
+                    </button>
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 text-sm font-medium cursor-pointer transition"
@@ -293,6 +318,15 @@ const NavBar = () => {
                         My Orders
                       </button>
                     )}
+                    <button
+                      onClick={() => {
+                        navigate("/edit-profile");
+                        setShowInfo(false);
+                      }}
+                      className="w-full text-left px-4 py-2.5 text-[#2d2d2d] hover:bg-gray-50 text-sm cursor-pointer"
+                    >
+                      Edit Profile
+                    </button>
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2.5 text-red-500 hover:bg-red-50 text-sm cursor-pointer"

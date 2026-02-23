@@ -9,7 +9,9 @@ import { serverUrl } from "../App";
 import { setMyShopData } from "../store/owner.slice";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
-
+import Cropper from "react-easy-crop";
+import getCroppedImg from "../utils/cropImage";
+import toast from "react-hot-toast";
 
 const CreateEditShop = () => {
   const navigate = useNavigate();
@@ -29,12 +31,46 @@ const CreateEditShop = () => {
   );
   const [frontendImage, setFrontendImage] = useState(myShopData?.image || null);
   const [backendImage, setBackendImage] = useState(null);
+  const [rawImage, setRawImage] = useState(null);
+
+  // Cropper State
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [showCropper, setShowCropper] = useState(false);
+
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setBackendImage(file);
-      setFrontendImage(URL.createObjectURL(file));
+      setRawImage(URL.createObjectURL(file));
+      setShowCropper(true);
     }
+  };
+
+  const onCropComplete = (croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const handleCropConfirm = async () => {
+    try {
+      const croppedImageUrl = await getCroppedImg(rawImage, croppedAreaPixels);
+      
+      // Convert Object URL back to a File for the backend
+      const response = await fetch(croppedImageUrl);
+      const blob = await response.blob();
+      const file = new File([blob], "cropped_image.jpg", { type: "image/jpeg" });
+
+      setBackendImage(file);
+      setFrontendImage(croppedImageUrl);
+      setShowCropper(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleCropCancel = () => {
+    setShowCropper(false);
+    setRawImage(null);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,10 +90,11 @@ const CreateEditShop = () => {
         { withCredentials: true }
       );
       dispatch(setMyShopData(result.data));
+      toast.success(isEditMode ? "Shop updated successfully!" : "Shop created successfully!");
       setLoading(false);
       navigate("/home");
     } catch (error) {
-      console.log("Error in creating/editing shop:", error);
+      toast.error(error?.response?.data?.message || "Failed to save shop details");
       setLoading(false);
     }
   };
@@ -270,6 +307,63 @@ const CreateEditShop = () => {
           </p>
         </div>
       </div>
+
+      {/* ===== CROPPER MODAL ===== */}
+      {showCropper && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="w-full max-w-3xl bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col h-[80vh]">
+            <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-white z-10">
+              <h3 className="text-xl font-extrabold text-[#2d2d2d]">Crop Shop Image</h3>
+              <p className="text-xs text-gray-400 font-medium">Drag to format perfectly</p>
+            </div>
+            
+            <div className="relative flex-1 w-full bg-gray-100">
+              <Cropper
+                image={rawImage}
+                crop={crop}
+                zoom={zoom}
+                aspect={16 / 9} // Common aspect ratio for beautiful wide banners
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+                onZoomChange={setZoom}
+              />
+            </div>
+
+            <div className="p-6 bg-white border-t border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center z-10">
+              <div className="flex-1 w-full max-w-xs flex items-center gap-4">
+                <span className="text-xs text-gray-500 font-bold">Zoom</span>
+                <input
+                  type="range"
+                  value={zoom}
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  aria-labelledby="Zoom"
+                  onChange={(e) => setZoom(e.target.value)}
+                  className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#e84c3d]"
+                />
+              </div>
+
+              <div className="flex gap-3 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={handleCropCancel}
+                  className="flex-1 sm:flex-none px-6 py-3 rounded-full text-[#2d2d2d] font-bold border-2 border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCropConfirm}
+                  className="flex-1 sm:flex-none px-6 py-3 rounded-full text-white font-bold bg-[#e84c3d] shadow-lg shadow-[#e84c3d]/30 hover:shadow-[#e84c3d]/50 hover:-translate-y-0.5 transition-all cursor-pointer"
+                >
+                  Confirm Crop
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

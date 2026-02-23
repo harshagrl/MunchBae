@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -14,7 +15,6 @@ const ForgotPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -27,11 +27,10 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       setStep(2);
-      console.log(result);
-      setErr("");
+      toast.success(`OTP sent to ${email}`);
       setLoading(false);
     } catch (error) {
-      setErr(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to send OTP");
       setLoading(false);
     }
   };
@@ -45,19 +44,17 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       setStep(3);
-      console.log(result);
-      setErr("");
+      toast.success("OTP Verified successfully");
       setLoading(false);
     } catch (error) {
-      setErr(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Invalid OTP");
       setLoading(false);
     }
   };
 
   const handleResetPassword = async () => {
     if (newPassword !== confirmPassword) {
-      setErr("Passwords do not match");
-      return;
+      return toast.error("Passwords do not match");
     }
     setLoading(true);
     try {
@@ -67,11 +64,10 @@ const ForgotPassword = () => {
         { withCredentials: true }
       );
       navigate("/signin");
-      console.log(result);
-      setErr("");
+      toast.success("Password reset successfully. Please log in.");
       setLoading(false);
     } catch (error) {
-      setErr(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to reset password");
       setLoading(false);
     }
   };
@@ -140,9 +136,7 @@ const ForgotPassword = () => {
                   />
                 </div>
 
-                {err && err.length > 0 && (
-                  <p className="text-red-500 text-sm">{err}</p>
-                )}
+
 
                 <button
                   className="w-full py-3.5 bg-[#2d2d2d] hover:bg-black text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
@@ -174,9 +168,7 @@ const ForgotPassword = () => {
                   />
                 </div>
 
-                {err && err.length > 0 && (
-                  <p className="text-red-500 text-sm">{err}</p>
-                )}
+
 
                 <button
                   className="w-full py-3.5 bg-[#2d2d2d] hover:bg-black text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
@@ -193,7 +185,6 @@ const ForgotPassword = () => {
                 <button
                   className="w-full text-center text-sm text-gray-400 hover:text-[#2d2d2d] font-medium transition-colors duration-300 cursor-pointer"
                   onClick={() => {
-                    setErr("");
                     handleSendOtp();
                   }}
                   disabled={loading}
@@ -251,10 +242,6 @@ const ForgotPassword = () => {
                     )}
                   </button>
                 </div>
-
-                {err && err.length > 0 && (
-                  <p className="text-red-500 text-sm">{err}</p>
-                )}
 
                 <button
                   className="w-full py-3.5 bg-[#2d2d2d] hover:bg-black text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"

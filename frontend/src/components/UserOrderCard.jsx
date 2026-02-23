@@ -95,22 +95,28 @@ function UserOrderCard({ data }) {
               {shopOrder.shopOrderItem.map((item, idx) => (
                 <div
                   key={idx}
-                  className="shrink-0 w-32 bg-[#faf8f4] rounded-xl p-2 border border-[#f0ece4]"
+                  className="shrink-0 w-32 bg-[#faf8f4] rounded-xl p-2 border border-[#f0ece4] flex flex-col"
                 >
-                  <img
-                    src={item.item.image}
-                    alt={item.item.name}
-                    className="w-full h-20 object-cover rounded-lg"
-                  />
+                  <div className="w-full h-20 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                    {item.item?.image ? (
+                      <img
+                        src={item.item.image}
+                        alt={item.item?.name || "food item"}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-xs text-gray-400 font-medium">No Image</span>
+                    )}
+                  </div>
                   <p className="text-xs font-semibold text-[#2d2d2d] mt-1.5 truncate">
-                    {item.item.name}
+                    {item.item?.name || "Deleted Item"}
                   </p>
                   <p className="text-[11px] text-gray-400">
-                    ₹{item.item.price} × {item.quantity}
+                    ₹{item.item?.price || 0} × {item.quantity}
                   </p>
 
                   {/* Star Rating */}
-                  {shopOrder.status === "delivered" && (
+                  {shopOrder.status === "delivered" && item.item?._id && (
                     <div className="flex gap-0.5 mt-1.5 justify-center">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button

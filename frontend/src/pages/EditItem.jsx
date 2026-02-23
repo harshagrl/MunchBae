@@ -10,6 +10,7 @@ import { setMyShopData } from "../store/owner.slice";
 
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 const EditItem = () => {
   const { itemId } = useParams();
@@ -66,10 +67,11 @@ const EditItem = () => {
         { withCredentials: true }
       );
       dispatch(setMyShopData(result.data));
+      toast.success("Food item updated successfully!");
       setLoading(false);
       navigate("/home");
     } catch (error) {
-      console.log("Error in editing food item:", error);
+      toast.error(error?.response?.data?.message || "Error updating food item");
       setLoading(false);
     }
   };
@@ -84,7 +86,7 @@ const EditItem = () => {
         );
         setCurrentItem(result.data);
       } catch (error) {
-        console.error("Error getting item: ", error);
+        toast.error("Error fetching item details");
       } finally {
         setFetching(false);
       }

@@ -14,12 +14,12 @@ import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../store/user.slice";
+import toast from "react-hot-toast";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const dispatch = useDispatch();
@@ -46,10 +46,10 @@ const SignIn = () => {
       );
       dispatch(setUserData(result.data));
       localStorage.setItem("userData", JSON.stringify(result.data));
-      setErr("");
+      toast.success("Welcome back!");
       setLoading(false);
     } catch (error) {
-      setErr(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Sign in failed");
       setLoading(false);
     }
   };
@@ -67,8 +67,10 @@ const SignIn = () => {
       );
       dispatch(setUserData(data));
       localStorage.setItem("userData", JSON.stringify(data));
+      toast.success("Welcome back!");
     } catch (error) {
       console.error(error);
+      toast.error("Google Auth Failed");
     }
   };
 
@@ -143,10 +145,6 @@ const SignIn = () => {
                   Forget Password?
                 </Link>
               </div>
-
-              {err && err.length > 0 && (
-                <p className="text-red-500 text-sm">{err}</p>
-              )}
 
               <button
                 className="w-full py-3.5 bg-[#2d2d2d] hover:bg-black text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"

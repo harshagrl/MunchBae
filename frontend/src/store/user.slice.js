@@ -1,16 +1,42 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const getInitialCartItems = () => {
+  try {
+    const items = localStorage.getItem("cartItems");
+    return items ? JSON.parse(items) : [];
+  } catch (error) {
+    console.error("Failed to parse cart items from localStorage", error);
+    return [];
+  }
+};
+
+const getInitialUserData = () => {
+  try {
+    const user = localStorage.getItem("userData");
+    return user ? JSON.parse(user) : null;
+  } catch (error) {
+    console.error("Failed to parse user data from localStorage", error);
+    return null;
+  }
+};
+
+const initialCartItems = getInitialCartItems();
+const initialTotalAmount = initialCartItems.reduce(
+  (sum, i) => sum + i.price * i.quantity,
+  0
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    userData: null,
+    userData: getInitialUserData(),
     currentCity: null,
     currentState: null,
     currentAddress: null,
     shopsInMyCity: [],
     itemsInMyCity: [],
-    cartItems: [],
-    totalAmount: 0,
+    cartItems: initialCartItems,
+    totalAmount: initialTotalAmount,
     myOrders: [],
     searchItems: [],
     socket: null,
@@ -49,6 +75,7 @@ const userSlice = createSlice({
         (sum, i) => sum + i.price * i.quantity,
         0,
       );
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
     updateQuantity: (state, action) => {
       const { id, quantity } = action.payload;
@@ -60,6 +87,7 @@ const userSlice = createSlice({
         (sum, i) => sum + i.price * i.quantity,
         0,
       );
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
     removeItem: (state, action) => {
       state.cartItems = state.cartItems.filter((i) => i.id !== action.payload);
@@ -67,6 +95,7 @@ const userSlice = createSlice({
         (sum, i) => sum + i.price * i.quantity,
         0,
       );
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
     setMyOrders: (state, action) => {
       state.myOrders = action.payload;
@@ -101,6 +130,7 @@ const userSlice = createSlice({
     clearCart: (state) => {
       state.cartItems = [];
       state.totalAmount = 0;
+      localStorage.removeItem("cartItems");
     },
   },
 });

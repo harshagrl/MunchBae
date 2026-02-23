@@ -14,6 +14,7 @@ import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../store/user.slice";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,8 +23,9 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
-  const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otp, setOtp] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
   const dispatch = useDispatch();
 
@@ -42,7 +44,41 @@ const SignUp = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSignUp = async () => {
+  const handleSignUpClick = async () => {
+    if (!fullName || !email || !mobile || !password) {
+      return toast.error("All fields are required.");
+    }
+    if (!/^[A-Za-z\s]+$/.test(fullName)) {
+      return toast.error("Name should only contain alphabets.");
+    }
+    if (mobile.length !== 10) {
+      return toast.error("Mobile no. length must be of 10 digits.");
+    }
+    if (password.length < 6) {
+      return toast.error("Password length must be at least 6 characters.");
+    }
+
+    setLoading(true);
+    try {
+      await axios.post(
+        `${serverUrl}/api/auth/send-signup-otp`,
+        { email },
+        { withCredentials: true }
+      );
+      setShowOtpModal(true);
+      toast.success(`OTP Sent to ${email}`);
+      setLoading(false);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to send OTP");
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyAndSignUp = async () => {
+    if (otp.length < 4) {
+      return toast.error("Please enter a valid OTP.");
+    }
+
     setLoading(true);
     try {
       const result = await axios.post(
@@ -53,22 +89,24 @@ const SignUp = () => {
           mobile,
           password,
           role,
+          otp,
         },
         { withCredentials: true },
       );
       dispatch(setUserData(result.data));
       localStorage.setItem("userData", JSON.stringify(result.data));
-      setErr("");
+      toast.success("Account created successfully!");
       setLoading(false);
+      setShowOtpModal(false);
     } catch (error) {
-      setErr(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Invalid OTP");
       setLoading(false);
     }
   };
 
   const handleGoogleAuth = async () => {
     if (!mobile) {
-      return setErr("Mobile no. is required");
+      return toast.error("Mobile no. is required");
     }
     try {
       const provider = new GoogleAuthProvider();
@@ -85,8 +123,10 @@ const SignUp = () => {
       );
       dispatch(setUserData(data));
       localStorage.setItem("userData", JSON.stringify(data));
+      toast.success("Account created via Google!");
     } catch (error) {
       console.error(error);
+      toast.error("Google Auth Failed");
     }
   };
 
@@ -126,6 +166,7 @@ const SignUp = () => {
                   placeholder="Full Name"
                   onChange={(e) => setFullName(e.target.value)}
                   value={fullName}
+                  disabled={showOtpModal}
                   required
                 />
               </div>
@@ -138,6 +179,7 @@ const SignUp = () => {
                   placeholder="Email"
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
+                  disabled={showOtpModal}
                   required
                 />
               </div>
@@ -150,6 +192,7 @@ const SignUp = () => {
                   placeholder="Mobile Number"
                   onChange={(e) => setMobile(e.target.value)}
                   value={mobile}
+                  disabled={showOtpModal}
                   required
                 />
               </div>
@@ -162,12 +205,14 @@ const SignUp = () => {
                   placeholder="Password"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
+                  disabled={showOtpModal}
                   required
                 />
                 <button
                   type="button"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition cursor-pointer"
                   onClick={() => setShowPassword((prev) => !prev)}
+                  disabled={showOtpModal}
                 >
                   {!showPassword ? (
                     <FaRegEye size={18} />
@@ -199,37 +244,80 @@ const SignUp = () => {
                 </div>
               </div>
 
-              {err && err.length > 0 && (
-                <p className="text-red-500 text-sm">* {err}</p>
+              {!showOtpModal ? (
+                <>
+                  <button
+                    className="w-full py-3.5 bg-[#2d2d2d] hover:bg-black text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+                    onClick={handleSignUpClick}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <ClipLoader size={20} color="white" />
+                    ) : (
+                      "Create Account"
+                    )}
+                  </button>
+
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-px bg-gray-200"></div>
+                    <span className="text-gray-400 text-xs">or sign up with</span>
+                    <div className="flex-1 h-px bg-gray-200"></div>
+                  </div>
+
+                  <button
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-[#2d2d2d] font-medium text-sm transition-all duration-300 cursor-pointer"
+                    onClick={handleGoogleAuth}
+                    disabled={loading}
+                  >
+                    <FcGoogle size={20} />
+                    <span>Sign Up with Google</span>
+                  </button>
+                </>
+              ) : (
+                <div className="pt-4 border-t border-gray-100 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div className="bg-orange-50/50 p-5 rounded-2xl border border-orange-100">
+                    <h3 className="text-sm font-bold text-[#2d2d2d] mb-1">Verify Email</h3>
+                    <p className="text-xs text-gray-500 mb-4">
+                      An OTP has been sent to <span className="font-semibold text-gray-700">{email}</span>.
+                    </p>
+                    <div className="space-y-4">
+                      <input
+                        type="text"
+                        maxLength={6}
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        placeholder="Enter OTP"
+                        className="w-full bg-white px-4 py-3 rounded-xl border border-gray-200 text-[#2d2d2d] focus:outline-none focus:ring-2 focus:ring-[#e84c3d]/20 focus:border-[#e84c3d] text-center text-lg tracking-[0.4em] font-bold shadow-sm"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowOtpModal(false);
+                            setOtp("");
+                          }}
+                          disabled={loading}
+                          className="flex-1 py-3 text-[#2d2d2d] text-sm font-bold rounded-xl border border-gray-200 hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleVerifyAndSignUp}
+                          disabled={loading || otp.length < 4}
+                          className="flex-1 py-3 bg-[#e84c3d] hover:bg-[#d63d2e] text-white text-sm font-bold rounded-xl shadow-md transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                        >
+                          {loading ? (
+                            <ClipLoader size={16} color="white" />
+                          ) : (
+                            "Verify"
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
-
-              <button
-                className="w-full py-3.5 bg-[#2d2d2d] hover:bg-black text-white rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
-                onClick={handleSignUp}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ClipLoader size={20} color="white" />
-                ) : (
-                  "Create Account"
-                )}
-              </button>
-
-              {/* Divider */}
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-gray-200"></div>
-                <span className="text-gray-400 text-xs">or sign up with</span>
-                <div className="flex-1 h-px bg-gray-200"></div>
-              </div>
-
-              {/* Google */}
-              <button
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-[#2d2d2d] font-medium text-sm transition-all duration-300 cursor-pointer"
-                onClick={handleGoogleAuth}
-              >
-                <FcGoogle size={20} />
-                <span>Sign Up with Google</span>
-              </button>
             </div>
 
             {/* Bottom Link */}

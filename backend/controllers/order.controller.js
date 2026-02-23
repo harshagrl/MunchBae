@@ -204,6 +204,44 @@ export const getMyOrders = async (req, res) => {
       }));
 
       return res.status(200).json(particularShopOrders);
+    } else if (user.role === "deliveryBoy") {
+      const orders = await Order.find({
+        "shopOrders.assignedDeliveryPartner": req.userId,
+        "shopOrders.status": "delivered",
+      })
+        .sort({
+          createdAt: -1,
+        })
+        .populate("shopOrders.shop", "name")
+        .populate("user")
+        .populate("shopOrders.shopOrderItem.item", "name image price");
+
+      if (!orders) {
+        return res.status(400).json({ message: "Orders not found" });
+      }
+
+      const particularShopOrders = orders.reduce((acc, order) => {
+        const matchingShopOrders = order.shopOrders.filter(
+          (o) =>
+            o.assignedDeliveryPartner?._id == req.userId &&
+            o.status === "delivered"
+        );
+        
+        matchingShopOrders.forEach((shopOrder) => {
+          acc.push({
+            _id: order._id,
+            paymentMethod: order.paymentMethod,
+            user: order.user,
+            shopOrders: shopOrder,
+            createdAt: order.createdAt,
+            deliveryAddress: order.deliveryAddress,
+            payment: order.payment,
+          });
+        });
+        return acc;
+      }, []);
+
+      return res.status(200).json(particularShopOrders);
     }
   } catch (error) {
     return res.status(500).json({ message: `Get My Orders error: ${error}` });
@@ -224,6 +262,16 @@ export const updateOrderStatus = async (req, res) => {
     }
     shopOrder.status = status;
     let deliveryBoysPayload = [];
+
+    // If status reverts from out for delivery, clear the existing assignment
+    if (status !== "out for delivery" && status !== "delivered") {
+      if (shopOrder.assignment) {
+        await DeliveryAssignment.findByIdAndDelete(shopOrder.assignment);
+      }
+      shopOrder.assignedDeliveryPartner = null;
+      shopOrder.assignment = null;
+    }
+
     if (status === "out for delivery" && !shopOrder.assignment) {
       const { longitude, latitude } = order.deliveryAddress;
       const nearByDeliveryPartners = await User.find({

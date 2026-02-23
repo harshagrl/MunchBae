@@ -14,6 +14,7 @@ import {
   YAxis,
 } from "recharts";
 import { ClipLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 const DeliveryBoyDashBoard = () => {
   const [availableAssignments, setAvailableAssignments] = useState([]);
@@ -185,8 +186,9 @@ const DeliveryBoyDashBoard = () => {
       );
       setLoading(false);
       setShowOtpBox(true);
+      toast.success("OTP sent to customer!");
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data?.message || "Failed to send Delivery OTP");
       setDistanceError("Error sending OTP. Please try again.");
       setLoading(false);
     }
@@ -207,9 +209,12 @@ const DeliveryBoyDashBoard = () => {
         },
       );
       setMessage(result.data.message);
-      location.reload();
+      toast.success(result.data.message);
+      setTimeout(() => {
+        location.reload();
+      }, 1500);
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data?.message || "Invalid OTP");
     }
   };
 
