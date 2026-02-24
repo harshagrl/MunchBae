@@ -31,12 +31,15 @@ import { io } from "socket.io-client";
 import { Toaster } from "react-hot-toast";
 import axios from "axios";
 
+export const serverUrl = import.meta.env.VITE_BACKEND_URL;
+
 axios.interceptors.request.use((config) => {
   try {
     const userDataStr = localStorage.getItem("userData");
     if (userDataStr) {
       const userData = JSON.parse(userDataStr);
-      if (userData?.token) {
+      // Only attach the token to requests intended for our own backend
+      if (userData?.token && config.url.startsWith(serverUrl)) {
         config.headers.Authorization = `Bearer ${userData.token}`;
       }
     }
@@ -45,7 +48,6 @@ axios.interceptors.request.use((config) => {
   }
   return config;
 });
-export const serverUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
   const dispatch = useDispatch();
