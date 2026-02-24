@@ -45,7 +45,7 @@ app.use("/api/shop", shopRouter);
 app.use("/api/item", itemRouter);
 app.use("/api/order", orderRouter);
 socketHandler(io);
-server.listen(port, async () => {
+server.listen(port, "0.0.0.0", async () => {
   await connectDB();
   console.log(`Server is running on ${port}`);
 });
