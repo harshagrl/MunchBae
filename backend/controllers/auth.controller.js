@@ -63,7 +63,7 @@ export const SignUp = async (req, res) => {
       sameSite: "none",
     });
 
-    return res.status(201).json(user);
+    return res.status(201).json({ ...user.toObject(), token });
   } catch (error) {
     return res.status(500).json(`Sign up error ${error}`);
   }
@@ -115,7 +115,7 @@ export const SignIn = async (req, res) => {
       sameSite: "none",
     });
 
-    return res.status(200).json(user);
+    return res.status(200).json({ ...user.toObject(), token });
   } catch (error) {
     return res.status(500).json(`Sign in error ${error}`);
   }
@@ -208,7 +208,7 @@ export const googleAuth = async (req, res) => {
       sameSite: "none",
     });
 
-    return res.status(200).json(user);
+    return res.status(200).json({ ...user.toObject(), token });
   } catch (error) {
     return res.status(500).json(`Google auth error ${error}`);
   }

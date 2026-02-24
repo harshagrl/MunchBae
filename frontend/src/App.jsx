@@ -29,7 +29,22 @@ import TermsPrivacy from "./pages/TermsPrivacy";
 import EditProfile from "./pages/EditProfile";
 import { io } from "socket.io-client";
 import { Toaster } from "react-hot-toast";
+import axios from "axios";
 
+axios.interceptors.request.use((config) => {
+  try {
+    const userDataStr = localStorage.getItem("userData");
+    if (userDataStr) {
+      const userData = JSON.parse(userDataStr);
+      if (userData?.token) {
+        config.headers.Authorization = `Bearer ${userData.token}`;
+      }
+    }
+  } catch (error) {
+    console.error("Axios interceptor error", error);
+  }
+  return config;
+});
 export const serverUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
