@@ -361,7 +361,7 @@ const Checkout = () => {
                 </div>
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-gray-500">Taxes & Charges</span>
-                  <span className="text-[#2d2d2d]">₹{packingCharge + GST}</span>
+                  <span className="text-[#2d2d2d]">₹{(packingCharge + GST).toFixed(2)}</span>
                 </div>
                 
                 {totalAmount < 500 && (
