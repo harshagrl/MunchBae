@@ -10,6 +10,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { MdMyLocation } from "react-icons/md";
 import { IoChevronDown } from "react-icons/io5";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const AVAILABLE_CITIES = ["Kapurthala"];
 
@@ -80,9 +81,26 @@ const LocationPicker = ({ isMobile = false }) => {
         setDetectingLocation(false);
         setIsOpen(false);
       },
-      () => {
-        // Geolocation denied or failed — fallback to Kapurthala
+      (error) => {
+        // Show user-friendly message based on the error
+        if (error.code === error.PERMISSION_DENIED) {
+          toast.error(
+            "Location access is blocked. Please enable location in your browser settings.",
+            { duration: 4000 }
+          );
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          toast.error(
+            "Location unavailable. Please check if your device's location is turned on.",
+            { duration: 4000 }
+          );
+        } else if (error.code === error.TIMEOUT) {
+          toast.error(
+            "Location request timed out. Please try again.",
+            { duration: 3000 }
+          );
+        }
         dispatch(setCurrentCity("Kapurthala"));
+        localStorage.setItem("selectedCity", "Kapurthala");
         setDetectingLocation(false);
         setIsOpen(false);
       },
