@@ -64,13 +64,21 @@ const Checkout = () => {
   };
 
   const getCurrentLocation = () => {
-    const latitude = userData.location.coordinates[1];
-    const longitude = userData.location.coordinates[0];
-    dispatch(setLocation({ lat: latitude, long: longitude }));
-    getAddressbyLatLng(latitude, longitude);
-    if (mapRef.current) {
-      mapRef.current.setView([latitude, longitude], 16, { animate: true });
-    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        dispatch(setLocation({ lat: latitude, long: longitude }));
+        getAddressbyLatLng(latitude, longitude);
+        if (mapRef.current) {
+          mapRef.current.setView([latitude, longitude], 16, { animate: true });
+        }
+      },
+      (error) => {
+        toast.error("Could not fetch current location. Please check browser permissions.");
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   };
 
   const onDragEnd = (e) => {
