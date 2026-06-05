@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import logo from "../assets/munch-bae-logo.png";
-import { FaLocationDot } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { IoIosCart } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { serverUrl } from "../App";
 import { setSearchItems, setUserData } from "../store/user.slice";
-import { IoIosAdd } from "react-icons/io";
 import { TbReceiptRupee } from "react-icons/tb";
 import { Link, useNavigate } from "react-router";
+import LocationPicker from "./LocationPicker";
 
 const NavBar = () => {
   const { userData, currentCity, cartItems, myOrders } = useSelector(
@@ -95,10 +94,7 @@ const NavBar = () => {
 
           {/* Center Nav */}
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-1.5 text-[#2d2d2d] text-sm font-medium">
-              <FaLocationDot className="text-[#e84c3d]" />
-              <span>{currentCity || "Location"}</span>
-            </div>
+            <LocationPicker />
 
             {userData.role === "user" && (
               <div className="flex items-center bg-white rounded-full px-4 py-2.5 shadow-sm border border-gray-200 w-80">
@@ -210,12 +206,7 @@ const NavBar = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img src={logo} alt="logo" className="w-10 h-10" />
-            <div className="flex gap-1 items-center">
-              <FaLocationDot className="text-[#e84c3d] text-sm" />
-              <span className="text-sm font-medium text-[#2d2d2d] truncate max-w-[120px]">
-                {currentCity || "Location"}
-              </span>
-            </div>
+            <LocationPicker isMobile />
           </div>
 
           <div className="flex items-center gap-2">

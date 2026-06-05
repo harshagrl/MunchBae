@@ -30,7 +30,7 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     userData: getInitialUserData(),
-    currentCity: null,
+    currentCity: localStorage.getItem("selectedCity") || "Kapurthala",
     currentState: null,
     currentAddress: null,
     shopsInMyCity: [],

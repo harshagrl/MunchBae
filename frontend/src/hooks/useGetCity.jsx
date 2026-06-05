@@ -13,6 +13,13 @@ const useGetCity = () => {
   const geoApiKey = import.meta.env.VITE_GEO_APIKEY;
   const dispatch = useDispatch();
   useEffect(() => {
+    const savedCity = localStorage.getItem("selectedCity");
+    if (savedCity) {
+      // User has manually selected a city — skip geolocation
+      dispatch(setCurrentCity(savedCity));
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(async (position) => {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
