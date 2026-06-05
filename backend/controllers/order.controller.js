@@ -584,6 +584,9 @@ export const sendDeliveryOtp = async (req, res) => {
     if (!order) {
       return res.status(400).json({ message: "Order not found" });
     }
+    if (!order.user) {
+      return res.status(400).json({ message: "User for this order no longer exists. They may have deleted their account." });
+    }
     const shopOrder = order.shopOrders.id(shopOrderId);
     if (!shopOrder) {
       return res.status(400).json({ message: "Shop Order not found" });
@@ -592,12 +595,18 @@ export const sendDeliveryOtp = async (req, res) => {
     shopOrder.deliveryOtp = otp;
     shopOrder.otpExpires = Date.now() + 5 * 60 * 1000;
     await order.save();
-    await sendDeliveryOtpMail(order.user, otp);
+    
+    try {
+      await sendDeliveryOtpMail(order.user, otp);
+    } catch (mailError) {
+      return res.status(500).json({ message: `Failed to send email via NodeMailer: ${mailError.message}` });
+    }
+    
     return res.status(200).json({ message: "OTP sent successfully" });
   } catch (error) {
     return res
       .status(500)
-      .json({ message: `Send Delivery OTP error: ${error}` });
+      .json({ message: `Send Delivery OTP error: ${error.message}` });
   }
 };
 
