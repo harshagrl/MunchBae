@@ -15,8 +15,26 @@ const useGetCity = () => {
   useEffect(() => {
     const savedCity = localStorage.getItem("selectedCity");
     if (savedCity) {
-      // User has manually selected a city — skip geolocation
+      // User has manually selected a city — skip geolocation but fetch its coordinates
       dispatch(setCurrentCity(savedCity));
+      
+      const fetchCityCoords = async () => {
+        try {
+          const result = await axios.get(
+            `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(savedCity)}&apiKey=${geoApiKey}`
+          );
+          if (result.data.features && result.data.features.length > 0) {
+            const { lat, lon, formatted, state } = result.data.features[0].properties;
+            dispatch(setLocation({ lat, long: lon }));
+            dispatch(setAddress(formatted || savedCity));
+            dispatch(setCurrentState(state));
+            dispatch(setCurrentAddress(formatted || savedCity));
+          }
+        } catch (error) {
+          console.error("Failed to get city coordinates", error);
+        }
+      };
+      fetchCityCoords();
       return;
     }
 

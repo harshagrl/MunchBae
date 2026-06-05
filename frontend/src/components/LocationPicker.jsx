@@ -35,10 +35,25 @@ const LocationPicker = ({ isMobile = false }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
-  const handleSelectCity = (city) => {
+  const handleSelectCity = async (city) => {
     dispatch(setCurrentCity(city));
     localStorage.setItem("selectedCity", city);
     setIsOpen(false);
+    
+    try {
+      const result = await axios.get(
+        `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(city)}&apiKey=${geoApiKey}`
+      );
+      if (result.data.features && result.data.features.length > 0) {
+        const { lat, lon, formatted, state } = result.data.features[0].properties;
+        dispatch(setLocation({ lat, long: lon }));
+        dispatch(setAddress(formatted || city));
+        dispatch(setCurrentState(state));
+        dispatch(setCurrentAddress(formatted || city));
+      }
+    } catch (error) {
+      console.error("Failed to fetch city coordinates", error);
+    }
   };
 
   const handleUseMyLocation = () => {
