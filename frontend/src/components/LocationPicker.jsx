@@ -54,18 +54,23 @@ const LocationPicker = ({ isMobile = false }) => {
           const result = await axios.get(
             `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${geoApiKey}`,
           );
-          dispatch(setCurrentCity(result?.data?.results[0].state_district));
-          dispatch(setCurrentState(result?.data?.results[0].state));
+          const loc = result?.data?.results[0];
+          const cityName =
+            loc?.state_district ||
+            loc?.city ||
+            loc?.county ||
+            loc?.state ||
+            "Kapurthala";
+          dispatch(setCurrentCity(cityName));
+          dispatch(setCurrentState(loc?.state));
           dispatch(
             setCurrentAddress(
-              result?.data?.results[0].formatted ||
-                result?.data?.results[0].address_line2,
+              loc?.formatted || loc?.address_line2,
             ),
           );
           dispatch(
             setAddress(
-              result?.data?.results[0].formatted ||
-                result?.data?.results[0].address_line2,
+              loc?.formatted || loc?.address_line2,
             ),
           );
         } catch (error) {
