@@ -22,7 +22,7 @@ const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
     credentials: true,
-    methods: ["GET", "POST","PUT"],
+    methods: ["GET", "POST", "PUT"],
   },
 });
 
@@ -45,7 +45,10 @@ app.use("/api/shop", shopRouter);
 app.use("/api/item", itemRouter);
 app.use("/api/order", orderRouter);
 socketHandler(io);
-server.listen(port, "0.0.0.0", async () => {
-  await connectDB();
-  console.log(`Server is running on ${port}`);
+
+// ✅ Connect to DB first, then start the server
+connectDB().then(() => {
+  server.listen(port, "0.0.0.0", () => {
+    console.log(`Server is running on ${port}`);
+  });
 });
